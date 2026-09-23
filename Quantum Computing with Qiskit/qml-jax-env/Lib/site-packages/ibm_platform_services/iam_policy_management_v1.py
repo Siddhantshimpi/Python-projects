@@ -1,0 +1,15488 @@
+# coding: utf-8
+
+# (C) Copyright IBM Corp. 2025.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# IBM OpenAPI SDK Code Generator Version: 3.107.1-41b0fbd0-20250825-080732
+
+"""
+IAM Policy Management API
+
+API Version: 1.0.1
+"""
+
+from datetime import datetime
+from enum import Enum
+from typing import Dict, List, Optional
+import json
+
+from ibm_cloud_sdk_core import BaseService, DetailedResponse
+from ibm_cloud_sdk_core.authenticators.authenticator import Authenticator
+from ibm_cloud_sdk_core.get_authenticator import get_authenticator_from_environment
+from ibm_cloud_sdk_core.utils import convert_model, datetime_to_string, string_to_datetime
+
+from .common import get_sdk_headers
+
+##############################################################################
+# Service
+##############################################################################
+
+
+class IamPolicyManagementV1(BaseService):
+    """The iam_policy_management V1 service."""
+
+    DEFAULT_SERVICE_URL = 'https://iam.cloud.ibm.com'
+    DEFAULT_SERVICE_NAME = 'iam_policy_management'
+
+    @classmethod
+    def new_instance(
+        cls,
+        service_name: str = DEFAULT_SERVICE_NAME,
+    ) -> 'IamPolicyManagementV1':
+        """
+        Return a new client for the iam_policy_management service using the
+               specified parameters and external configuration.
+        """
+        authenticator = get_authenticator_from_environment(service_name)
+        service = cls(authenticator)
+        service.configure_service(service_name)
+        return service
+
+    def __init__(
+        self,
+        authenticator: Authenticator = None,
+    ) -> None:
+        """
+        Construct a new client for the iam_policy_management service.
+
+        :param Authenticator authenticator: The authenticator specifies the authentication mechanism.
+               Get up to date information from https://github.com/IBM/python-sdk-core/blob/main/README.md
+               about initializing the authenticator of your choice.
+        """
+        BaseService.__init__(self, service_url=self.DEFAULT_SERVICE_URL, authenticator=authenticator)
+
+    #########################
+    # Policies
+    #########################
+
+    def list_policies(
+        self,
+        account_id: str,
+        *,
+        accept_language: Optional[str] = None,
+        iam_id: Optional[str] = None,
+        access_group_id: Optional[str] = None,
+        type: Optional[str] = None,
+        service_type: Optional[str] = None,
+        tag_name: Optional[str] = None,
+        tag_value: Optional[str] = None,
+        sort: Optional[str] = None,
+        format: Optional[str] = None,
+        state: Optional[str] = None,
+        limit: Optional[int] = None,
+        start: Optional[str] = None,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Get policies by attributes.
+
+        Get policies and filter by attributes. While managing policies, you might want to
+        retrieve policies in the account and filter by attribute values. This can be done
+        through query parameters. The following attributes are supported: account_id,
+        iam_id, access_group_id, type, service_type, sort, format and state. account_id is
+        a required query parameter. Only policies that have the specified attributes and
+        that the caller has read access to are returned. If the caller does not have read
+        access to any policies an empty array is returned.
+
+        :param str account_id: The account GUID that the policies belong to.
+        :param str accept_language: (optional) Language code for translations
+               * `default` - English
+               * `de` -  German (Standard)
+               * `en` - English
+               * `es` - Spanish (Spain)
+               * `fr` - French (Standard)
+               * `it` - Italian (Standard)
+               * `ja` - Japanese
+               * `ko` - Korean
+               * `pt-br` - Portuguese (Brazil)
+               * `zh-cn` - Chinese (Simplified, PRC)
+               * `zh-tw` - (Chinese, Taiwan).
+        :param str iam_id: (optional) Optional IAM ID used to identify the subject.
+        :param str access_group_id: (optional) Optional access group id.
+        :param str type: (optional) Optional type of policy.
+        :param str service_type: (optional) Optional type of service.
+        :param str tag_name: (optional) Optional name of the access tag in the
+               policy.
+        :param str tag_value: (optional) Optional value of the access tag in the
+               policy.
+        :param str sort: (optional) Optional top level policy field to sort
+               results. Ascending sort is default. Descending sort available by prepending
+               '-' to field. Example '-last_modified_at'.
+        :param str format: (optional) Include additional data per policy returned
+               * `include_last_permit` - returns details of when the policy last granted a
+               permit decision and the number of times it has done so
+               * `display` - returns the list of all actions included in each of the
+               policy roles.
+        :param str state: (optional) The state of the policy.
+               * `active` - returns active policies
+               * `deleted` - returns non-active policies.
+        :param int limit: (optional) The number of documents to include in the
+               collection.
+        :param str start: (optional) Page token that refers to the page of the
+               collection to return.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `PolicyCollection` object
+        """
+
+        if not account_id:
+            raise ValueError('account_id must be provided')
+        headers = {
+            'Accept-Language': accept_language,
+        }
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='list_policies',
+        )
+        headers.update(sdk_headers)
+
+        params = {
+            'account_id': account_id,
+            'iam_id': iam_id,
+            'access_group_id': access_group_id,
+            'type': type,
+            'service_type': service_type,
+            'tag_name': tag_name,
+            'tag_value': tag_value,
+            'sort': sort,
+            'format': format,
+            'state': state,
+            'limit': limit,
+            'start': start,
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        url = '/v1/policies'
+        request = self.prepare_request(
+            method='GET',
+            url=url,
+            headers=headers,
+            params=params,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def create_policy(
+        self,
+        type: str,
+        subjects: List['PolicySubject'],
+        roles: List['PolicyRole'],
+        resources: List['PolicyResource'],
+        *,
+        description: Optional[str] = None,
+        accept_language: Optional[str] = None,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Create a policy.
+
+        Creates a policy to grant access between a subject and a resource. There are two
+        types of policies: **access** and **authorization**. A policy administrator might
+        want to create an access policy which grants access to a user, service-id, or an
+        access group. They might also want to create an authorization policy and setup
+        access between services.
+        ### Access
+        To create an access policy, use **`"type": "access"`** in the body. The possible
+        subject attributes are **`iam_id`** and **`access_group_id`**. Use the
+        **`iam_id`** subject attribute for assigning access for a user or service-id. Use
+        the **`access_group_id`** subject attribute for assigning access for an access
+        group. Assign roles that are supported by the service or platform roles. For more
+        information, see [IAM roles and
+        actions](/docs/account?topic=account-iam-service-roles-actions). Use only the
+        resource attributes supported by the service. To view a service's or the
+        platform's supported attributes, check the [documentation](/docs?tab=all-docs).
+        The policy resource must include either the **`serviceType`**, **`serviceName`**,
+        **`resourceGroupId`** or **`service_group_id`** attribute and the **`accountId`**
+        attribute. The IAM Services group (`IAM`) is a subset of account management
+        services that includes the IAM platform services IAM Identity, IAM Access
+        Management, IAM Users Management, IAM Groups, and future IAM services. If the
+        subject is a locked service-id, the request will fail.
+        ### Authorization
+        Authorization policies are supported by services on a case by case basis. Refer to
+        service documentation to verify their support of authorization policies. To create
+        an authorization policy, use **`"type": "authorization"`** in the body. The
+        subject attributes must match the supported authorization subjects of the
+        resource. Multiple subject attributes might be provided. The following attributes
+        are supported:
+          serviceName, serviceInstance, region, resourceType, resource, accountId,
+        resourceGroupId Assign roles that are supported by the service or platform roles.
+        For more information, see [IAM roles and
+        actions](/docs/account?topic=account-iam-service-roles-actions). The user must
+        also have the same level of access or greater to the target resource in order to
+        grant the role. Use only the resource attributes supported by the service. To view
+        a service's or the platform's supported attributes, check the
+        [documentation](/docs?tab=all-docs). Both the policy subject and the policy
+        resource must include the **`accountId`** attributes. The policy subject must
+        include either **`serviceName`** or **`resourceGroupId`** (or both) attributes.
+        ### Attribute Operators
+        Currently, only the `stringEquals` and the `stringMatch` operators are available.
+        Resource attributes may support one or both operators. For more information, see
+        [Assigning access by using wildcard
+        policies](https://cloud.ibm.com/docs/account?topic=account-wildcard).
+        ### Attribute Validations
+        Policy attribute values must be between 1 and 1,000 characters in length. If
+        location related attributes like geography, country, metro, region, satellite, and
+        locationvalues are supported by the service, they are validated against Global
+        Catalog locations.
+
+        :param str type: The policy type; either 'access' or 'authorization'.
+        :param List[PolicySubject] subjects: The subjects associated with a policy.
+        :param List[PolicyRole] roles: A set of role Cloud Resource Names (CRNs)
+               granted by the policy.
+        :param List[PolicyResource] resources: The resources associated with a
+               policy.
+        :param str description: (optional) Customer-defined description.
+        :param str accept_language: (optional) Language code for translations
+               * `default` - English
+               * `de` -  German (Standard)
+               * `en` - English
+               * `es` - Spanish (Spain)
+               * `fr` - French (Standard)
+               * `it` - Italian (Standard)
+               * `ja` - Japanese
+               * `ko` - Korean
+               * `pt-br` - Portuguese (Brazil)
+               * `zh-cn` - Chinese (Simplified, PRC)
+               * `zh-tw` - (Chinese, Taiwan).
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `Policy` object
+        """
+
+        if type is None:
+            raise ValueError('type must be provided')
+        if subjects is None:
+            raise ValueError('subjects must be provided')
+        if roles is None:
+            raise ValueError('roles must be provided')
+        if resources is None:
+            raise ValueError('resources must be provided')
+        subjects = [convert_model(x) for x in subjects]
+        roles = [convert_model(x) for x in roles]
+        resources = [convert_model(x) for x in resources]
+        headers = {
+            'Accept-Language': accept_language,
+        }
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='create_policy',
+        )
+        headers.update(sdk_headers)
+
+        data = {
+            'type': type,
+            'subjects': subjects,
+            'roles': roles,
+            'resources': resources,
+            'description': description,
+        }
+        data = {k: v for (k, v) in data.items() if v is not None}
+        data = json.dumps(data)
+        headers['content-type'] = 'application/json'
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        url = '/v1/policies'
+        request = self.prepare_request(
+            method='POST',
+            url=url,
+            headers=headers,
+            data=data,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def replace_policy(
+        self,
+        policy_id: str,
+        if_match: str,
+        type: str,
+        subjects: List['PolicySubject'],
+        roles: List['PolicyRole'],
+        resources: List['PolicyResource'],
+        *,
+        description: Optional[str] = None,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Update a policy.
+
+        Update a policy to grant access between a subject and a resource. A policy
+        administrator might want to update an existing policy. The policy type cannot be
+        changed (You cannot change an access policy to an authorization policy).
+        ### Access
+        To update an access policy, use **`"type": "access"`** in the body. The possible
+        subject attributes are **`iam_id`** and **`access_group_id`**. Use the
+        **`iam_id`** subject attribute for assigning access for a user or service-id. Use
+        the **`access_group_id`** subject attribute for assigning access for an access
+        group. Assign roles that are supported by the service or platform roles. For more
+        information, see [IAM roles and
+        actions](/docs/account?topic=account-iam-service-roles-actions). Use only the
+        resource attributes supported by the service. To view a service's or the
+        platform's supported attributes, check the [documentation](/docs?tab=all-docs).
+        The policy resource must include either the **`serviceType`**, **`serviceName`**,
+        or **`resourceGroupId`** attribute and the **`accountId`** attribute.` If the
+        subject is a locked service-id, the request will fail.
+        ### Authorization
+        To update an authorization policy, use **`"type": "authorization"`** in the body.
+        The subject attributes must match the supported authorization subjects of the
+        resource. Multiple subject attributes might be provided. The following attributes
+        are supported:
+          serviceName, serviceInstance, region, resourceType, resource, accountId,
+        resourceGroupId Assign roles that are supported by the service or platform roles.
+        For more information, see [IAM roles and
+        actions](/docs/account?topic=account-iam-service-roles-actions). The user must
+        also have the same level of access or greater to the target resource in order to
+        grant the role. Use only the resource attributes supported by the service. To view
+        a service's or the platform's supported attributes, check the
+        [documentation](/docs?tab=all-docs). Both the policy subject and the policy
+        resource must include the **`accountId`** attributes. The policy subject must
+        include either **`serviceName`** or **`resourceGroupId`** (or both) attributes.
+        ### Attribute Operators
+        Currently, only the `stringEquals` and the `stringMatch` operators are available.
+        Resource attributes might support one or both operators. For more information, see
+        [Assigning access by using wildcard
+        policies](https://cloud.ibm.com/docs/account?topic=account-wildcard).
+        ### Attribute Validations
+        Policy attribute values must be between 1 and 1,000 characters in length. If
+        location related attributes like geography, country, metro, region, satellite, and
+        locationvalues are supported by the service, they are validated against Global
+        Catalog locations.
+
+        :param str policy_id: The policy ID.
+        :param str if_match: The revision number for updating a policy and must
+               match the ETag value of the existing policy. The Etag can be retrieved
+               using the GET /v1/policies/{policy_id} API and looking at the ETag response
+               header.
+        :param str type: The policy type; either 'access' or 'authorization'.
+        :param List[PolicySubject] subjects: The subjects associated with a policy.
+        :param List[PolicyRole] roles: A set of role Cloud Resource Names (CRNs)
+               granted by the policy.
+        :param List[PolicyResource] resources: The resources associated with a
+               policy.
+        :param str description: (optional) Customer-defined description.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `Policy` object
+        """
+
+        if not policy_id:
+            raise ValueError('policy_id must be provided')
+        if not if_match:
+            raise ValueError('if_match must be provided')
+        if type is None:
+            raise ValueError('type must be provided')
+        if subjects is None:
+            raise ValueError('subjects must be provided')
+        if roles is None:
+            raise ValueError('roles must be provided')
+        if resources is None:
+            raise ValueError('resources must be provided')
+        subjects = [convert_model(x) for x in subjects]
+        roles = [convert_model(x) for x in roles]
+        resources = [convert_model(x) for x in resources]
+        headers = {
+            'If-Match': if_match,
+        }
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='replace_policy',
+        )
+        headers.update(sdk_headers)
+
+        data = {
+            'type': type,
+            'subjects': subjects,
+            'roles': roles,
+            'resources': resources,
+            'description': description,
+        }
+        data = {k: v for (k, v) in data.items() if v is not None}
+        data = json.dumps(data)
+        headers['content-type'] = 'application/json'
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['policy_id']
+        path_param_values = self.encode_path_vars(policy_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/v1/policies/{policy_id}'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='PUT',
+            url=url,
+            headers=headers,
+            data=data,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def get_policy(
+        self,
+        policy_id: str,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Retrieve a policy by ID.
+
+        Retrieve a policy by providing a policy ID.
+
+        :param str policy_id: The policy ID.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `PolicyTemplateMetaData` object
+        """
+
+        if not policy_id:
+            raise ValueError('policy_id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='get_policy',
+        )
+        headers.update(sdk_headers)
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['policy_id']
+        path_param_values = self.encode_path_vars(policy_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/v1/policies/{policy_id}'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='GET',
+            url=url,
+            headers=headers,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def delete_policy(
+        self,
+        policy_id: str,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Delete a policy by ID.
+
+        Delete a policy by providing a policy ID. A policy cannot be deleted if the
+        subject ID contains a locked service ID. If the subject of the policy is a locked
+        service-id, the request will fail.
+
+        :param str policy_id: The policy ID.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse
+        """
+
+        if not policy_id:
+            raise ValueError('policy_id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='delete_policy',
+        )
+        headers.update(sdk_headers)
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+
+        path_param_keys = ['policy_id']
+        path_param_values = self.encode_path_vars(policy_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/v1/policies/{policy_id}'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='DELETE',
+            url=url,
+            headers=headers,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def update_policy_state(
+        self,
+        policy_id: str,
+        if_match: str,
+        *,
+        state: Optional[str] = None,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Restore a deleted policy by ID.
+
+        Restore a policy that has recently been deleted. A policy administrator might want
+        to restore a deleted policy. To restore a policy, use **`"state": "active"`** in
+        the body.
+
+        :param str policy_id: The policy ID.
+        :param str if_match: The revision number for updating a policy and must
+               match the ETag value of the existing policy. The Etag can be retrieved
+               using the GET /v1/policies/{policy_id} API and looking at the ETag response
+               header.
+        :param str state: (optional) The policy state.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `Policy` object
+        """
+
+        if not policy_id:
+            raise ValueError('policy_id must be provided')
+        if not if_match:
+            raise ValueError('if_match must be provided')
+        headers = {
+            'If-Match': if_match,
+        }
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='update_policy_state',
+        )
+        headers.update(sdk_headers)
+
+        data = {
+            'state': state,
+        }
+        data = {k: v for (k, v) in data.items() if v is not None}
+        data = json.dumps(data)
+        headers['content-type'] = 'application/json'
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['policy_id']
+        path_param_values = self.encode_path_vars(policy_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/v1/policies/{policy_id}'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='PATCH',
+            url=url,
+            headers=headers,
+            data=data,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    #########################
+    # Roles
+    #########################
+
+    def list_roles(
+        self,
+        *,
+        accept_language: Optional[str] = None,
+        account_id: Optional[str] = None,
+        service_name: Optional[str] = None,
+        source_service_name: Optional[str] = None,
+        policy_type: Optional[str] = None,
+        service_group_id: Optional[str] = None,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Get roles by filters.
+
+        Get roles based on the filters. While managing roles, you may want to retrieve
+        roles and filter by usages. This can be done through query parameters. Currently,
+        we only support the following attributes: account_id, service_name,
+        service_group_id, source_service_name and policy_type. Both service_name and
+        service_group_id attributes are mutually exclusive. Only roles that match the
+        filter and that the caller has read access to are returned. If the caller does not
+        have read access to any roles an empty array is returned.
+
+        :param str accept_language: (optional) Language code for translations
+               * `default` - English
+               * `de` -  German (Standard)
+               * `en` - English
+               * `es` - Spanish (Spain)
+               * `fr` - French (Standard)
+               * `it` - Italian (Standard)
+               * `ja` - Japanese
+               * `ko` - Korean
+               * `pt-br` - Portuguese (Brazil)
+               * `zh-cn` - Chinese (Simplified, PRC)
+               * `zh-tw` - (Chinese, Taiwan).
+        :param str account_id: (optional) Optional account GUID in which the roles
+               belong to.
+        :param str service_name: (optional) Optional name of IAM enabled service.
+        :param str source_service_name: (optional) Optional name of source IAM
+               enabled service.
+        :param str policy_type: (optional) Optional Policy Type.
+        :param str service_group_id: (optional) Optional id of service group.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `RoleCollection` object
+        """
+
+        headers = {
+            'Accept-Language': accept_language,
+        }
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='list_roles',
+        )
+        headers.update(sdk_headers)
+
+        params = {
+            'account_id': account_id,
+            'service_name': service_name,
+            'source_service_name': source_service_name,
+            'policy_type': policy_type,
+            'service_group_id': service_group_id,
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        url = '/v2/roles'
+        request = self.prepare_request(
+            method='GET',
+            url=url,
+            headers=headers,
+            params=params,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def create_role(
+        self,
+        display_name: str,
+        actions: List[str],
+        name: str,
+        account_id: str,
+        service_name: str,
+        *,
+        description: Optional[str] = None,
+        accept_language: Optional[str] = None,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Create a role.
+
+        Creates a custom role for a specific service within the account. An account owner
+        or a user assigned the Administrator role on the Role management service can
+        create a custom role. Any number of actions for a single service can be mapped to
+        the new role, but there must be at least one service-defined action to
+        successfully create the new role.
+
+        :param str display_name: The display the name of the role that is shown in
+               the console.
+        :param List[str] actions: The actions of the role. For more information,
+               see [IAM roles and
+               actions](https://cloud.ibm.com/docs/account?topic=account-iam-service-roles-actions).
+        :param str name: The name of the role that is used in the CRN. This must be
+               alphanumeric and capitalized.
+        :param str account_id: The account GUID.
+        :param str service_name: The service name.
+        :param str description: (optional) The description of the role.
+        :param str accept_language: (optional) Language code for translations
+               * `default` - English
+               * `de` -  German (Standard)
+               * `en` - English
+               * `es` - Spanish (Spain)
+               * `fr` - French (Standard)
+               * `it` - Italian (Standard)
+               * `ja` - Japanese
+               * `ko` - Korean
+               * `pt-br` - Portuguese (Brazil)
+               * `zh-cn` - Chinese (Simplified, PRC)
+               * `zh-tw` - (Chinese, Taiwan).
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `CustomRole` object
+        """
+
+        if display_name is None:
+            raise ValueError('display_name must be provided')
+        if actions is None:
+            raise ValueError('actions must be provided')
+        if name is None:
+            raise ValueError('name must be provided')
+        if account_id is None:
+            raise ValueError('account_id must be provided')
+        if service_name is None:
+            raise ValueError('service_name must be provided')
+        headers = {
+            'Accept-Language': accept_language,
+        }
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='create_role',
+        )
+        headers.update(sdk_headers)
+
+        data = {
+            'display_name': display_name,
+            'actions': actions,
+            'name': name,
+            'account_id': account_id,
+            'service_name': service_name,
+            'description': description,
+        }
+        data = {k: v for (k, v) in data.items() if v is not None}
+        data = json.dumps(data)
+        headers['content-type'] = 'application/json'
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        url = '/v2/roles'
+        request = self.prepare_request(
+            method='POST',
+            url=url,
+            headers=headers,
+            data=data,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def replace_role(
+        self,
+        role_id: str,
+        if_match: str,
+        display_name: str,
+        actions: List[str],
+        *,
+        description: Optional[str] = None,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Update a role.
+
+        Update a custom role. A role administrator might want to update an existing role
+        by updating the display name, description, or the actions that are mapped to the
+        role. The name, account_id, and service_name can't be changed.
+
+        :param str role_id: The role ID.
+        :param str if_match: The revision number for updating a role and must match
+               the ETag value of the existing role. The Etag can be retrieved using the
+               GET /v2/roles/{role_id} API and looking at the ETag response header.
+        :param str display_name: The display the name of the role that is shown in
+               the console.
+        :param List[str] actions: The actions of the role. For more information,
+               see [IAM roles and
+               actions](https://cloud.ibm.com/docs/account?topic=account-iam-service-roles-actions).
+        :param str description: (optional) The description of the role.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `CustomRole` object
+        """
+
+        if not role_id:
+            raise ValueError('role_id must be provided')
+        if not if_match:
+            raise ValueError('if_match must be provided')
+        if display_name is None:
+            raise ValueError('display_name must be provided')
+        if actions is None:
+            raise ValueError('actions must be provided')
+        headers = {
+            'If-Match': if_match,
+        }
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='replace_role',
+        )
+        headers.update(sdk_headers)
+
+        data = {
+            'display_name': display_name,
+            'actions': actions,
+            'description': description,
+        }
+        data = {k: v for (k, v) in data.items() if v is not None}
+        data = json.dumps(data)
+        headers['content-type'] = 'application/json'
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['role_id']
+        path_param_values = self.encode_path_vars(role_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/v2/roles/{role_id}'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='PUT',
+            url=url,
+            headers=headers,
+            data=data,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def get_role(
+        self,
+        role_id: str,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Retrieve a role by ID.
+
+        Retrieve a role by providing a role ID.
+
+        :param str role_id: The role ID.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `CustomRole` object
+        """
+
+        if not role_id:
+            raise ValueError('role_id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='get_role',
+        )
+        headers.update(sdk_headers)
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['role_id']
+        path_param_values = self.encode_path_vars(role_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/v2/roles/{role_id}'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='GET',
+            url=url,
+            headers=headers,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def delete_role(
+        self,
+        role_id: str,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Delete a role by ID.
+
+        Delete a role by providing a role ID.
+
+        :param str role_id: The role ID.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse
+        """
+
+        if not role_id:
+            raise ValueError('role_id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='delete_role',
+        )
+        headers.update(sdk_headers)
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+
+        path_param_keys = ['role_id']
+        path_param_values = self.encode_path_vars(role_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/v2/roles/{role_id}'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='DELETE',
+            url=url,
+            headers=headers,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    #########################
+    # v2/Policies
+    #########################
+
+    def list_v2_policies(
+        self,
+        account_id: str,
+        *,
+        accept_language: Optional[str] = None,
+        iam_id: Optional[str] = None,
+        access_group_id: Optional[str] = None,
+        type: Optional[str] = None,
+        service_type: Optional[str] = None,
+        service_name: Optional[str] = None,
+        service_group_id: Optional[str] = None,
+        sort: Optional[str] = None,
+        format: Optional[str] = None,
+        state: Optional[str] = None,
+        limit: Optional[int] = None,
+        start: Optional[str] = None,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Get policies by attributes.
+
+        Get policies and filter by attributes. While managing policies, you might want to
+        retrieve policies in the account and filter by attribute values. This can be done
+        through query parameters. The following attributes are supported: account_id,
+        iam_id, access_group_id, type, service_type, sort, format and state. account_id is
+        a required query parameter. Only policies that have the specified attributes and
+        that the caller has read access to are returned. If the caller does not have read
+        access to any policies an empty array is returned.
+
+        :param str account_id: The account GUID in which the policies belong to.
+        :param str accept_language: (optional) Language code for translations
+               * `default` - English
+               * `de` -  German (Standard)
+               * `en` - English
+               * `es` - Spanish (Spain)
+               * `fr` - French (Standard)
+               * `it` - Italian (Standard)
+               * `ja` - Japanese
+               * `ko` - Korean
+               * `pt-br` - Portuguese (Brazil)
+               * `zh-cn` - Chinese (Simplified, PRC)
+               * `zh-tw` - (Chinese, Taiwan).
+        :param str iam_id: (optional) Optional IAM ID used to identify the subject.
+        :param str access_group_id: (optional) Optional access group id.
+        :param str type: (optional) Optional type of policy.
+        :param str service_type: (optional) Optional type of service.
+        :param str service_name: (optional) Optional name of service.
+        :param str service_group_id: (optional) Optional ID of service group.
+        :param str sort: (optional) Optional top level policy field to sort
+               results. Ascending sort is default. Descending sort available by prepending
+               '-' to field, for example, '-last_modified_at'. Note that last permit
+               information is only included when 'format=include_last_permit', for
+               example, "format=include_last_permit&sort=last_permit_at" Example fields
+               that can be sorted on:
+                 - 'id'
+                 - 'type'
+                 - 'href'
+                 - 'created_at'
+                 - 'created_by_id'
+                 - 'last_modified_at'
+                 - 'last_modified_by_id'
+                 - 'state'
+                 - 'last_permit_at'
+                 - 'last_permit_frequency'.
+        :param str format: (optional) Include additional data per policy returned
+               * `include_last_permit` - returns details of when the policy last granted a
+               permit decision and the number of times it has done so
+               * `display` - returns the list of all actions included in each of the
+               policy roles and translations for all relevant fields.
+        :param str state: (optional) The state of the policy.
+               * `active` - returns active policies
+               * `deleted` - returns non-active policies.
+        :param int limit: (optional) The number of documents to include in the
+               collection.
+        :param str start: (optional) Page token that refers to the page of the
+               collection to return.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `V2PolicyCollection` object
+        """
+
+        if not account_id:
+            raise ValueError('account_id must be provided')
+        headers = {
+            'Accept-Language': accept_language,
+        }
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='list_v2_policies',
+        )
+        headers.update(sdk_headers)
+
+        params = {
+            'account_id': account_id,
+            'iam_id': iam_id,
+            'access_group_id': access_group_id,
+            'type': type,
+            'service_type': service_type,
+            'service_name': service_name,
+            'service_group_id': service_group_id,
+            'sort': sort,
+            'format': format,
+            'state': state,
+            'limit': limit,
+            'start': start,
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        url = '/v2/policies'
+        request = self.prepare_request(
+            method='GET',
+            url=url,
+            headers=headers,
+            params=params,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def create_v2_policy(
+        self,
+        control: 'Control',
+        type: str,
+        *,
+        description: Optional[str] = None,
+        subject: Optional['V2PolicySubject'] = None,
+        resource: Optional['V2PolicyResource'] = None,
+        pattern: Optional[str] = None,
+        rule: Optional['V2PolicyRule'] = None,
+        accept_language: Optional[str] = None,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Create a policy.
+
+        Creates a policy to grant access between a subject and a resource. Currently,
+        there is one type of a v2/policy: **access**. A policy administrator might want to
+        create an access policy that grants access to a user, service-id, or an access
+        group.
+        ### Access
+        To create an access policy, use **`"type": "access"`** in the body. The supported
+        subject attributes are **`iam_id`** and **`access_group_id`**. Use the
+        **`iam_id`** subject attribute to assign access to a user or service-id. Use the
+        **`access_group_id`** subject attribute to assign access to an access group.
+        Assign roles that are supported by the service or platform roles. For more
+        information, see [IAM roles and
+        actions](/docs/account?topic=account-iam-service-roles-actions). Use only the
+        resource attributes supported by the service. To view a service's or the
+        platform's supported attributes, check the [documentation](/docs?tab=all-docs).
+        The policy resource must include either the **`serviceType`**, **`serviceName`**,
+        **`resourceGroupId`** or **`service_group_id`** attribute and the **`accountId`**
+        attribute. In the rule field, you can specify a single condition by using
+        **`key`**, **`value`**, and condition **`operator`**, or a set of **`conditions`**
+        with a combination **`operator`**. The possible combination operators are
+        **`and`** and **`or`**.
+        Currently, we support two types of patterns:
+        1. `time-based`: Used to specify a time-based restriction
+        Combine conditions to specify a time-based restriction (e.g., access only during
+        business hours, during the Monday-Friday work week). For example, a policy can
+        grant access Monday-Friday, 9:00am-5:00pm using the following rule:
+        ```json
+          "rule": {
+            "operator": "and",
+            "conditions": [{
+              "key": "{{environment.attributes.day_of_week}}",
+              "operator": "dayOfWeekAnyOf",
+              "value": ["1+00:00", "2+00:00", "3+00:00", "4+00:00", "5+00:00"]
+            },
+              "key": "{{environment.attributes.current_time}}",
+              "operator": "timeGreaterThanOrEquals",
+              "value": "09:00:00+00:00"
+            },
+              "key": "{{environment.attributes.current_time}}",
+              "operator": "timeLessThanOrEquals",
+              "value": "17:00:00+00:00"
+            }]
+          }
+        ``` You can use the following operators in the **`key`** and **`value`** pair:
+        ```
+          'timeLessThan', 'timeLessThanOrEquals', 'timeGreaterThan',
+        'timeGreaterThanOrEquals',
+          'dateLessThan', 'dateLessThanOrEquals', 'dateGreaterThan',
+        'dateGreaterThanOrEquals',
+          'dateTimeLessThan', 'dateTimeLessThanOrEquals', 'dateTimeGreaterThan',
+        'dateTimeGreaterThanOrEquals',
+          'dayOfWeekEquals', 'dayOfWeekAnyOf'
+        ```
+        The pattern field that matches the rule is required when rule is provided. For the
+        business hour rule example above, the **`pattern`** is
+        **`"time-based-conditions:weekly"`**. For more information, see [Time-based
+        conditions
+        operators](/docs/account?topic=account-iam-condition-properties&interface=ui#policy-condition-properties)
+        and
+        [Limiting access with time-based
+        conditions](/docs/account?topic=account-iam-time-based&interface=ui). If the
+        subject is a locked service-id, the request will fail.
+        2. `attribute-based`: Used to specify a combination of OR/AND based conditions
+        applied on resource attributes.
+        Combine conditions to specify an attribute-based condition using AND/OR-based
+        operators.
+        For example, a policy can grant access based on multiple conditions applied on the
+        resource attributes below:
+        ```json
+          "pattern": "attribute-based-condition:resource:literal-and-wildcard"
+          "rule": {
+              "operator": "or",
+              "conditions": [
+                {
+                  "operator": "and",
+                  "conditions": [
+                    {
+                      "key": "{{resource.attributes.prefix}}",
+                      "operator": "stringEquals",
+                      "value": "home/test"
+                    },
+                    {
+                      "key": "{{environment.attributes.delimiter}}",
+                      "operator": "stringEquals",
+                      "value": "/"
+                    }
+                  ]
+                },
+                {
+                  "key": "{{resource.attributes.path}}",
+                  "operator": "stringMatch",
+                  "value": "home/David/*"
+                }
+              ]
+          }
+        ```
+        In addition to satisfying the `resources` section, the policy grants permission
+        only if either the `path` begins with `home/David/` **OR**  the `prefix` is
+        `home/test` and the `delimiter` is `/`. This mechanism helps you consolidate
+        multiple policies in to a single policy,  making policies easier to administer and
+        stay within the policy limit for an account. View the list of operators that can
+        be used in the condition
+        [here](/docs/account?topic=account-wildcard#string-comparisons).
+        ### Authorization
+        Authorization policies are supported by services on a case by case basis. Refer to
+        service documentation to verify their support of authorization policies. To create
+        an authorization policy, use **`"type": "authorization"`** in the body. The
+        subject attributes must match the supported authorization subjects of the
+        resource. Multiple subject attributes might be provided. The following attributes
+        are supported:
+          serviceName, serviceInstance, region, resourceType, resource, accountId,
+        resourceGroupId Assign roles that are supported by the service or platform roles.
+        For more information, see [IAM roles and
+        actions](/docs/account?topic=account-iam-service-roles-actions). The user must
+        also have the same level of access or greater to the target resource in order to
+        grant the role. Use only the resource attributes supported by the service. To view
+        a service's or the platform's supported attributes, check the
+        [documentation](/docs?tab=all-docs). Both the policy subject and the policy
+        resource must include the **`accountId`** attributes. The policy subject must
+        include either **`serviceName`** or **`resourceGroupId`** (or both) attributes.
+        ### Attribute Operators
+        Currently, only the `stringEquals`, `stringMatch`, and `stringEquals` operators
+        are available. For more information, see [Assigning access by using wildcard
+        policies](https://cloud.ibm.com/docs/account?topic=account-wildcard).
+        ### Attribute Validations
+        Policy attribute values must be between 1 and 1,000 characters in length. If
+        location related attributes like geography, country, metro, region, satellite, and
+        locationvalues are supported by the service, they are validated against Global
+        Catalog locations.
+
+        :param Control control: Specifies the type of access that is granted by the
+               policy.
+        :param str type: The policy type; either 'access' or 'authorization'.
+        :param str description: (optional) Description of the policy.
+        :param V2PolicySubject subject: (optional) The subject attributes for whom
+               the policy grants access.
+        :param V2PolicyResource resource: (optional) The resource attributes to
+               which the policy grants access.
+        :param str pattern: (optional) Indicates pattern of rule, either
+               'time-based-conditions:once', 'time-based-conditions:weekly:all-day', or
+               'time-based-conditions:weekly:custom-hours'.
+        :param V2PolicyRule rule: (optional) Additional access conditions
+               associated with the policy.
+        :param str accept_language: (optional) Language code for translations
+               * `default` - English
+               * `de` -  German (Standard)
+               * `en` - English
+               * `es` - Spanish (Spain)
+               * `fr` - French (Standard)
+               * `it` - Italian (Standard)
+               * `ja` - Japanese
+               * `ko` - Korean
+               * `pt-br` - Portuguese (Brazil)
+               * `zh-cn` - Chinese (Simplified, PRC)
+               * `zh-tw` - (Chinese, Taiwan).
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `V2Policy` object
+        """
+
+        if control is None:
+            raise ValueError('control must be provided')
+        if type is None:
+            raise ValueError('type must be provided')
+        control = convert_model(control)
+        if subject is not None:
+            subject = convert_model(subject)
+        if resource is not None:
+            resource = convert_model(resource)
+        if rule is not None:
+            rule = convert_model(rule)
+        headers = {
+            'Accept-Language': accept_language,
+        }
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='create_v2_policy',
+        )
+        headers.update(sdk_headers)
+
+        data = {
+            'control': control,
+            'type': type,
+            'description': description,
+            'subject': subject,
+            'resource': resource,
+            'pattern': pattern,
+            'rule': rule,
+        }
+        data = {k: v for (k, v) in data.items() if v is not None}
+        data = json.dumps(data)
+        headers['content-type'] = 'application/json'
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        url = '/v2/policies'
+        request = self.prepare_request(
+            method='POST',
+            url=url,
+            headers=headers,
+            data=data,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def replace_v2_policy(
+        self,
+        id: str,
+        if_match: str,
+        control: 'Control',
+        type: str,
+        *,
+        description: Optional[str] = None,
+        subject: Optional['V2PolicySubject'] = None,
+        resource: Optional['V2PolicyResource'] = None,
+        pattern: Optional[str] = None,
+        rule: Optional['V2PolicyRule'] = None,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Update a policy.
+
+        Update a policy to grant access between a subject and a resource. A policy
+        administrator might want to update an existing policy.
+        ### Access
+        To update an access policy, use **`"type": "access"`** in the body. The supported
+        subject attributes are **`iam_id`** and **`access_group_id`**. Use the
+        **`iam_id`** subject attribute to assign access to a user or service-id. Use the
+        **`access_group_id`** subject attribute to assign access to an access group.
+        Assign roles that are supported by the service or platform roles. For more
+        information, see [IAM roles and
+        actions](/docs/account?topic=account-iam-service-roles-actions). Use only the
+        resource attributes supported by the service. To view a service's or the
+        platform's supported attributes, check the [documentation](/docs?tab=all-docs).
+        The policy resource must include either the **`serviceType`**, **`serviceName`**,
+        **`resourceGroupId`** or **`service_group_id`** attribute and the **`accountId`**
+        attribute. In the rule field, you can specify a single condition by using
+        **`key`**, **`value`**, and condition **`operator`**, or a set of **`conditions`**
+        with a combination **`operator`**. The possible combination operators are
+        **`and`** and **`or`**.
+        Currently, we support two types of patterns:
+        1. `time-based`: Used to specify a time-based restriction
+        Combine conditions to specify a time-based restriction (e.g., access only during
+        business hours, during the Monday-Friday work week). For example, a policy can
+        grant access Monday-Friday, 9:00am-5:00pm using the following rule:
+        ```json
+          "rule": {
+            "operator": "and",
+            "conditions": [{
+              "key": "{{environment.attributes.day_of_week}}",
+              "operator": "dayOfWeekAnyOf",
+              "value": ["1+00:00", "2+00:00", "3+00:00", "4+00:00", "5+00:00"]
+            },
+              "key": "{{environment.attributes.current_time}}",
+              "operator": "timeGreaterThanOrEquals",
+              "value": "09:00:00+00:00"
+            },
+              "key": "{{environment.attributes.current_time}}",
+              "operator": "timeLessThanOrEquals",
+              "value": "17:00:00+00:00"
+            }]
+          }
+        ``` You can use the following operators in the **`key`** and **`value`** pair:
+        ```
+          'timeLessThan', 'timeLessThanOrEquals', 'timeGreaterThan',
+        'timeGreaterThanOrEquals',
+          'dateLessThan', 'dateLessThanOrEquals', 'dateGreaterThan',
+        'dateGreaterThanOrEquals',
+          'dateTimeLessThan', 'dateTimeLessThanOrEquals', 'dateTimeGreaterThan',
+        'dateTimeGreaterThanOrEquals',
+          'dayOfWeekEquals', 'dayOfWeekAnyOf'
+        ``` The pattern field that matches the rule is required when rule is provided. For
+        the business hour rule example above, the **`pattern`** is
+        **`"time-based-conditions:weekly"`**. For more information, see [Time-based
+        conditions
+        operators](/docs/account?topic=account-iam-condition-properties&interface=ui#policy-condition-properties)
+        and
+        [Limiting access with time-based
+        conditions](/docs/account?topic=account-iam-time-based&interface=ui). If the
+        subject is a locked service-id, the request will fail.
+        2. `attribute-based`: Used to specify a combination of OR/AND based conditions
+        applied on resource attributes.
+        Combine conditions to specify an attribute-based condition using AND/OR-based
+        operators.
+        For example, a policy can grant access based on multiple conditions applied on the
+        resource attributes below:
+        ```json
+          "pattern": "attribute-based-condition:resource:literal-and-wildcard"
+          "rule": {
+              "operator": "or",
+              "conditions": [
+                {
+                  "operator": "and",
+                  "conditions": [
+                    {
+                      "key": "{{resource.attributes.prefix}}",
+                      "operator": "stringEquals",
+                      "value": "home/test"
+                    },
+                    {
+                      "key": "{{environment.attributes.delimiter}}",
+                      "operator": "stringEquals",
+                      "value": "/"
+                    }
+                  ]
+                },
+                {
+                  "key": "{{resource.attributes.path}}",
+                  "operator": "stringMatch",
+                  "value": "home/David/*"
+                }
+              ]
+          }
+        ```
+        In addition to satisfying the `resources` section, the policy grants permission
+        only if either the `path` begins with `home/David/` **OR**  the `prefix` is
+        `home/test` and the `delimiter` is `/`. This mechanism helps you consolidate
+        multiple policies in to a single policy,  making policies easier to administer and
+        stay within the policy limit for an account. View the list of operators that can
+        be used in the condition
+        [here](/docs/account?topic=account-wildcard#string-comparisons).
+        ### Authorization
+        To update an authorization policy, use **`"type": "authorization"`** in the body.
+        The subject attributes must match the supported authorization subjects of the
+        resource. Multiple subject attributes might be provided. The following attributes
+        are supported:
+          serviceName, serviceInstance, region, resourceType, resource, accountId,
+        resourceGroupId Assign roles that are supported by the service or platform roles.
+        For more information, see [IAM roles and
+        actions](/docs/account?topic=account-iam-service-roles-actions). The user must
+        also have the same level of access or greater to the target resource in order to
+        grant the role. Use only the resource attributes supported by the service. To view
+        a service's or the platform's supported attributes, check the
+        [documentation](/docs?tab=all-docs). Both the policy subject and the policy
+        resource must include the **`accountId`** attributes. The policy subject must
+        include either **`serviceName`** or **`resourceGroupId`** (or both) attributes.
+        ### Attribute Operators
+        Currently, only the `stringEquals`, `stringMatch`, and `stringEquals` operators
+        are available. For more information, see [Assigning access by using wildcard
+        policies](https://cloud.ibm.com/docs/account?topic=account-wildcard).
+        ### Attribute Validations
+        Policy attribute values must be between 1 and 1,000 characters in length. If
+        location related attributes like geography, country, metro, region, satellite, and
+        locationvalues are supported by the service, they are validated against Global
+        Catalog locations.
+
+        :param str id: The policy ID.
+        :param str if_match: The revision number for updating a policy and must
+               match the ETag value of the existing policy. The Etag can be retrieved
+               using the GET /v2/policies/{id} API and looking at the ETag response
+               header.
+        :param Control control: Specifies the type of access that is granted by the
+               policy.
+        :param str type: The policy type; either 'access' or 'authorization'.
+        :param str description: (optional) Description of the policy.
+        :param V2PolicySubject subject: (optional) The subject attributes for whom
+               the policy grants access.
+        :param V2PolicyResource resource: (optional) The resource attributes to
+               which the policy grants access.
+        :param str pattern: (optional) Indicates pattern of rule, either
+               'time-based-conditions:once', 'time-based-conditions:weekly:all-day', or
+               'time-based-conditions:weekly:custom-hours'.
+        :param V2PolicyRule rule: (optional) Additional access conditions
+               associated with the policy.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `V2Policy` object
+        """
+
+        if not id:
+            raise ValueError('id must be provided')
+        if not if_match:
+            raise ValueError('if_match must be provided')
+        if control is None:
+            raise ValueError('control must be provided')
+        if type is None:
+            raise ValueError('type must be provided')
+        control = convert_model(control)
+        if subject is not None:
+            subject = convert_model(subject)
+        if resource is not None:
+            resource = convert_model(resource)
+        if rule is not None:
+            rule = convert_model(rule)
+        headers = {
+            'If-Match': if_match,
+        }
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='replace_v2_policy',
+        )
+        headers.update(sdk_headers)
+
+        data = {
+            'control': control,
+            'type': type,
+            'description': description,
+            'subject': subject,
+            'resource': resource,
+            'pattern': pattern,
+            'rule': rule,
+        }
+        data = {k: v for (k, v) in data.items() if v is not None}
+        data = json.dumps(data)
+        headers['content-type'] = 'application/json'
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/v2/policies/{id}'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='PUT',
+            url=url,
+            headers=headers,
+            data=data,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def get_v2_policy(
+        self,
+        id: str,
+        *,
+        format: Optional[str] = None,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Retrieve a policy by ID.
+
+        Retrieve a policy by providing a policy ID.
+
+        :param str id: The policy ID.
+        :param str format: (optional) Include additional data for policy returned
+               * `include_last_permit` - returns details of when the policy last granted a
+               permit decision and the number of times it has done so
+               * `display` - returns the list of all actions included in each of the
+               policy roles and translations for all relevant fields.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `V2PolicyTemplateMetaData` object
+        """
+
+        if not id:
+            raise ValueError('id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='get_v2_policy',
+        )
+        headers.update(sdk_headers)
+
+        params = {
+            'format': format,
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/v2/policies/{id}'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='GET',
+            url=url,
+            headers=headers,
+            params=params,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def delete_v2_policy(
+        self,
+        id: str,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Delete a policy by ID.
+
+        Delete a policy by providing a policy ID. A policy cannot be deleted if the
+        subject ID contains a locked service ID. If the subject of the policy is a locked
+        service-id, the request will fail.
+
+        :param str id: The policy ID.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse
+        """
+
+        if not id:
+            raise ValueError('id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='delete_v2_policy',
+        )
+        headers.update(sdk_headers)
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/v2/policies/{id}'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='DELETE',
+            url=url,
+            headers=headers,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    #########################
+    # Policy templates
+    #########################
+
+    def list_policy_templates(
+        self,
+        account_id: str,
+        *,
+        accept_language: Optional[str] = None,
+        state: Optional[str] = None,
+        name: Optional[str] = None,
+        policy_service_type: Optional[str] = None,
+        policy_service_name: Optional[str] = None,
+        policy_service_group_id: Optional[str] = None,
+        policy_type: Optional[str] = None,
+        limit: Optional[int] = None,
+        start: Optional[str] = None,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        List policy templates by attributes.
+
+        List policy templates and filter by attributes by using query parameters. The
+        following attributes are supported:
+        `account_id`, `policy_service_name`, `policy_service_type`,
+        `policy_service_group_id` and `policy_type`.
+        `account_id` is a required query parameter. These attributes
+        `policy_service_name`, `policy_service_type` and `policy_service_group_id` are
+        mutually exclusive. Only policy templates that have the specified attributes and
+        that the caller has read access to are returned. If the caller does not have read
+        access to any policy templates an empty array is returned.
+
+        :param str account_id: The account GUID that the policy templates belong
+               to.
+        :param str accept_language: (optional) Language code for translations
+               * `default` - English
+               * `de` -  German (Standard)
+               * `en` - English
+               * `es` - Spanish (Spain)
+               * `fr` - French (Standard)
+               * `it` - Italian (Standard)
+               * `ja` - Japanese
+               * `ko` - Korean
+               * `pt-br` - Portuguese (Brazil)
+               * `zh-cn` - Chinese (Simplified, PRC)
+               * `zh-tw` - (Chinese, Taiwan).
+        :param str state: (optional) The policy template state.
+        :param str name: (optional) The policy template name.
+        :param str policy_service_type: (optional) Service type, Optional.
+        :param str policy_service_name: (optional) Service name, Optional.
+        :param str policy_service_group_id: (optional) Service group id, Optional.
+        :param str policy_type: (optional) Policy type, Optional.
+        :param int limit: (optional) The number of documents to include in the
+               collection.
+        :param str start: (optional) Page token that refers to the page of the
+               collection to return.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `PolicyTemplateCollection` object
+        """
+
+        if not account_id:
+            raise ValueError('account_id must be provided')
+        headers = {
+            'Accept-Language': accept_language,
+        }
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='list_policy_templates',
+        )
+        headers.update(sdk_headers)
+
+        params = {
+            'account_id': account_id,
+            'state': state,
+            'name': name,
+            'policy_service_type': policy_service_type,
+            'policy_service_name': policy_service_name,
+            'policy_service_group_id': policy_service_group_id,
+            'policy_type': policy_type,
+            'limit': limit,
+            'start': start,
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        url = '/v1/policy_templates'
+        request = self.prepare_request(
+            method='GET',
+            url=url,
+            headers=headers,
+            params=params,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def create_policy_template(
+        self,
+        name: str,
+        account_id: str,
+        policy: 'TemplatePolicy',
+        *,
+        description: Optional[str] = None,
+        committed: Optional[bool] = None,
+        accept_language: Optional[str] = None,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Create a policy template.
+
+        Create a policy template. Policy templates define a policy without requiring a
+        subject, and you can use them to grant access to multiple subjects.
+
+        :param str name: Required field when creating a new template. Otherwise,
+               this field is optional. If the field is included, it changes the name value
+               for all existing versions of the template.
+        :param str account_id: Enterprise account ID where this template is
+               created.
+        :param TemplatePolicy policy: The core set of properties associated with
+               the template's policy object.
+        :param str description: (optional) Description of the policy template. This
+               is shown to users in the enterprise account. Use this to describe the
+               purpose or context of the policy for enterprise users managing IAM
+               templates.
+        :param bool committed: (optional) Committed status of the template.
+        :param str accept_language: (optional) Language code for translations
+               * `default` - English
+               * `de` -  German (Standard)
+               * `en` - English
+               * `es` - Spanish (Spain)
+               * `fr` - French (Standard)
+               * `it` - Italian (Standard)
+               * `ja` - Japanese
+               * `ko` - Korean
+               * `pt-br` - Portuguese (Brazil)
+               * `zh-cn` - Chinese (Simplified, PRC)
+               * `zh-tw` - (Chinese, Taiwan).
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `PolicyTemplateLimitData` object
+        """
+
+        if name is None:
+            raise ValueError('name must be provided')
+        if account_id is None:
+            raise ValueError('account_id must be provided')
+        if policy is None:
+            raise ValueError('policy must be provided')
+        policy = convert_model(policy)
+        headers = {
+            'Accept-Language': accept_language,
+        }
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='create_policy_template',
+        )
+        headers.update(sdk_headers)
+
+        data = {
+            'name': name,
+            'account_id': account_id,
+            'policy': policy,
+            'description': description,
+            'committed': committed,
+        }
+        data = {k: v for (k, v) in data.items() if v is not None}
+        data = json.dumps(data)
+        headers['content-type'] = 'application/json'
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        url = '/v1/policy_templates'
+        request = self.prepare_request(
+            method='POST',
+            url=url,
+            headers=headers,
+            data=data,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def get_policy_template(
+        self,
+        policy_template_id: str,
+        *,
+        state: Optional[str] = None,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Retrieve latest version of a policy template.
+
+        Retrieve the latest version of a policy template by providing a policy template
+        ID.
+
+        :param str policy_template_id: The policy template ID.
+        :param str state: (optional) The policy template state.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `PolicyTemplate` object
+        """
+
+        if not policy_template_id:
+            raise ValueError('policy_template_id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='get_policy_template',
+        )
+        headers.update(sdk_headers)
+
+        params = {
+            'state': state,
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['policy_template_id']
+        path_param_values = self.encode_path_vars(policy_template_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/v1/policy_templates/{policy_template_id}'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='GET',
+            url=url,
+            headers=headers,
+            params=params,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def delete_policy_template(
+        self,
+        policy_template_id: str,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Delete a policy template.
+
+        Delete a policy template by providing the policy template ID. This deletes all
+        versions of this template. A policy template can't be deleted if any version of
+        the template is assigned to one or more child accounts. You must remove the policy
+        assignments first.
+
+        :param str policy_template_id: The policy template ID.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse
+        """
+
+        if not policy_template_id:
+            raise ValueError('policy_template_id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='delete_policy_template',
+        )
+        headers.update(sdk_headers)
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+
+        path_param_keys = ['policy_template_id']
+        path_param_values = self.encode_path_vars(policy_template_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/v1/policy_templates/{policy_template_id}'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='DELETE',
+            url=url,
+            headers=headers,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def create_policy_template_version(
+        self,
+        policy_template_id: str,
+        policy: 'TemplatePolicy',
+        *,
+        name: Optional[str] = None,
+        description: Optional[str] = None,
+        committed: Optional[bool] = None,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Create a new policy template version.
+
+        Create a new version of a policy template. Use this if you need to make updates to
+        a policy template that is committed.
+
+        :param str policy_template_id: The policy template ID.
+        :param TemplatePolicy policy: The core set of properties associated with
+               the template's policy object.
+        :param str name: (optional) Required field when creating a new template.
+               Otherwise, this field is optional. If the field is included, it changes the
+               name value for all existing versions of the template.
+        :param str description: (optional) Description of the policy template. This
+               is shown to users in the enterprise account. Use this to describe the
+               purpose or context of the policy for enterprise users managing IAM
+               templates.
+        :param bool committed: (optional) Committed status of the template version.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `PolicyTemplateLimitData` object
+        """
+
+        if not policy_template_id:
+            raise ValueError('policy_template_id must be provided')
+        if policy is None:
+            raise ValueError('policy must be provided')
+        policy = convert_model(policy)
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='create_policy_template_version',
+        )
+        headers.update(sdk_headers)
+
+        data = {
+            'policy': policy,
+            'name': name,
+            'description': description,
+            'committed': committed,
+        }
+        data = {k: v for (k, v) in data.items() if v is not None}
+        data = json.dumps(data)
+        headers['content-type'] = 'application/json'
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['policy_template_id']
+        path_param_values = self.encode_path_vars(policy_template_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/v1/policy_templates/{policy_template_id}/versions'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='POST',
+            url=url,
+            headers=headers,
+            data=data,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def list_policy_template_versions(
+        self,
+        policy_template_id: str,
+        *,
+        state: Optional[str] = None,
+        limit: Optional[int] = None,
+        start: Optional[str] = None,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Retrieve policy template versions.
+
+        Retrieve the versions of a policy template by providing a policy template ID.
+
+        :param str policy_template_id: The policy template ID.
+        :param str state: (optional) The policy template state.
+        :param int limit: (optional) The number of documents to include in the
+               collection.
+        :param str start: (optional) Page token that refers to the page of the
+               collection to return.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `PolicyTemplateVersionsCollection` object
+        """
+
+        if not policy_template_id:
+            raise ValueError('policy_template_id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='list_policy_template_versions',
+        )
+        headers.update(sdk_headers)
+
+        params = {
+            'state': state,
+            'limit': limit,
+            'start': start,
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['policy_template_id']
+        path_param_values = self.encode_path_vars(policy_template_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/v1/policy_templates/{policy_template_id}/versions'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='GET',
+            url=url,
+            headers=headers,
+            params=params,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def replace_policy_template(
+        self,
+        policy_template_id: str,
+        version: str,
+        if_match: str,
+        policy: 'TemplatePolicy',
+        *,
+        name: Optional[str] = None,
+        description: Optional[str] = None,
+        committed: Optional[bool] = None,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Update a policy template version.
+
+        Update a specific version of a policy template. You can use this only if the
+        version isn't committed.
+
+        :param str policy_template_id: The policy template ID.
+        :param str version: The policy template version.
+        :param str if_match: The revision number for updating a policy template
+               version and must match the Etag value of the existing policy template
+               version. The Etag can be retrieved using the GET
+               /v1/policy_templates/{policy_template_id}/versions/{version} API and
+               looking at the Etag response header.
+        :param TemplatePolicy policy: The core set of properties associated with
+               the template's policy object.
+        :param str name: (optional) Required field when creating a new template.
+               Otherwise, this field is optional. If the field is included, it changes the
+               name value for all existing versions of the template.
+        :param str description: (optional) Description of the policy template. This
+               is shown to users in the enterprise account. Use this to describe the
+               purpose or context of the policy for enterprise users managing IAM
+               templates.
+        :param bool committed: (optional) Committed status of the template version.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `PolicyTemplate` object
+        """
+
+        if not policy_template_id:
+            raise ValueError('policy_template_id must be provided')
+        if not version:
+            raise ValueError('version must be provided')
+        if not if_match:
+            raise ValueError('if_match must be provided')
+        if policy is None:
+            raise ValueError('policy must be provided')
+        policy = convert_model(policy)
+        headers = {
+            'If-Match': if_match,
+        }
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='replace_policy_template',
+        )
+        headers.update(sdk_headers)
+
+        data = {
+            'policy': policy,
+            'name': name,
+            'description': description,
+            'committed': committed,
+        }
+        data = {k: v for (k, v) in data.items() if v is not None}
+        data = json.dumps(data)
+        headers['content-type'] = 'application/json'
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['policy_template_id', 'version']
+        path_param_values = self.encode_path_vars(policy_template_id, version)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/v1/policy_templates/{policy_template_id}/versions/{version}'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='PUT',
+            url=url,
+            headers=headers,
+            data=data,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def delete_policy_template_version(
+        self,
+        policy_template_id: str,
+        version: str,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Delete a policy template version.
+
+        Delete a specific version of a policy template by providing a policy template ID
+        and version number. You can't delete a policy template version that is assigned to
+        one or more child accounts. You must remove the policy assignments first.
+
+        :param str policy_template_id: The policy template ID.
+        :param str version: The policy template version.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse
+        """
+
+        if not policy_template_id:
+            raise ValueError('policy_template_id must be provided')
+        if not version:
+            raise ValueError('version must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='delete_policy_template_version',
+        )
+        headers.update(sdk_headers)
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+
+        path_param_keys = ['policy_template_id', 'version']
+        path_param_values = self.encode_path_vars(policy_template_id, version)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/v1/policy_templates/{policy_template_id}/versions/{version}'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='DELETE',
+            url=url,
+            headers=headers,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def get_policy_template_version(
+        self,
+        policy_template_id: str,
+        version: str,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Retrieve a policy template version.
+
+        Retrieve a policy template by providing a policy template ID and version number.
+
+        :param str policy_template_id: The policy template ID.
+        :param str version: The policy template version.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `PolicyTemplate` object
+        """
+
+        if not policy_template_id:
+            raise ValueError('policy_template_id must be provided')
+        if not version:
+            raise ValueError('version must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='get_policy_template_version',
+        )
+        headers.update(sdk_headers)
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['policy_template_id', 'version']
+        path_param_values = self.encode_path_vars(policy_template_id, version)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/v1/policy_templates/{policy_template_id}/versions/{version}'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='GET',
+            url=url,
+            headers=headers,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def commit_policy_template(
+        self,
+        policy_template_id: str,
+        version: str,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Commit a policy template version.
+
+        Commit a policy template version. You can make no further changes to the policy
+        template once it's committed. If you need to make updates after committing a
+        version, create a new version.
+
+        :param str policy_template_id: The policy template ID.
+        :param str version: The policy template version.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse
+        """
+
+        if not policy_template_id:
+            raise ValueError('policy_template_id must be provided')
+        if not version:
+            raise ValueError('version must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='commit_policy_template',
+        )
+        headers.update(sdk_headers)
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+
+        path_param_keys = ['policy_template_id', 'version']
+        path_param_values = self.encode_path_vars(policy_template_id, version)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/v1/policy_templates/{policy_template_id}/versions/{version}/commit'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='POST',
+            url=url,
+            headers=headers,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    #########################
+    # Policy assignments
+    #########################
+
+    def list_policy_assignments(
+        self,
+        version: str,
+        account_id: str,
+        *,
+        accept_language: Optional[str] = None,
+        template_id: Optional[str] = None,
+        template_version: Optional[str] = None,
+        limit: Optional[int] = None,
+        start: Optional[str] = None,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Get policy template assignments.
+
+        Get policy template assignments by attributes. The following attributes are
+        supported:
+        `account_id`, `template_id`, `template_version`, `sort`.
+        `account_id` is a required query parameter. Only policy template assignments that
+        have the specified attributes and that the caller has read access to are returned.
+        If the caller does not have read access to any policy template assignments an
+        empty array is returned.
+
+        :param str version: specify version of response body format.
+        :param str account_id: The account GUID in which the policies belong to.
+        :param str accept_language: (optional) Language code for translations
+               * `default` - English
+               * `de` -  German (Standard)
+               * `en` - English
+               * `es` - Spanish (Spain)
+               * `fr` - French (Standard)
+               * `it` - Italian (Standard)
+               * `ja` - Japanese
+               * `ko` - Korean
+               * `pt-br` - Portuguese (Brazil)
+               * `zh-cn` - Chinese (Simplified, PRC)
+               * `zh-tw` - (Chinese, Taiwan).
+        :param str template_id: (optional) Optional template id.
+        :param str template_version: (optional) Optional policy template version.
+        :param int limit: (optional) The number of documents to include in the
+               collection.
+        :param str start: (optional) Page token that refers to the page of the
+               collection to return.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `PolicyTemplateAssignmentCollection` object
+        """
+
+        if not version:
+            raise ValueError('version must be provided')
+        if not account_id:
+            raise ValueError('account_id must be provided')
+        headers = {
+            'Accept-Language': accept_language,
+        }
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='list_policy_assignments',
+        )
+        headers.update(sdk_headers)
+
+        params = {
+            'version': version,
+            'account_id': account_id,
+            'template_id': template_id,
+            'template_version': template_version,
+            'limit': limit,
+            'start': start,
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        url = '/v1/policy_assignments'
+        request = self.prepare_request(
+            method='GET',
+            url=url,
+            headers=headers,
+            params=params,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def create_policy_template_assignment(
+        self,
+        version: str,
+        target: 'AssignmentTargetDetails',
+        templates: List['AssignmentTemplateDetails'],
+        *,
+        accept_language: Optional[str] = None,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Create a policy authorization template assignment.
+
+        Assign a policy template to child accounts and account groups. This creates the
+        policy in the accounts and account groups that you specify.
+
+        :param str version: specify version of response body format.
+        :param AssignmentTargetDetails target: assignment target account and type.
+        :param List[AssignmentTemplateDetails] templates: List of template details
+               for policy assignment.
+        :param str accept_language: (optional) Language code for translations
+               * `default` - English
+               * `de` -  German (Standard)
+               * `en` - English
+               * `es` - Spanish (Spain)
+               * `fr` - French (Standard)
+               * `it` - Italian (Standard)
+               * `ja` - Japanese
+               * `ko` - Korean
+               * `pt-br` - Portuguese (Brazil)
+               * `zh-cn` - Chinese (Simplified, PRC)
+               * `zh-tw` - (Chinese, Taiwan).
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `PolicyAssignmentV1Collection` object
+        """
+
+        if not version:
+            raise ValueError('version must be provided')
+        if target is None:
+            raise ValueError('target must be provided')
+        if templates is None:
+            raise ValueError('templates must be provided')
+        target = convert_model(target)
+        templates = [convert_model(x) for x in templates]
+        headers = {
+            'Accept-Language': accept_language,
+        }
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='create_policy_template_assignment',
+        )
+        headers.update(sdk_headers)
+
+        params = {
+            'version': version,
+        }
+
+        data = {
+            'target': target,
+            'templates': templates,
+        }
+        data = {k: v for (k, v) in data.items() if v is not None}
+        data = json.dumps(data)
+        headers['content-type'] = 'application/json'
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        url = '/v1/policy_assignments'
+        request = self.prepare_request(
+            method='POST',
+            url=url,
+            headers=headers,
+            params=params,
+            data=data,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def get_policy_assignment(
+        self,
+        assignment_id: str,
+        version: str,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Retrieve a policy assignment.
+
+        Retrieve a policy template assignment by providing a policy assignment ID.
+
+        :param str assignment_id: The policy template assignment ID.
+        :param str version: specify version of response body format.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `PolicyTemplateAssignmentItems` object
+        """
+
+        if not assignment_id:
+            raise ValueError('assignment_id must be provided')
+        if not version:
+            raise ValueError('version must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='get_policy_assignment',
+        )
+        headers.update(sdk_headers)
+
+        params = {
+            'version': version,
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['assignment_id']
+        path_param_values = self.encode_path_vars(assignment_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/v1/policy_assignments/{assignment_id}'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='GET',
+            url=url,
+            headers=headers,
+            params=params,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def update_policy_assignment(
+        self,
+        assignment_id: str,
+        version: str,
+        if_match: str,
+        template_version: str,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Update a policy authorization type assignment.
+
+        Update a policy assignment by providing a policy assignment ID.
+
+        :param str assignment_id: The policy template assignment ID.
+        :param str version: specify version of response body format.
+        :param str if_match: The revision number for updating a policy assignment
+               and must match the Etag value of the existing policy assignment. The Etag
+               can be retrieved using the GET /v1/policy_assignments/{assignment_id} API
+               and looking at the Etag response header.
+        :param str template_version: The policy template version to update to.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `PolicyAssignmentV1` object
+        """
+
+        if not assignment_id:
+            raise ValueError('assignment_id must be provided')
+        if not version:
+            raise ValueError('version must be provided')
+        if not if_match:
+            raise ValueError('if_match must be provided')
+        if template_version is None:
+            raise ValueError('template_version must be provided')
+        headers = {
+            'If-Match': if_match,
+        }
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='update_policy_assignment',
+        )
+        headers.update(sdk_headers)
+
+        params = {
+            'version': version,
+        }
+
+        data = {
+            'template_version': template_version,
+        }
+        data = {k: v for (k, v) in data.items() if v is not None}
+        data = json.dumps(data)
+        headers['content-type'] = 'application/json'
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['assignment_id']
+        path_param_values = self.encode_path_vars(assignment_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/v1/policy_assignments/{assignment_id}'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='PATCH',
+            url=url,
+            headers=headers,
+            params=params,
+            data=data,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def delete_policy_assignment(
+        self,
+        assignment_id: str,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Remove a policy assignment.
+
+        Remove a policy template assignment by providing a policy assignment ID. You can't
+        delete a policy assignment if the status is "in_progress".
+
+        :param str assignment_id: The policy template assignment ID.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse
+        """
+
+        if not assignment_id:
+            raise ValueError('assignment_id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='delete_policy_assignment',
+        )
+        headers.update(sdk_headers)
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+
+        path_param_keys = ['assignment_id']
+        path_param_values = self.encode_path_vars(assignment_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/v1/policy_assignments/{assignment_id}'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='DELETE',
+            url=url,
+            headers=headers,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    #########################
+    # Access Management Settings
+    #########################
+
+    def get_settings(
+        self,
+        account_id: str,
+        *,
+        accept_language: Optional[str] = None,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Retrieve Access Management account settings by account ID.
+
+        Retrieve Access Management settings for an account by providing the account ID.
+
+        :param str account_id: The account GUID that the settings belong to.
+        :param str accept_language: (optional) Language code for translations
+               * `default` - English
+               * `de` -  German (Standard)
+               * `en` - English
+               * `es` - Spanish (Spain)
+               * `fr` - French (Standard)
+               * `it` - Italian (Standard)
+               * `ja` - Japanese
+               * `ko` - Korean
+               * `pt-br` - Portuguese (Brazil)
+               * `zh-cn` - Chinese (Simplified, PRC)
+               * `zh-tw` - (Chinese, Taiwan).
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `AccountSettingsAccessManagement` object
+        """
+
+        if not account_id:
+            raise ValueError('account_id must be provided')
+        headers = {
+            'Accept-Language': accept_language,
+        }
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='get_settings',
+        )
+        headers.update(sdk_headers)
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['account_id']
+        path_param_values = self.encode_path_vars(account_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/v1/accounts/{account_id}/settings/access_management'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='GET',
+            url=url,
+            headers=headers,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def update_settings(
+        self,
+        account_id: str,
+        if_match: str,
+        *,
+        external_account_identity_interaction: Optional['ExternalAccountIdentityInteractionPatch'] = None,
+        accept_language: Optional[str] = None,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Update Access Management account settings by account ID.
+
+        Update access management settings for an account.
+        ### External Account Identity Interaction
+        Update the way identities within an external account are allowed to interact with
+        the requested account by providing:
+        * the `account_id` as a parameter
+        * one or more external account ID(s) and state for the specific identity in the
+        request body
+        External account identity interaction includes the following `identity_types`:
+        `user` (user identities that are defined as
+        [IBMid's](https://cloud.ibm.com/docs/account?topic=account-identity-overview#users-bestpract)),
+        `service_id` (defined as [IAM
+        ServiceIds](https://cloud.ibm.com/docs/account?topic=account-identity-overview#serviceid-bestpract)),
+        `service` (defined by a service’s
+        [CRN](https://cloud.ibm.com/docs/account?topic=account-crn)). To update an
+        Identity’s setting, the `state` and `external_allowed_accounts` fields are
+        required.
+        Different identity states are:
+        * "enabled": An identity type is allowed to access resources in the account
+        provided it has access policies on those resources.
+        * "limited": An identity type is allowed to access resources in the account
+        provided it has access policies on those resources AND it is associated with
+        either the account the resources are in or one of the allowed accounts. This
+        setting uses the "external_allowed_accounts" list.
+        * "monitor": It has no direct impact on an Identity’s access. Instead, it creates
+        AT events for access decisions as if the account were in a limited “state”.
+        **Note**: The state "enabled" is a special case. In this case, access is given to
+        all accounts and there is no need to specify a particular list. Therefore, when
+        updating "state" to "enabled" for an identity type "external_allowed_accounts"
+        should be left empty.
+
+        :param str account_id: The account GUID that the settings belong to.
+        :param str if_match: The revision number for updating Access Management
+               Account Settings and must match the Etag value of the existing Access
+               Management Account Settings. The Etag can be retrieved using the GET
+               /v1/accounts/{account_id}/settings/access_management API and looking at the
+               Etag response header.
+        :param ExternalAccountIdentityInteractionPatch
+               external_account_identity_interaction: (optional) Update to how external
+               accounts can interact in relation to the requested account.
+        :param str accept_language: (optional) Language code for translations
+               * `default` - English
+               * `de` -  German (Standard)
+               * `en` - English
+               * `es` - Spanish (Spain)
+               * `fr` - French (Standard)
+               * `it` - Italian (Standard)
+               * `ja` - Japanese
+               * `ko` - Korean
+               * `pt-br` - Portuguese (Brazil)
+               * `zh-cn` - Chinese (Simplified, PRC)
+               * `zh-tw` - (Chinese, Taiwan).
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `AccountSettingsAccessManagement` object
+        """
+
+        if not account_id:
+            raise ValueError('account_id must be provided')
+        if not if_match:
+            raise ValueError('if_match must be provided')
+        if external_account_identity_interaction is not None:
+            external_account_identity_interaction = convert_model(external_account_identity_interaction)
+        headers = {
+            'If-Match': if_match,
+            'Accept-Language': accept_language,
+        }
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='update_settings',
+        )
+        headers.update(sdk_headers)
+
+        data = {
+            'external_account_identity_interaction': external_account_identity_interaction,
+        }
+        data = {k: v for (k, v) in data.items() if v is not None}
+        data = json.dumps(data)
+        headers['content-type'] = 'application/json'
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['account_id']
+        path_param_values = self.encode_path_vars(account_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/v1/accounts/{account_id}/settings/access_management'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='PATCH',
+            url=url,
+            headers=headers,
+            data=data,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    #########################
+    # Action Control Templates
+    #########################
+
+    def list_action_control_templates(
+        self,
+        account_id: str,
+        *,
+        accept_language: Optional[str] = None,
+        limit: Optional[int] = None,
+        start: Optional[str] = None,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        List action control templates by attributes.
+
+        List action control templates and filter by attributes by using query parameters.
+        The following attributes are supported:
+        `account_id`
+        `account_id` is a required query parameter. Only action control templates that
+        have the specified attributes and that the caller has read access to are returned.
+        If the caller does not have read access to any action control templates an empty
+        array is returned.
+
+        :param str account_id: The account GUID that the action control templates
+               belong to.
+        :param str accept_language: (optional) Language code for translations
+               * `default` - English
+               * `de` -  German (Standard)
+               * `en` - English
+               * `es` - Spanish (Spain)
+               * `fr` - French (Standard)
+               * `it` - Italian (Standard)
+               * `ja` - Japanese
+               * `ko` - Korean
+               * `pt-br` - Portuguese (Brazil)
+               * `zh-cn` - Chinese (Simplified, PRC)
+               * `zh-tw` - (Chinese, Taiwan).
+        :param int limit: (optional) The number of documents to include in the
+               collection.
+        :param str start: (optional) Page token that refers to the page of the
+               collection to return.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `ActionControlTemplateCollection` object
+        """
+
+        if not account_id:
+            raise ValueError('account_id must be provided')
+        headers = {
+            'Accept-Language': accept_language,
+        }
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='list_action_control_templates',
+        )
+        headers.update(sdk_headers)
+
+        params = {
+            'account_id': account_id,
+            'limit': limit,
+            'start': start,
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        url = '/v1/action_control_templates'
+        request = self.prepare_request(
+            method='GET',
+            url=url,
+            headers=headers,
+            params=params,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def create_action_control_template(
+        self,
+        name: str,
+        account_id: str,
+        *,
+        description: Optional[str] = None,
+        committed: Optional[bool] = None,
+        action_control: Optional['TemplateActionControl'] = None,
+        accept_language: Optional[str] = None,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Create an action control template.
+
+        Create an action control template. Action control templates define a service
+        action control.
+
+        :param str name: Required field when creating a new template. Otherwise,
+               this field is optional. If the field is included, it changes the name value
+               for all existing versions of the template.
+        :param str account_id: Enterprise account ID where this template is
+               created.
+        :param str description: (optional) Description of the action control
+               template. This is shown to users in the enterprise account. Use this to
+               describe the purpose or context of the action control for enterprise users
+               managing IAM templates.
+        :param bool committed: (optional) Committed status of the template. If
+               committed is set to true, then the template version can no longer be
+               updated.
+        :param TemplateActionControl action_control: (optional) The action control
+               properties that are created in an action resource when the template is
+               assigned.
+        :param str accept_language: (optional) Language code for translations
+               * `default` - English
+               * `de` -  German (Standard)
+               * `en` - English
+               * `es` - Spanish (Spain)
+               * `fr` - French (Standard)
+               * `it` - Italian (Standard)
+               * `ja` - Japanese
+               * `ko` - Korean
+               * `pt-br` - Portuguese (Brazil)
+               * `zh-cn` - Chinese (Simplified, PRC)
+               * `zh-tw` - (Chinese, Taiwan).
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `ActionControlTemplate` object
+        """
+
+        if name is None:
+            raise ValueError('name must be provided')
+        if account_id is None:
+            raise ValueError('account_id must be provided')
+        if action_control is not None:
+            action_control = convert_model(action_control)
+        headers = {
+            'Accept-Language': accept_language,
+        }
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='create_action_control_template',
+        )
+        headers.update(sdk_headers)
+
+        data = {
+            'name': name,
+            'account_id': account_id,
+            'description': description,
+            'committed': committed,
+            'action_control': action_control,
+        }
+        data = {k: v for (k, v) in data.items() if v is not None}
+        data = json.dumps(data)
+        headers['content-type'] = 'application/json'
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        url = '/v1/action_control_templates'
+        request = self.prepare_request(
+            method='POST',
+            url=url,
+            headers=headers,
+            data=data,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def get_action_control_template(
+        self,
+        action_control_template_id: str,
+        *,
+        state: Optional[str] = None,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Retrieve the latest version of an action control template.
+
+        Retrieve the latest version of an action control template by providing an action
+        control template ID.
+
+        :param str action_control_template_id: Action control template ID.
+        :param str state: (optional) The action control template state.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `ActionControlTemplate` object
+        """
+
+        if not action_control_template_id:
+            raise ValueError('action_control_template_id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='get_action_control_template',
+        )
+        headers.update(sdk_headers)
+
+        params = {
+            'state': state,
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['action_control_template_id']
+        path_param_values = self.encode_path_vars(action_control_template_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/v1/action_control_templates/{action_control_template_id}'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='GET',
+            url=url,
+            headers=headers,
+            params=params,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def delete_action_control_template(
+        self,
+        action_control_template_id: str,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Delete an action control template.
+
+        Delete an action control template by providing the action control template ID.
+        This deletes all versions of this template. An action control template can't be
+        deleted if any version of the template is assigned to one or more child accounts.
+        You must remove the action control assignments first.
+
+        :param str action_control_template_id: Action control template ID.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse
+        """
+
+        if not action_control_template_id:
+            raise ValueError('action_control_template_id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='delete_action_control_template',
+        )
+        headers.update(sdk_headers)
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+
+        path_param_keys = ['action_control_template_id']
+        path_param_values = self.encode_path_vars(action_control_template_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/v1/action_control_templates/{action_control_template_id}'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='DELETE',
+            url=url,
+            headers=headers,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def create_action_control_template_version(
+        self,
+        action_control_template_id: str,
+        *,
+        name: Optional[str] = None,
+        description: Optional[str] = None,
+        action_control: Optional['TemplateActionControl'] = None,
+        committed: Optional[bool] = None,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Create a new action control template version.
+
+        Create a new version of an action control template. Use this if you need to make
+        updates to an action control template that is committed.
+
+        :param str action_control_template_id: The action control template ID.
+        :param str name: (optional) Required field when creating a new template.
+               Otherwise, this field is optional. If the field is included, it will change
+               the name value for all existing versions of the template.
+        :param str description: (optional) Description of the action control
+               template. This is shown to users in the enterprise account. Use this to
+               describe the purpose or context of the action control for enterprise users
+               managing IAM templates.
+        :param TemplateActionControl action_control: (optional) The action control
+               properties that are created in an action resource when the template is
+               assigned.
+        :param bool committed: (optional) Committed status of the template version.
+               If committed is set to true, then the template version can no longer be
+               updated.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `ActionControlTemplate` object
+        """
+
+        if not action_control_template_id:
+            raise ValueError('action_control_template_id must be provided')
+        if action_control is not None:
+            action_control = convert_model(action_control)
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='create_action_control_template_version',
+        )
+        headers.update(sdk_headers)
+
+        data = {
+            'name': name,
+            'description': description,
+            'action_control': action_control,
+            'committed': committed,
+        }
+        data = {k: v for (k, v) in data.items() if v is not None}
+        data = json.dumps(data)
+        headers['content-type'] = 'application/json'
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['action_control_template_id']
+        path_param_values = self.encode_path_vars(action_control_template_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/v1/action_control_templates/{action_control_template_id}/versions'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='POST',
+            url=url,
+            headers=headers,
+            data=data,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def list_action_control_template_versions(
+        self,
+        action_control_template_id: str,
+        *,
+        state: Optional[str] = None,
+        limit: Optional[int] = None,
+        start: Optional[str] = None,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Retrieve action control template versions.
+
+        Retrieve the versions of an action control template by providing an action control
+        template ID.
+
+        :param str action_control_template_id: The action control template ID.
+        :param str state: (optional) Action control template state.
+        :param int limit: (optional) The number of documents to include in the
+               collection.
+        :param str start: (optional) Page token that refers to the page of the
+               collection to return.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `ActionControlTemplateVersionsCollection` object
+        """
+
+        if not action_control_template_id:
+            raise ValueError('action_control_template_id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='list_action_control_template_versions',
+        )
+        headers.update(sdk_headers)
+
+        params = {
+            'state': state,
+            'limit': limit,
+            'start': start,
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['action_control_template_id']
+        path_param_values = self.encode_path_vars(action_control_template_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/v1/action_control_templates/{action_control_template_id}/versions'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='GET',
+            url=url,
+            headers=headers,
+            params=params,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def replace_action_control_template(
+        self,
+        action_control_template_id: str,
+        version: str,
+        if_match: str,
+        *,
+        name: Optional[str] = None,
+        description: Optional[str] = None,
+        action_control: Optional['TemplateActionControl'] = None,
+        committed: Optional[bool] = None,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Update an action control template version.
+
+        Update a specific version of an action control template. You can use this only if
+        the version isn't committed.
+
+        :param str action_control_template_id: Action control template ID.
+        :param str version: Action control template version.
+        :param str if_match: The revision number for updating an action control
+               template version must match the Etag value of the existing action control
+               template version. The Etag can be retrieved using the GET
+               /v1/action_control_templates/{template_id}/versions/{version} API and
+               looking at the Etag response header.
+        :param str name: (optional) Required field when creating a new template.
+               Otherwise, this field is optional. If the field is included, it will change
+               the name value for all existing versions of the template.
+        :param str description: (optional) Description of the action control
+               template. This is shown to users in the enterprise account. Use this to
+               describe the purpose or context of the action control for enterprise users
+               managing IAM templates.
+        :param TemplateActionControl action_control: (optional) The action control
+               properties that are created in an action resource when the template is
+               assigned.
+        :param bool committed: (optional) Committed status of the template version.
+               If committed is set to true, then the template version can no longer be
+               updated.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `ActionControlTemplate` object
+        """
+
+        if not action_control_template_id:
+            raise ValueError('action_control_template_id must be provided')
+        if not version:
+            raise ValueError('version must be provided')
+        if not if_match:
+            raise ValueError('if_match must be provided')
+        if action_control is not None:
+            action_control = convert_model(action_control)
+        headers = {
+            'If-Match': if_match,
+        }
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='replace_action_control_template',
+        )
+        headers.update(sdk_headers)
+
+        data = {
+            'name': name,
+            'description': description,
+            'action_control': action_control,
+            'committed': committed,
+        }
+        data = {k: v for (k, v) in data.items() if v is not None}
+        data = json.dumps(data)
+        headers['content-type'] = 'application/json'
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['action_control_template_id', 'version']
+        path_param_values = self.encode_path_vars(action_control_template_id, version)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/v1/action_control_templates/{action_control_template_id}/versions/{version}'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='PUT',
+            url=url,
+            headers=headers,
+            data=data,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def delete_action_control_template_version(
+        self,
+        action_control_template_id: str,
+        version: str,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Delete an action control template version.
+
+        Delete a specific version of an action control template by providing an action
+        control template ID and version number. You can't delete an action control
+        template version that is assigned to one or more child accounts. You must remove
+        the action control assignments first.
+
+        :param str action_control_template_id: Action control template ID.
+        :param str version: Action control template version.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse
+        """
+
+        if not action_control_template_id:
+            raise ValueError('action_control_template_id must be provided')
+        if not version:
+            raise ValueError('version must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='delete_action_control_template_version',
+        )
+        headers.update(sdk_headers)
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+
+        path_param_keys = ['action_control_template_id', 'version']
+        path_param_values = self.encode_path_vars(action_control_template_id, version)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/v1/action_control_templates/{action_control_template_id}/versions/{version}'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='DELETE',
+            url=url,
+            headers=headers,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def get_action_control_template_version(
+        self,
+        action_control_template_id: str,
+        version: str,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Retrieve an action control template version.
+
+        Retrieve an action control template by providing an action control template ID and
+        version number.
+
+        :param str action_control_template_id: Action control template ID.
+        :param str version: Action control template version.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `ActionControlTemplate` object
+        """
+
+        if not action_control_template_id:
+            raise ValueError('action_control_template_id must be provided')
+        if not version:
+            raise ValueError('version must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='get_action_control_template_version',
+        )
+        headers.update(sdk_headers)
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['action_control_template_id', 'version']
+        path_param_values = self.encode_path_vars(action_control_template_id, version)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/v1/action_control_templates/{action_control_template_id}/versions/{version}'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='GET',
+            url=url,
+            headers=headers,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def commit_action_control_template(
+        self,
+        action_control_template_id: str,
+        version: str,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Commit an action control template version.
+
+        Commit an action control template version. You cannot make any further changes to
+        the action control template once it's committed. If you have to make updates after
+        committing a version, create a new version.
+
+        :param str action_control_template_id: Action control template ID.
+        :param str version: The action control template version.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse
+        """
+
+        if not action_control_template_id:
+            raise ValueError('action_control_template_id must be provided')
+        if not version:
+            raise ValueError('version must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='commit_action_control_template',
+        )
+        headers.update(sdk_headers)
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+
+        path_param_keys = ['action_control_template_id', 'version']
+        path_param_values = self.encode_path_vars(action_control_template_id, version)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/v1/action_control_templates/{action_control_template_id}/versions/{version}/commit'.format(
+            **path_param_dict
+        )
+        request = self.prepare_request(
+            method='POST',
+            url=url,
+            headers=headers,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    #########################
+    # Action Control Assignments
+    #########################
+
+    def list_action_control_assignments(
+        self,
+        account_id: str,
+        *,
+        accept_language: Optional[str] = None,
+        template_id: Optional[str] = None,
+        template_version: Optional[str] = None,
+        limit: Optional[int] = None,
+        start: Optional[str] = None,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Get action control template assignments.
+
+        Get action control template assignments by attributes. The following attributes
+        are supported:
+        `account_id`, `template_id`, `template_version`, `sort`.
+        `account_id` is a required query parameter. Only action control template
+        assignments with the specified attributes and  accessible by the caller are
+        returned. If the caller does not have read access to any action control template
+        assignments, an empty array is returned.
+
+        :param str account_id: The account GUID in which the action control
+               assignment belongs to.
+        :param str accept_language: (optional) Language code for translations
+               * `default` - English
+               * `de` -  German (Standard)
+               * `en` - English
+               * `es` - Spanish (Spain)
+               * `fr` - French (Standard)
+               * `it` - Italian (Standard)
+               * `ja` - Japanese
+               * `ko` - Korean
+               * `pt-br` - Portuguese (Brazil)
+               * `zh-cn` - Chinese (Simplified, PRC)
+               * `zh-tw` - (Chinese, Taiwan).
+        :param str template_id: (optional) Optional template ID.
+        :param str template_version: (optional) Optional action control template
+               version.
+        :param int limit: (optional) The number of documents to include in the
+               collection.
+        :param str start: (optional) Page token that refers to the page of the
+               collection to return.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `ActionControlAssignmentCollection` object
+        """
+
+        if not account_id:
+            raise ValueError('account_id must be provided')
+        headers = {
+            'Accept-Language': accept_language,
+        }
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='list_action_control_assignments',
+        )
+        headers.update(sdk_headers)
+
+        params = {
+            'account_id': account_id,
+            'template_id': template_id,
+            'template_version': template_version,
+            'limit': limit,
+            'start': start,
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        url = '/v1/action_control_assignments'
+        request = self.prepare_request(
+            method='GET',
+            url=url,
+            headers=headers,
+            params=params,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def create_action_control_template_assignment(
+        self,
+        target: 'AssignmentTargetDetails',
+        templates: List['ActionControlAssignmentTemplate'],
+        *,
+        accept_language: Optional[str] = None,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Create an action control template assignment.
+
+        Assign an action control template to child accounts and account groups. This
+        creates the action control in the accounts and account groups that you specify.
+
+        :param AssignmentTargetDetails target: assignment target account and type.
+        :param List[ActionControlAssignmentTemplate] templates: List of action
+               control template details for action control assignment.
+        :param str accept_language: (optional) Language code for translations
+               * `default` - English
+               * `de` -  German (Standard)
+               * `en` - English
+               * `es` - Spanish (Spain)
+               * `fr` - French (Standard)
+               * `it` - Italian (Standard)
+               * `ja` - Japanese
+               * `ko` - Korean
+               * `pt-br` - Portuguese (Brazil)
+               * `zh-cn` - Chinese (Simplified, PRC)
+               * `zh-tw` - (Chinese, Taiwan).
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `ActionControlAssignmentCollection` object
+        """
+
+        if target is None:
+            raise ValueError('target must be provided')
+        if templates is None:
+            raise ValueError('templates must be provided')
+        target = convert_model(target)
+        templates = [convert_model(x) for x in templates]
+        headers = {
+            'Accept-Language': accept_language,
+        }
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='create_action_control_template_assignment',
+        )
+        headers.update(sdk_headers)
+
+        data = {
+            'target': target,
+            'templates': templates,
+        }
+        data = {k: v for (k, v) in data.items() if v is not None}
+        data = json.dumps(data)
+        headers['content-type'] = 'application/json'
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        url = '/v1/action_control_assignments'
+        request = self.prepare_request(
+            method='POST',
+            url=url,
+            headers=headers,
+            data=data,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def get_action_control_assignment(
+        self,
+        assignment_id: str,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Retrieve an action control assignment.
+
+        Retrieve an action control template assignment by providing an action control
+        assignment ID.
+
+        :param str assignment_id: Action control template assignment ID.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `ActionControlAssignment` object
+        """
+
+        if not assignment_id:
+            raise ValueError('assignment_id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='get_action_control_assignment',
+        )
+        headers.update(sdk_headers)
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['assignment_id']
+        path_param_values = self.encode_path_vars(assignment_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/v1/action_control_assignments/{assignment_id}'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='GET',
+            url=url,
+            headers=headers,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def update_action_control_assignment(
+        self,
+        assignment_id: str,
+        if_match: str,
+        template_version: str,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Update an action control assignment.
+
+        Update an action control assignment by providing an action control assignment ID.
+
+        :param str assignment_id: Action control template assignment ID.
+        :param str if_match: The revision number for updating an action control
+               assignment and must match the Etag value of the existing action control
+               assignment. The Etag can be retrieved using the GET
+               /v1/action_control_assignments/{assignment_id} API and looking at the Etag
+               response header.
+        :param str template_version: The version number of the template used to
+               identify different versions of same template.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `ActionControlAssignment` object
+        """
+
+        if not assignment_id:
+            raise ValueError('assignment_id must be provided')
+        if not if_match:
+            raise ValueError('if_match must be provided')
+        if template_version is None:
+            raise ValueError('template_version must be provided')
+        headers = {
+            'If-Match': if_match,
+        }
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='update_action_control_assignment',
+        )
+        headers.update(sdk_headers)
+
+        data = {
+            'template_version': template_version,
+        }
+        data = {k: v for (k, v) in data.items() if v is not None}
+        data = json.dumps(data)
+        headers['content-type'] = 'application/json'
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['assignment_id']
+        path_param_values = self.encode_path_vars(assignment_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/v1/action_control_assignments/{assignment_id}'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='PATCH',
+            url=url,
+            headers=headers,
+            data=data,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def delete_action_control_assignment(
+        self,
+        assignment_id: str,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Remove an action control assignment.
+
+        Remove an action control template assignment by providing an action control
+        assignment ID. You can't delete an action control assignment if the status is
+        "in_progress".
+
+        :param str assignment_id: Action control template assignment ID.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse
+        """
+
+        if not assignment_id:
+            raise ValueError('assignment_id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='delete_action_control_assignment',
+        )
+        headers.update(sdk_headers)
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+
+        path_param_keys = ['assignment_id']
+        path_param_values = self.encode_path_vars(assignment_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/v1/action_control_assignments/{assignment_id}'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='DELETE',
+            url=url,
+            headers=headers,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    #########################
+    # Role Templates
+    #########################
+
+    def list_role_templates(
+        self,
+        account_id: str,
+        *,
+        accept_language: Optional[str] = None,
+        name: Optional[str] = None,
+        role_name: Optional[str] = None,
+        role_service_name: Optional[str] = None,
+        state: Optional[str] = None,
+        limit: Optional[int] = None,
+        start: Optional[str] = None,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        List role templates by attributes.
+
+        List role templates and filter by attributes by using query parameters. The
+        following attributes are supported:
+        `account_id`, `name`, `role_name`, `role_service_name`, `state`, `limit`, `start`.
+        `account_id` is a required query parameter. Only role templates that have the
+        specified attributes and that the caller has read access to are returned. If the
+        caller does not have read access to any role templates an empty array is returned.
+
+        :param str account_id: The account GUID that the role templates belong to.
+        :param str accept_language: (optional) Language code for translations
+               * `default` - English
+               * `de` -  German (Standard)
+               * `en` - English
+               * `es` - Spanish (Spain)
+               * `fr` - French (Standard)
+               * `it` - Italian (Standard)
+               * `ja` - Japanese
+               * `ko` - Korean
+               * `pt-br` - Portuguese (Brazil)
+               * `zh-cn` - Chinese (Simplified, PRC)
+               * `zh-tw` - (Chinese, Taiwan).
+        :param str name: (optional) The role template name.
+        :param str role_name: (optional) The template role name.
+        :param str role_service_name: (optional) The template role service name.
+        :param str state: (optional) The role template state.
+        :param int limit: (optional) The number of documents to include in the
+               collection.
+        :param str start: (optional) Page token that refers to the page of the
+               collection to return.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `RoleTemplateCollection` object
+        """
+
+        if not account_id:
+            raise ValueError('account_id must be provided')
+        headers = {
+            'Accept-Language': accept_language,
+        }
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='list_role_templates',
+        )
+        headers.update(sdk_headers)
+
+        params = {
+            'account_id': account_id,
+            'name': name,
+            'role_name': role_name,
+            'role_service_name': role_service_name,
+            'state': state,
+            'limit': limit,
+            'start': start,
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        url = '/v1/role_templates'
+        request = self.prepare_request(
+            method='GET',
+            url=url,
+            headers=headers,
+            params=params,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def create_role_template(
+        self,
+        name: str,
+        account_id: str,
+        *,
+        description: Optional[str] = None,
+        committed: Optional[bool] = None,
+        role: Optional['RoleTemplatePrototypeRole'] = None,
+        accept_language: Optional[str] = None,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Create role template.
+
+        Create a role template. Role templates define roles from an existing system or
+        service defined role.
+
+        :param str name: Required field when creating a new template. Otherwise,
+               this field is optional. If the field is included, it changes the name value
+               for all existing versions of the template.
+        :param str account_id: Enterprise account ID where this template is
+               created.
+        :param str description: (optional) Description of the role template. This
+               is shown to users in the enterprise account. Use this to describe the
+               purpose or context of the role for enterprise users managing IAM templates.
+        :param bool committed: (optional) Committed status of the template. If
+               committed is set to true, then the template version can no longer be
+               updated.
+        :param RoleTemplatePrototypeRole role: (optional) The role properties that
+               are created in an action resource when the template is assigned.
+        :param str accept_language: (optional) Language code for translations
+               * `default` - English
+               * `de` -  German (Standard)
+               * `en` - English
+               * `es` - Spanish (Spain)
+               * `fr` - French (Standard)
+               * `it` - Italian (Standard)
+               * `ja` - Japanese
+               * `ko` - Korean
+               * `pt-br` - Portuguese (Brazil)
+               * `zh-cn` - Chinese (Simplified, PRC)
+               * `zh-tw` - (Chinese, Taiwan).
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `RoleTemplate` object
+        """
+
+        if name is None:
+            raise ValueError('name must be provided')
+        if account_id is None:
+            raise ValueError('account_id must be provided')
+        if role is not None:
+            role = convert_model(role)
+        headers = {
+            'Accept-Language': accept_language,
+        }
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='create_role_template',
+        )
+        headers.update(sdk_headers)
+
+        data = {
+            'name': name,
+            'account_id': account_id,
+            'description': description,
+            'committed': committed,
+            'role': role,
+        }
+        data = {k: v for (k, v) in data.items() if v is not None}
+        data = json.dumps(data)
+        headers['content-type'] = 'application/json'
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        url = '/v1/role_templates'
+        request = self.prepare_request(
+            method='POST',
+            url=url,
+            headers=headers,
+            data=data,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def get_role_template(
+        self,
+        role_template_id: str,
+        *,
+        state: Optional[str] = None,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Retrieve the latest version of a role template.
+
+        Retrieve the latest version of a role template by providing a role template ID.
+
+        :param str role_template_id: Role template ID.
+        :param str state: (optional) The role template state.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `RoleTemplate` object
+        """
+
+        if not role_template_id:
+            raise ValueError('role_template_id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='get_role_template',
+        )
+        headers.update(sdk_headers)
+
+        params = {
+            'state': state,
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['role_template_id']
+        path_param_values = self.encode_path_vars(role_template_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/v1/role_templates/{role_template_id}'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='GET',
+            url=url,
+            headers=headers,
+            params=params,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def delete_role_template(
+        self,
+        role_template_id: str,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Delete a Role template.
+
+        Delete a role template by providing the role template ID. This deletes all
+        versions of this template. A role template can't be deleted if any version of the
+        template is assigned to one or more child accounts. You must remove the role
+        assignments first.
+
+        :param str role_template_id: Role template ID.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse
+        """
+
+        if not role_template_id:
+            raise ValueError('role_template_id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='delete_role_template',
+        )
+        headers.update(sdk_headers)
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+
+        path_param_keys = ['role_template_id']
+        path_param_values = self.encode_path_vars(role_template_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/v1/role_templates/{role_template_id}'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='DELETE',
+            url=url,
+            headers=headers,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def create_role_template_version(
+        self,
+        role_template_id: str,
+        *,
+        name: Optional[str] = None,
+        description: Optional[str] = None,
+        role: Optional['TemplateRole'] = None,
+        committed: Optional[bool] = None,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Create a new role template version.
+
+        Create a new version of a role template. Use this if you need to make updates to a
+        role template that is committed.
+
+        :param str role_template_id: The role template ID.
+        :param str name: (optional) Required field when creating a new template.
+               Otherwise, this field is optional. If the field is included, it will change
+               the name value for all existing versions of the template.
+        :param str description: (optional) Description of the role template. This
+               is shown to users in the enterprise account. Use this to describe the
+               purpose or context of the role for enterprise users managing IAM templates.
+        :param TemplateRole role: (optional) The role properties that are created
+               in an action resource when the template is assigned.
+        :param bool committed: (optional) Committed status of the template version.
+               If committed is set to true, then the template version can no longer be
+               updated.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `RoleTemplate` object
+        """
+
+        if not role_template_id:
+            raise ValueError('role_template_id must be provided')
+        if role is not None:
+            role = convert_model(role)
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='create_role_template_version',
+        )
+        headers.update(sdk_headers)
+
+        data = {
+            'name': name,
+            'description': description,
+            'role': role,
+            'committed': committed,
+        }
+        data = {k: v for (k, v) in data.items() if v is not None}
+        data = json.dumps(data)
+        headers['content-type'] = 'application/json'
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['role_template_id']
+        path_param_values = self.encode_path_vars(role_template_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/v1/role_templates/{role_template_id}/versions'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='POST',
+            url=url,
+            headers=headers,
+            data=data,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def list_role_template_versions(
+        self,
+        role_template_id: str,
+        *,
+        state: Optional[str] = None,
+        limit: Optional[int] = None,
+        start: Optional[str] = None,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Retrieve role template versions.
+
+        Retrieve the versions of a role template by providing a role template ID.
+
+        :param str role_template_id: The role template ID.
+        :param str state: (optional) Role template state.
+        :param int limit: (optional) The number of documents to include in the
+               collection.
+        :param str start: (optional) Page token that refers to the page of the
+               collection to return.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `RoleTemplateVersionsCollection` object
+        """
+
+        if not role_template_id:
+            raise ValueError('role_template_id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='list_role_template_versions',
+        )
+        headers.update(sdk_headers)
+
+        params = {
+            'state': state,
+            'limit': limit,
+            'start': start,
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['role_template_id']
+        path_param_values = self.encode_path_vars(role_template_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/v1/role_templates/{role_template_id}/versions'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='GET',
+            url=url,
+            headers=headers,
+            params=params,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def replace_role_template(
+        self,
+        role_template_id: str,
+        version: str,
+        if_match: str,
+        *,
+        name: Optional[str] = None,
+        description: Optional[str] = None,
+        role: Optional['TemplateRole'] = None,
+        committed: Optional[bool] = None,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Update a role template version.
+
+        Update a specific version of a role template. You can use this only if the version
+        isn't committed.
+
+        :param str role_template_id: Role template ID.
+        :param str version: Role template version.
+        :param str if_match: The revision number for updating a role template
+               version must match the Etag value of the existing role template version.
+               The Etag can be retrieved using the GET
+               /v1/role_templates/{template_id}/versions/{version} API and looking at the
+               Etag response header.
+        :param str name: (optional) Required field when creating a new template.
+               Otherwise, this field is optional. If the field is included, it will change
+               the name value for all existing versions of the template.
+        :param str description: (optional) Description of the role template. This
+               is shown to users in the enterprise account. Use this to describe the
+               purpose or context of the role for enterprise users managing IAM templates.
+        :param TemplateRole role: (optional) The role properties that are created
+               in an action resource when the template is assigned.
+        :param bool committed: (optional) Committed status of the template version.
+               If committed is set to true, then the template version can no longer be
+               updated.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `RoleTemplate` object
+        """
+
+        if not role_template_id:
+            raise ValueError('role_template_id must be provided')
+        if not version:
+            raise ValueError('version must be provided')
+        if not if_match:
+            raise ValueError('if_match must be provided')
+        if role is not None:
+            role = convert_model(role)
+        headers = {
+            'If-Match': if_match,
+        }
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='replace_role_template',
+        )
+        headers.update(sdk_headers)
+
+        data = {
+            'name': name,
+            'description': description,
+            'role': role,
+            'committed': committed,
+        }
+        data = {k: v for (k, v) in data.items() if v is not None}
+        data = json.dumps(data)
+        headers['content-type'] = 'application/json'
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['role_template_id', 'version']
+        path_param_values = self.encode_path_vars(role_template_id, version)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/v1/role_templates/{role_template_id}/versions/{version}'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='PUT',
+            url=url,
+            headers=headers,
+            data=data,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def delete_role_template_version(
+        self,
+        role_template_id: str,
+        version: str,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Delete a role template version.
+
+        Delete a specific version of a role template by providing a role template ID and
+        version number. You can't delete a role template version that is assigned to one
+        or more child accounts. You must remove the role assignments first.
+
+        :param str role_template_id: Role template ID.
+        :param str version: Role template version.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse
+        """
+
+        if not role_template_id:
+            raise ValueError('role_template_id must be provided')
+        if not version:
+            raise ValueError('version must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='delete_role_template_version',
+        )
+        headers.update(sdk_headers)
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+
+        path_param_keys = ['role_template_id', 'version']
+        path_param_values = self.encode_path_vars(role_template_id, version)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/v1/role_templates/{role_template_id}/versions/{version}'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='DELETE',
+            url=url,
+            headers=headers,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def get_role_template_version(
+        self,
+        role_template_id: str,
+        version: str,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Retrieve a role template version.
+
+        Retrieve a role template by providing a role template ID and version number.
+
+        :param str role_template_id: Role template ID.
+        :param str version: Role template version.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `RoleTemplate` object
+        """
+
+        if not role_template_id:
+            raise ValueError('role_template_id must be provided')
+        if not version:
+            raise ValueError('version must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='get_role_template_version',
+        )
+        headers.update(sdk_headers)
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['role_template_id', 'version']
+        path_param_values = self.encode_path_vars(role_template_id, version)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/v1/role_templates/{role_template_id}/versions/{version}'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='GET',
+            url=url,
+            headers=headers,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def commit_role_template(
+        self,
+        role_template_id: str,
+        version: str,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Commit a role template version.
+
+        Commit a role template version. You cannot make any further changes to the role
+        template once it's committed. If you have to make updates after committing a
+        version, create a new version.
+
+        :param str role_template_id: Role template ID.
+        :param str version: The role template version.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse
+        """
+
+        if not role_template_id:
+            raise ValueError('role_template_id must be provided')
+        if not version:
+            raise ValueError('version must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='commit_role_template',
+        )
+        headers.update(sdk_headers)
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+
+        path_param_keys = ['role_template_id', 'version']
+        path_param_values = self.encode_path_vars(role_template_id, version)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/v1/role_templates/{role_template_id}/versions/{version}/commit'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='POST',
+            url=url,
+            headers=headers,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    #########################
+    # Role Assignments
+    #########################
+
+    def list_role_assignments(
+        self,
+        account_id: str,
+        *,
+        accept_language: Optional[str] = None,
+        template_id: Optional[str] = None,
+        template_version: Optional[str] = None,
+        limit: Optional[int] = None,
+        start: Optional[str] = None,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Get role template assignments.
+
+        Get role template assignments by attributes. The following attributes are
+        supported:
+        `account_id`, `template_id`, `template_version`, `target`, `target_type`, `limit`,
+        `start`.
+        `account_id` is a required query parameter. Only role template assignments with
+        the specified attributes and  accessible by the caller are returned. If the caller
+        does not have read access to any role template assignments, an empty array is
+        returned.
+
+        :param str account_id: The account GUID in which the role assignment
+               belongs to.
+        :param str accept_language: (optional) Language code for translations
+               * `default` - English
+               * `de` -  German (Standard)
+               * `en` - English
+               * `es` - Spanish (Spain)
+               * `fr` - French (Standard)
+               * `it` - Italian (Standard)
+               * `ja` - Japanese
+               * `ko` - Korean
+               * `pt-br` - Portuguese (Brazil)
+               * `zh-cn` - Chinese (Simplified, PRC)
+               * `zh-tw` - (Chinese, Taiwan).
+        :param str template_id: (optional) Optional template ID.
+        :param str template_version: (optional) Optional role template version.
+        :param int limit: (optional) The number of documents to include in the
+               collection.
+        :param str start: (optional) Page token that refers to the page of the
+               collection to return.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `RoleAssignmentCollection` object
+        """
+
+        if not account_id:
+            raise ValueError('account_id must be provided')
+        headers = {
+            'Accept-Language': accept_language,
+        }
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='list_role_assignments',
+        )
+        headers.update(sdk_headers)
+
+        params = {
+            'account_id': account_id,
+            'template_id': template_id,
+            'template_version': template_version,
+            'limit': limit,
+            'start': start,
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        url = '/v1/role_assignments'
+        request = self.prepare_request(
+            method='GET',
+            url=url,
+            headers=headers,
+            params=params,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def create_role_template_assignment(
+        self,
+        target: 'AssignmentTargetDetails',
+        templates: List['RoleAssignmentTemplate'],
+        *,
+        accept_language: Optional[str] = None,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Create a role template assignment.
+
+        Assign a role template to child accounts and account groups. This creates the role
+        in the accounts and account groups that you specify.
+
+        :param AssignmentTargetDetails target: assignment target account and type.
+        :param List[RoleAssignmentTemplate] templates: List of role template
+               details for role assignment.
+        :param str accept_language: (optional) Language code for translations
+               * `default` - English
+               * `de` -  German (Standard)
+               * `en` - English
+               * `es` - Spanish (Spain)
+               * `fr` - French (Standard)
+               * `it` - Italian (Standard)
+               * `ja` - Japanese
+               * `ko` - Korean
+               * `pt-br` - Portuguese (Brazil)
+               * `zh-cn` - Chinese (Simplified, PRC)
+               * `zh-tw` - (Chinese, Taiwan).
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `RoleAssignmentCollection` object
+        """
+
+        if target is None:
+            raise ValueError('target must be provided')
+        if templates is None:
+            raise ValueError('templates must be provided')
+        target = convert_model(target)
+        templates = [convert_model(x) for x in templates]
+        headers = {
+            'Accept-Language': accept_language,
+        }
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='create_role_template_assignment',
+        )
+        headers.update(sdk_headers)
+
+        data = {
+            'target': target,
+            'templates': templates,
+        }
+        data = {k: v for (k, v) in data.items() if v is not None}
+        data = json.dumps(data)
+        headers['content-type'] = 'application/json'
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        url = '/v1/role_assignments'
+        request = self.prepare_request(
+            method='POST',
+            url=url,
+            headers=headers,
+            data=data,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def get_role_assignment(
+        self,
+        assignment_id: str,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Retrieve a role assignment.
+
+        Retrieve a role template assignment by providing a role assignment ID.
+
+        :param str assignment_id: Role template assignment ID.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `RoleAssignment` object
+        """
+
+        if not assignment_id:
+            raise ValueError('assignment_id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='get_role_assignment',
+        )
+        headers.update(sdk_headers)
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['assignment_id']
+        path_param_values = self.encode_path_vars(assignment_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/v1/role_assignments/{assignment_id}'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='GET',
+            url=url,
+            headers=headers,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def update_role_assignment(
+        self,
+        assignment_id: str,
+        if_match: str,
+        template_version: str,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Update a role assignment.
+
+        Update a role assignment by providing a role assignment ID.
+
+        :param str assignment_id: Role template assignment ID.
+        :param str if_match: The revision number for updating a role assignment and
+               must match the Etag value of the existing role assignment. The Etag can be
+               retrieved using the GET /v1/role_assignments/{assignment_id} API and
+               looking at the Etag response header.
+        :param str template_version: The version number of the template used to
+               identify different versions of same template.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `RoleAssignment` object
+        """
+
+        if not assignment_id:
+            raise ValueError('assignment_id must be provided')
+        if not if_match:
+            raise ValueError('if_match must be provided')
+        if template_version is None:
+            raise ValueError('template_version must be provided')
+        headers = {
+            'If-Match': if_match,
+        }
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='update_role_assignment',
+        )
+        headers.update(sdk_headers)
+
+        data = {
+            'template_version': template_version,
+        }
+        data = {k: v for (k, v) in data.items() if v is not None}
+        data = json.dumps(data)
+        headers['content-type'] = 'application/json'
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['assignment_id']
+        path_param_values = self.encode_path_vars(assignment_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/v1/role_assignments/{assignment_id}'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='PATCH',
+            url=url,
+            headers=headers,
+            data=data,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def delete_role_assignment(
+        self,
+        assignment_id: str,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Remove a role assignment.
+
+        Remove a role template assignment by providing a role assignment ID. You can't
+        delete a role assignment if the status is "in_progress".
+
+        :param str assignment_id: Role template assignment ID.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse
+        """
+
+        if not assignment_id:
+            raise ValueError('assignment_id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V1',
+            operation_id='delete_role_assignment',
+        )
+        headers.update(sdk_headers)
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+
+        path_param_keys = ['assignment_id']
+        path_param_values = self.encode_path_vars(assignment_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/v1/role_assignments/{assignment_id}'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='DELETE',
+            url=url,
+            headers=headers,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+
+class ListPoliciesEnums:
+    """
+    Enums for list_policies parameters.
+    """
+
+    class Type(str, Enum):
+        """
+        Optional type of policy.
+        """
+
+        ACCESS = 'access'
+        AUTHORIZATION = 'authorization'
+
+    class ServiceType(str, Enum):
+        """
+        Optional type of service.
+        """
+
+        SERVICE = 'service'
+        PLATFORM_SERVICE = 'platform_service'
+
+    class Sort(str, Enum):
+        """
+        Optional top level policy field to sort results. Ascending sort is default.
+        Descending sort available by prepending '-' to field. Example '-last_modified_at'.
+        """
+
+        ID = 'id'
+        TYPE = 'type'
+        HREF = 'href'
+        CREATED_AT = 'created_at'
+        CREATED_BY_ID = 'created_by_id'
+        LAST_MODIFIED_AT = 'last_modified_at'
+        LAST_MODIFIED_BY_ID = 'last_modified_by_id'
+        STATE = 'state'
+
+    class Format(str, Enum):
+        """
+        Include additional data per policy returned
+        * `include_last_permit` - returns details of when the policy last granted a permit
+        decision and the number of times it has done so
+        * `display` - returns the list of all actions included in each of the policy
+        roles.
+        """
+
+        INCLUDE_LAST_PERMIT = 'include_last_permit'
+        DISPLAY = 'display'
+
+    class State(str, Enum):
+        """
+        The state of the policy.
+        * `active` - returns active policies
+        * `deleted` - returns non-active policies.
+        """
+
+        ACTIVE = 'active'
+        DELETED = 'deleted'
+
+
+class ListV2PoliciesEnums:
+    """
+    Enums for list_v2_policies parameters.
+    """
+
+    class Type(str, Enum):
+        """
+        Optional type of policy.
+        """
+
+        ACCESS = 'access'
+        AUTHORIZATION = 'authorization'
+
+    class ServiceType(str, Enum):
+        """
+        Optional type of service.
+        """
+
+        SERVICE = 'service'
+        PLATFORM_SERVICE = 'platform_service'
+
+    class Format(str, Enum):
+        """
+        Include additional data per policy returned
+        * `include_last_permit` - returns details of when the policy last granted a permit
+        decision and the number of times it has done so
+        * `display` - returns the list of all actions included in each of the policy roles
+        and translations for all relevant fields.
+        """
+
+        INCLUDE_LAST_PERMIT = 'include_last_permit'
+        DISPLAY = 'display'
+
+    class State(str, Enum):
+        """
+        The state of the policy.
+        * `active` - returns active policies
+        * `deleted` - returns non-active policies.
+        """
+
+        ACTIVE = 'active'
+        DELETED = 'deleted'
+
+
+class GetV2PolicyEnums:
+    """
+    Enums for get_v2_policy parameters.
+    """
+
+    class Format(str, Enum):
+        """
+        Include additional data for policy returned
+        * `include_last_permit` - returns details of when the policy last granted a permit
+        decision and the number of times it has done so
+        * `display` - returns the list of all actions included in each of the policy roles
+        and translations for all relevant fields.
+        """
+
+        INCLUDE_LAST_PERMIT = 'include_last_permit'
+        DISPLAY = 'display'
+
+
+class ListPolicyTemplatesEnums:
+    """
+    Enums for list_policy_templates parameters.
+    """
+
+    class State(str, Enum):
+        """
+        The policy template state.
+        """
+
+        ACTIVE = 'active'
+        DELETED = 'deleted'
+
+    class PolicyServiceType(str, Enum):
+        """
+        Service type, Optional.
+        """
+
+        SERVICE = 'service'
+        PLATFORM_SERVICE = 'platform_service'
+
+    class PolicyType(str, Enum):
+        """
+        Policy type, Optional.
+        """
+
+        ACCESS = 'access'
+        AUTHORIZATION = 'authorization'
+
+
+class GetPolicyTemplateEnums:
+    """
+    Enums for get_policy_template parameters.
+    """
+
+    class State(str, Enum):
+        """
+        The policy template state.
+        """
+
+        ACTIVE = 'active'
+        DELETED = 'deleted'
+
+
+class ListPolicyTemplateVersionsEnums:
+    """
+    Enums for list_policy_template_versions parameters.
+    """
+
+    class State(str, Enum):
+        """
+        The policy template state.
+        """
+
+        ACTIVE = 'active'
+        DELETED = 'deleted'
+
+
+class GetActionControlTemplateEnums:
+    """
+    Enums for get_action_control_template parameters.
+    """
+
+    class State(str, Enum):
+        """
+        The action control template state.
+        """
+
+        ACTIVE = 'active'
+        DELETED = 'deleted'
+
+
+class ListActionControlTemplateVersionsEnums:
+    """
+    Enums for list_action_control_template_versions parameters.
+    """
+
+    class State(str, Enum):
+        """
+        Action control template state.
+        """
+
+        ACTIVE = 'active'
+        DELETED = 'deleted'
+
+
+class ListRoleTemplatesEnums:
+    """
+    Enums for list_role_templates parameters.
+    """
+
+    class State(str, Enum):
+        """
+        The role template state.
+        """
+
+        ACTIVE = 'active'
+        DELETED = 'deleted'
+
+
+class GetRoleTemplateEnums:
+    """
+    Enums for get_role_template parameters.
+    """
+
+    class State(str, Enum):
+        """
+        The role template state.
+        """
+
+        ACTIVE = 'active'
+        DELETED = 'deleted'
+
+
+class ListRoleTemplateVersionsEnums:
+    """
+    Enums for list_role_template_versions parameters.
+    """
+
+    class State(str, Enum):
+        """
+        Role template state.
+        """
+
+        ACTIVE = 'active'
+        DELETED = 'deleted'
+
+
+##############################################################################
+# Models
+##############################################################################
+
+
+class AccountSettingsAccessManagement:
+    """
+    The Access Management Account Settings that are currently set for the requested
+    account.
+
+    :param ExternalAccountIdentityInteraction external_account_identity_interaction:
+          How external accounts can interact in relation to the requested account.
+    """
+
+    def __init__(
+        self,
+        external_account_identity_interaction: 'ExternalAccountIdentityInteraction',
+    ) -> None:
+        """
+        Initialize a AccountSettingsAccessManagement object.
+
+        :param ExternalAccountIdentityInteraction
+               external_account_identity_interaction: How external accounts can interact
+               in relation to the requested account.
+        """
+        self.external_account_identity_interaction = external_account_identity_interaction
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'AccountSettingsAccessManagement':
+        """Initialize a AccountSettingsAccessManagement object from a json dictionary."""
+        args = {}
+        if (external_account_identity_interaction := _dict.get('external_account_identity_interaction')) is not None:
+            args['external_account_identity_interaction'] = ExternalAccountIdentityInteraction.from_dict(
+                external_account_identity_interaction
+            )
+        else:
+            raise ValueError(
+                'Required property \'external_account_identity_interaction\' not present in AccountSettingsAccessManagement JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a AccountSettingsAccessManagement object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if (
+            hasattr(self, 'external_account_identity_interaction')
+            and self.external_account_identity_interaction is not None
+        ):
+            if isinstance(self.external_account_identity_interaction, dict):
+                _dict['external_account_identity_interaction'] = self.external_account_identity_interaction
+            else:
+                _dict['external_account_identity_interaction'] = self.external_account_identity_interaction.to_dict()
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this AccountSettingsAccessManagement object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'AccountSettingsAccessManagement') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'AccountSettingsAccessManagement') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class ActionControlAssignment:
+    """
+    The set of properties associated with the assigned action control template.
+
+    :param str id: (optional) Action control assignment ID.
+    :param str account_id: (optional) The account GUID that the action control
+          assignments belong to.
+    :param str href: (optional) The href URL that links to the action control
+          assignments API by action control assignment ID.
+    :param datetime created_at: (optional) The UTC timestamp when the action control
+          assignment was created.
+    :param str created_by_id: (optional) The IAM ID of the entity that created the
+          action control assignment.
+    :param datetime last_modified_at: (optional) The UTC timestamp when the action
+          control assignment was last modified.
+    :param str last_modified_by_id: (optional) The IAM ID of the entity that last
+          modified the action control assignment.
+    :param str operation: (optional) The current operation of the action control
+          assignment.
+    :param List[ActionControlAssignmentResource] resources: (optional) Resources
+          created when action control template is assigned.
+    :param ActionControlAssignmentTemplate template: The action control template id
+          and version that will be assigned.
+    :param AssignmentTargetDetails target: assignment target account and type.
+    :param str status: (optional) The action control assignment status.
+    """
+
+    def __init__(
+        self,
+        template: 'ActionControlAssignmentTemplate',
+        target: 'AssignmentTargetDetails',
+        *,
+        id: Optional[str] = None,
+        account_id: Optional[str] = None,
+        href: Optional[str] = None,
+        created_at: Optional[datetime] = None,
+        created_by_id: Optional[str] = None,
+        last_modified_at: Optional[datetime] = None,
+        last_modified_by_id: Optional[str] = None,
+        operation: Optional[str] = None,
+        resources: Optional[List['ActionControlAssignmentResource']] = None,
+        status: Optional[str] = None,
+    ) -> None:
+        """
+        Initialize a ActionControlAssignment object.
+
+        :param ActionControlAssignmentTemplate template: The action control
+               template id and version that will be assigned.
+        :param AssignmentTargetDetails target: assignment target account and type.
+        """
+        self.id = id
+        self.account_id = account_id
+        self.href = href
+        self.created_at = created_at
+        self.created_by_id = created_by_id
+        self.last_modified_at = last_modified_at
+        self.last_modified_by_id = last_modified_by_id
+        self.operation = operation
+        self.resources = resources
+        self.template = template
+        self.target = target
+        self.status = status
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'ActionControlAssignment':
+        """Initialize a ActionControlAssignment object from a json dictionary."""
+        args = {}
+        if (id := _dict.get('id')) is not None:
+            args['id'] = id
+        if (account_id := _dict.get('account_id')) is not None:
+            args['account_id'] = account_id
+        if (href := _dict.get('href')) is not None:
+            args['href'] = href
+        if (created_at := _dict.get('created_at')) is not None:
+            args['created_at'] = string_to_datetime(created_at)
+        if (created_by_id := _dict.get('created_by_id')) is not None:
+            args['created_by_id'] = created_by_id
+        if (last_modified_at := _dict.get('last_modified_at')) is not None:
+            args['last_modified_at'] = string_to_datetime(last_modified_at)
+        if (last_modified_by_id := _dict.get('last_modified_by_id')) is not None:
+            args['last_modified_by_id'] = last_modified_by_id
+        if (operation := _dict.get('operation')) is not None:
+            args['operation'] = operation
+        if (resources := _dict.get('resources')) is not None:
+            args['resources'] = [ActionControlAssignmentResource.from_dict(v) for v in resources]
+        if (template := _dict.get('template')) is not None:
+            args['template'] = ActionControlAssignmentTemplate.from_dict(template)
+        else:
+            raise ValueError('Required property \'template\' not present in ActionControlAssignment JSON')
+        if (target := _dict.get('target')) is not None:
+            args['target'] = AssignmentTargetDetails.from_dict(target)
+        else:
+            raise ValueError('Required property \'target\' not present in ActionControlAssignment JSON')
+        if (status := _dict.get('status')) is not None:
+            args['status'] = status
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a ActionControlAssignment object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'id') and getattr(self, 'id') is not None:
+            _dict['id'] = getattr(self, 'id')
+        if hasattr(self, 'account_id') and getattr(self, 'account_id') is not None:
+            _dict['account_id'] = getattr(self, 'account_id')
+        if hasattr(self, 'href') and getattr(self, 'href') is not None:
+            _dict['href'] = getattr(self, 'href')
+        if hasattr(self, 'created_at') and getattr(self, 'created_at') is not None:
+            _dict['created_at'] = datetime_to_string(getattr(self, 'created_at'))
+        if hasattr(self, 'created_by_id') and getattr(self, 'created_by_id') is not None:
+            _dict['created_by_id'] = getattr(self, 'created_by_id')
+        if hasattr(self, 'last_modified_at') and getattr(self, 'last_modified_at') is not None:
+            _dict['last_modified_at'] = datetime_to_string(getattr(self, 'last_modified_at'))
+        if hasattr(self, 'last_modified_by_id') and getattr(self, 'last_modified_by_id') is not None:
+            _dict['last_modified_by_id'] = getattr(self, 'last_modified_by_id')
+        if hasattr(self, 'operation') and getattr(self, 'operation') is not None:
+            _dict['operation'] = getattr(self, 'operation')
+        if hasattr(self, 'resources') and getattr(self, 'resources') is not None:
+            resources_list = []
+            for v in getattr(self, 'resources'):
+                if isinstance(v, dict):
+                    resources_list.append(v)
+                else:
+                    resources_list.append(v.to_dict())
+            _dict['resources'] = resources_list
+        if hasattr(self, 'template') and self.template is not None:
+            if isinstance(self.template, dict):
+                _dict['template'] = self.template
+            else:
+                _dict['template'] = self.template.to_dict()
+        if hasattr(self, 'target') and self.target is not None:
+            if isinstance(self.target, dict):
+                _dict['target'] = self.target
+            else:
+                _dict['target'] = self.target.to_dict()
+        if hasattr(self, 'status') and getattr(self, 'status') is not None:
+            _dict['status'] = getattr(self, 'status')
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this ActionControlAssignment object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'ActionControlAssignment') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'ActionControlAssignment') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class OperationEnum(str, Enum):
+        """
+        The current operation of the action control assignment.
+        """
+
+        CREATE = 'create'
+        APPLY = 'apply'
+        UPDATE = 'update'
+        REMOVE = 'remove'
+
+    class StatusEnum(str, Enum):
+        """
+        The action control assignment status.
+        """
+
+        ACCEPTED = 'accepted'
+        FAILURE = 'failure'
+        IN_PROGRESS = 'in_progress'
+        SUPERSEDED = 'superseded'
+
+
+class ActionControlAssignmentCollection:
+    """
+    A collection of action control assignments.
+
+    :param int limit: (optional) The number of documents to include per each page of
+          the collection.
+    :param First first: (optional) Details with linking href to first page of
+          requested collection.
+    :param Next next: (optional) Details with href linking to the following page of
+          requested collection.
+    :param Previous previous: (optional) Details with linking href to previous page
+          of requested collection.
+    :param List[ActionControlAssignment] assignments: List of action control
+          assignments.
+    """
+
+    def __init__(
+        self,
+        assignments: List['ActionControlAssignment'],
+        *,
+        limit: Optional[int] = None,
+        first: Optional['First'] = None,
+        next: Optional['Next'] = None,
+        previous: Optional['Previous'] = None,
+    ) -> None:
+        """
+        Initialize a ActionControlAssignmentCollection object.
+
+        :param List[ActionControlAssignment] assignments: List of action control
+               assignments.
+        :param int limit: (optional) The number of documents to include per each
+               page of the collection.
+        :param First first: (optional) Details with linking href to first page of
+               requested collection.
+        :param Next next: (optional) Details with href linking to the following
+               page of requested collection.
+        :param Previous previous: (optional) Details with linking href to previous
+               page of requested collection.
+        """
+        self.limit = limit
+        self.first = first
+        self.next = next
+        self.previous = previous
+        self.assignments = assignments
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'ActionControlAssignmentCollection':
+        """Initialize a ActionControlAssignmentCollection object from a json dictionary."""
+        args = {}
+        if (limit := _dict.get('limit')) is not None:
+            args['limit'] = limit
+        if (first := _dict.get('first')) is not None:
+            args['first'] = First.from_dict(first)
+        if (next := _dict.get('next')) is not None:
+            args['next'] = Next.from_dict(next)
+        if (previous := _dict.get('previous')) is not None:
+            args['previous'] = Previous.from_dict(previous)
+        if (assignments := _dict.get('assignments')) is not None:
+            args['assignments'] = [ActionControlAssignment.from_dict(v) for v in assignments]
+        else:
+            raise ValueError('Required property \'assignments\' not present in ActionControlAssignmentCollection JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a ActionControlAssignmentCollection object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'limit') and self.limit is not None:
+            _dict['limit'] = self.limit
+        if hasattr(self, 'first') and self.first is not None:
+            if isinstance(self.first, dict):
+                _dict['first'] = self.first
+            else:
+                _dict['first'] = self.first.to_dict()
+        if hasattr(self, 'next') and self.next is not None:
+            if isinstance(self.next, dict):
+                _dict['next'] = self.next
+            else:
+                _dict['next'] = self.next.to_dict()
+        if hasattr(self, 'previous') and self.previous is not None:
+            if isinstance(self.previous, dict):
+                _dict['previous'] = self.previous
+            else:
+                _dict['previous'] = self.previous.to_dict()
+        if hasattr(self, 'assignments') and self.assignments is not None:
+            assignments_list = []
+            for v in self.assignments:
+                if isinstance(v, dict):
+                    assignments_list.append(v)
+                else:
+                    assignments_list.append(v.to_dict())
+            _dict['assignments'] = assignments_list
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this ActionControlAssignmentCollection object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'ActionControlAssignmentCollection') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'ActionControlAssignmentCollection') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class ActionControlAssignmentResource:
+    """
+    The action control assignment resources and target where the template is assigned.
+
+    :param AssignmentTargetDetails target: assignment target account and type.
+    :param ActionControlAssignmentResourceActionControl action_control: (optional)
+          Set of properties of the assigned resource or error message if assignment
+          failed.
+    """
+
+    def __init__(
+        self,
+        target: 'AssignmentTargetDetails',
+        *,
+        action_control: Optional['ActionControlAssignmentResourceActionControl'] = None,
+    ) -> None:
+        """
+        Initialize a ActionControlAssignmentResource object.
+
+        :param AssignmentTargetDetails target: assignment target account and type.
+        :param ActionControlAssignmentResourceActionControl action_control:
+               (optional) Set of properties of the assigned resource or error message if
+               assignment failed.
+        """
+        self.target = target
+        self.action_control = action_control
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'ActionControlAssignmentResource':
+        """Initialize a ActionControlAssignmentResource object from a json dictionary."""
+        args = {}
+        if (target := _dict.get('target')) is not None:
+            args['target'] = AssignmentTargetDetails.from_dict(target)
+        else:
+            raise ValueError('Required property \'target\' not present in ActionControlAssignmentResource JSON')
+        if (action_control := _dict.get('action_control')) is not None:
+            args['action_control'] = ActionControlAssignmentResourceActionControl.from_dict(action_control)
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a ActionControlAssignmentResource object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'target') and self.target is not None:
+            if isinstance(self.target, dict):
+                _dict['target'] = self.target
+            else:
+                _dict['target'] = self.target.to_dict()
+        if hasattr(self, 'action_control') and self.action_control is not None:
+            if isinstance(self.action_control, dict):
+                _dict['action_control'] = self.action_control
+            else:
+                _dict['action_control'] = self.action_control.to_dict()
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this ActionControlAssignmentResource object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'ActionControlAssignmentResource') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'ActionControlAssignmentResource') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class ActionControlAssignmentResourceActionControl:
+    """
+    Set of properties of the assigned resource or error message if assignment failed.
+
+    :param ActionControlAssignmentResourceCreated resource_created: (optional) On
+          success, it includes the action control assigned.
+    :param AssignmentResourceError error_message: (optional) Body parameters for
+          assignment error.
+    """
+
+    def __init__(
+        self,
+        *,
+        resource_created: Optional['ActionControlAssignmentResourceCreated'] = None,
+        error_message: Optional['AssignmentResourceError'] = None,
+    ) -> None:
+        """
+        Initialize a ActionControlAssignmentResourceActionControl object.
+
+        :param ActionControlAssignmentResourceCreated resource_created: (optional)
+               On success, it includes the action control assigned.
+        :param AssignmentResourceError error_message: (optional) Body parameters
+               for assignment error.
+        """
+        self.resource_created = resource_created
+        self.error_message = error_message
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'ActionControlAssignmentResourceActionControl':
+        """Initialize a ActionControlAssignmentResourceActionControl object from a json dictionary."""
+        args = {}
+        if (resource_created := _dict.get('resource_created')) is not None:
+            args['resource_created'] = ActionControlAssignmentResourceCreated.from_dict(resource_created)
+        if (error_message := _dict.get('error_message')) is not None:
+            args['error_message'] = AssignmentResourceError.from_dict(error_message)
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a ActionControlAssignmentResourceActionControl object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'resource_created') and self.resource_created is not None:
+            if isinstance(self.resource_created, dict):
+                _dict['resource_created'] = self.resource_created
+            else:
+                _dict['resource_created'] = self.resource_created.to_dict()
+        if hasattr(self, 'error_message') and self.error_message is not None:
+            if isinstance(self.error_message, dict):
+                _dict['error_message'] = self.error_message
+            else:
+                _dict['error_message'] = self.error_message.to_dict()
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this ActionControlAssignmentResourceActionControl object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'ActionControlAssignmentResourceActionControl') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'ActionControlAssignmentResourceActionControl') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class ActionControlAssignmentResourceCreated:
+    """
+    On success, it includes the action control assigned.
+
+    :param str id: (optional) action control id.
+    """
+
+    def __init__(
+        self,
+        *,
+        id: Optional[str] = None,
+    ) -> None:
+        """
+        Initialize a ActionControlAssignmentResourceCreated object.
+
+        :param str id: (optional) action control id.
+        """
+        self.id = id
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'ActionControlAssignmentResourceCreated':
+        """Initialize a ActionControlAssignmentResourceCreated object from a json dictionary."""
+        args = {}
+        if (id := _dict.get('id')) is not None:
+            args['id'] = id
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a ActionControlAssignmentResourceCreated object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this ActionControlAssignmentResourceCreated object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'ActionControlAssignmentResourceCreated') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'ActionControlAssignmentResourceCreated') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class ActionControlAssignmentTemplate:
+    """
+    The action control template id and version that will be assigned.
+
+    :param str id: Action control template ID.
+    :param str version: Action control template version.
+    """
+
+    def __init__(
+        self,
+        id: str,
+        version: str,
+    ) -> None:
+        """
+        Initialize a ActionControlAssignmentTemplate object.
+
+        :param str id: Action control template ID.
+        :param str version: Action control template version.
+        """
+        self.id = id
+        self.version = version
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'ActionControlAssignmentTemplate':
+        """Initialize a ActionControlAssignmentTemplate object from a json dictionary."""
+        args = {}
+        if (id := _dict.get('id')) is not None:
+            args['id'] = id
+        else:
+            raise ValueError('Required property \'id\' not present in ActionControlAssignmentTemplate JSON')
+        if (version := _dict.get('version')) is not None:
+            args['version'] = version
+        else:
+            raise ValueError('Required property \'version\' not present in ActionControlAssignmentTemplate JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a ActionControlAssignmentTemplate object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        if hasattr(self, 'version') and self.version is not None:
+            _dict['version'] = self.version
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this ActionControlAssignmentTemplate object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'ActionControlAssignmentTemplate') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'ActionControlAssignmentTemplate') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class ActionControlTemplate:
+    """
+    The set of properties associated with the action control template.
+
+    :param str name: Required field when creating a new template. Otherwise, this
+          field is optional. If the field is included, it changes the name value for all
+          existing versions of the template.
+    :param str description: Description of the action control template. This is
+          shown to users in the enterprise account. Use this to describe the purpose or
+          context of the action control for enterprise users managing IAM templates.
+    :param str account_id: Enterprise account ID where this template is created.
+    :param bool committed: (optional) Committed status of the template. If committed
+          is set to true, then the template version can no longer be updated.
+    :param TemplateActionControl action_control: (optional) The action control
+          properties that are created in an action resource when the template is assigned.
+    :param str id: (optional) The action control template ID.
+    :param str href: (optional) The href URL that links to the action control
+          templates API by action control template ID.
+    :param datetime created_at: (optional) The UTC timestamp when the action control
+          template was created.
+    :param str created_by_id: (optional) The IAM ID of the entity that created the
+          action control template.
+    :param datetime last_modified_at: (optional) The UTC timestamp when the action
+          control template was last modified.
+    :param str last_modified_by_id: (optional) The IAM ID of the entity that last
+          modified the action control template.
+    :param str version: The version number of the template used to identify
+          different versions of same template.
+    :param str state: State of action control template.
+    """
+
+    def __init__(
+        self,
+        name: str,
+        description: str,
+        account_id: str,
+        version: str,
+        state: str,
+        *,
+        committed: Optional[bool] = None,
+        action_control: Optional['TemplateActionControl'] = None,
+        id: Optional[str] = None,
+        href: Optional[str] = None,
+        created_at: Optional[datetime] = None,
+        created_by_id: Optional[str] = None,
+        last_modified_at: Optional[datetime] = None,
+        last_modified_by_id: Optional[str] = None,
+    ) -> None:
+        """
+        Initialize a ActionControlTemplate object.
+
+        :param str name: Required field when creating a new template. Otherwise,
+               this field is optional. If the field is included, it changes the name value
+               for all existing versions of the template.
+        :param str description: Description of the action control template. This is
+               shown to users in the enterprise account. Use this to describe the purpose
+               or context of the action control for enterprise users managing IAM
+               templates.
+        :param str account_id: Enterprise account ID where this template is
+               created.
+        :param str version: The version number of the template used to identify
+               different versions of same template.
+        :param str state: State of action control template.
+        :param bool committed: (optional) Committed status of the template. If
+               committed is set to true, then the template version can no longer be
+               updated.
+        :param TemplateActionControl action_control: (optional) The action control
+               properties that are created in an action resource when the template is
+               assigned.
+        """
+        self.name = name
+        self.description = description
+        self.account_id = account_id
+        self.committed = committed
+        self.action_control = action_control
+        self.id = id
+        self.href = href
+        self.created_at = created_at
+        self.created_by_id = created_by_id
+        self.last_modified_at = last_modified_at
+        self.last_modified_by_id = last_modified_by_id
+        self.version = version
+        self.state = state
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'ActionControlTemplate':
+        """Initialize a ActionControlTemplate object from a json dictionary."""
+        args = {}
+        if (name := _dict.get('name')) is not None:
+            args['name'] = name
+        else:
+            raise ValueError('Required property \'name\' not present in ActionControlTemplate JSON')
+        if (description := _dict.get('description')) is not None:
+            args['description'] = description
+        else:
+            raise ValueError('Required property \'description\' not present in ActionControlTemplate JSON')
+        if (account_id := _dict.get('account_id')) is not None:
+            args['account_id'] = account_id
+        else:
+            raise ValueError('Required property \'account_id\' not present in ActionControlTemplate JSON')
+        if (committed := _dict.get('committed')) is not None:
+            args['committed'] = committed
+        if (action_control := _dict.get('action_control')) is not None:
+            args['action_control'] = TemplateActionControl.from_dict(action_control)
+        if (id := _dict.get('id')) is not None:
+            args['id'] = id
+        if (href := _dict.get('href')) is not None:
+            args['href'] = href
+        if (created_at := _dict.get('created_at')) is not None:
+            args['created_at'] = string_to_datetime(created_at)
+        if (created_by_id := _dict.get('created_by_id')) is not None:
+            args['created_by_id'] = created_by_id
+        if (last_modified_at := _dict.get('last_modified_at')) is not None:
+            args['last_modified_at'] = string_to_datetime(last_modified_at)
+        if (last_modified_by_id := _dict.get('last_modified_by_id')) is not None:
+            args['last_modified_by_id'] = last_modified_by_id
+        if (version := _dict.get('version')) is not None:
+            args['version'] = version
+        else:
+            raise ValueError('Required property \'version\' not present in ActionControlTemplate JSON')
+        if (state := _dict.get('state')) is not None:
+            args['state'] = state
+        else:
+            raise ValueError('Required property \'state\' not present in ActionControlTemplate JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a ActionControlTemplate object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'description') and self.description is not None:
+            _dict['description'] = self.description
+        if hasattr(self, 'account_id') and self.account_id is not None:
+            _dict['account_id'] = self.account_id
+        if hasattr(self, 'committed') and self.committed is not None:
+            _dict['committed'] = self.committed
+        if hasattr(self, 'action_control') and self.action_control is not None:
+            if isinstance(self.action_control, dict):
+                _dict['action_control'] = self.action_control
+            else:
+                _dict['action_control'] = self.action_control.to_dict()
+        if hasattr(self, 'id') and getattr(self, 'id') is not None:
+            _dict['id'] = getattr(self, 'id')
+        if hasattr(self, 'href') and getattr(self, 'href') is not None:
+            _dict['href'] = getattr(self, 'href')
+        if hasattr(self, 'created_at') and getattr(self, 'created_at') is not None:
+            _dict['created_at'] = datetime_to_string(getattr(self, 'created_at'))
+        if hasattr(self, 'created_by_id') and getattr(self, 'created_by_id') is not None:
+            _dict['created_by_id'] = getattr(self, 'created_by_id')
+        if hasattr(self, 'last_modified_at') and getattr(self, 'last_modified_at') is not None:
+            _dict['last_modified_at'] = datetime_to_string(getattr(self, 'last_modified_at'))
+        if hasattr(self, 'last_modified_by_id') and getattr(self, 'last_modified_by_id') is not None:
+            _dict['last_modified_by_id'] = getattr(self, 'last_modified_by_id')
+        if hasattr(self, 'version') and self.version is not None:
+            _dict['version'] = self.version
+        if hasattr(self, 'state') and self.state is not None:
+            _dict['state'] = self.state
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this ActionControlTemplate object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'ActionControlTemplate') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'ActionControlTemplate') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class StateEnum(str, Enum):
+        """
+        State of action control template.
+        """
+
+        ACTIVE = 'active'
+        DELETED = 'deleted'
+
+
+class ActionControlTemplateCollection:
+    """
+    A collection of action control templates.
+
+    :param int limit: (optional) The number of documents to include per each page of
+          the collection.
+    :param First first: (optional) Details with linking href to first page of
+          requested collection.
+    :param Next next: (optional) Details with href linking to the following page of
+          requested collection.
+    :param Previous previous: (optional) Details with linking href to previous page
+          of requested collection.
+    :param List[ActionControlTemplate] action_control_templates: List of action
+          control templates.
+    """
+
+    def __init__(
+        self,
+        action_control_templates: List['ActionControlTemplate'],
+        *,
+        limit: Optional[int] = None,
+        first: Optional['First'] = None,
+        next: Optional['Next'] = None,
+        previous: Optional['Previous'] = None,
+    ) -> None:
+        """
+        Initialize a ActionControlTemplateCollection object.
+
+        :param List[ActionControlTemplate] action_control_templates: List of action
+               control templates.
+        :param int limit: (optional) The number of documents to include per each
+               page of the collection.
+        :param First first: (optional) Details with linking href to first page of
+               requested collection.
+        :param Next next: (optional) Details with href linking to the following
+               page of requested collection.
+        :param Previous previous: (optional) Details with linking href to previous
+               page of requested collection.
+        """
+        self.limit = limit
+        self.first = first
+        self.next = next
+        self.previous = previous
+        self.action_control_templates = action_control_templates
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'ActionControlTemplateCollection':
+        """Initialize a ActionControlTemplateCollection object from a json dictionary."""
+        args = {}
+        if (limit := _dict.get('limit')) is not None:
+            args['limit'] = limit
+        if (first := _dict.get('first')) is not None:
+            args['first'] = First.from_dict(first)
+        if (next := _dict.get('next')) is not None:
+            args['next'] = Next.from_dict(next)
+        if (previous := _dict.get('previous')) is not None:
+            args['previous'] = Previous.from_dict(previous)
+        if (action_control_templates := _dict.get('action_control_templates')) is not None:
+            args['action_control_templates'] = [ActionControlTemplate.from_dict(v) for v in action_control_templates]
+        else:
+            raise ValueError(
+                'Required property \'action_control_templates\' not present in ActionControlTemplateCollection JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a ActionControlTemplateCollection object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'limit') and self.limit is not None:
+            _dict['limit'] = self.limit
+        if hasattr(self, 'first') and self.first is not None:
+            if isinstance(self.first, dict):
+                _dict['first'] = self.first
+            else:
+                _dict['first'] = self.first.to_dict()
+        if hasattr(self, 'next') and self.next is not None:
+            if isinstance(self.next, dict):
+                _dict['next'] = self.next
+            else:
+                _dict['next'] = self.next.to_dict()
+        if hasattr(self, 'previous') and self.previous is not None:
+            if isinstance(self.previous, dict):
+                _dict['previous'] = self.previous
+            else:
+                _dict['previous'] = self.previous.to_dict()
+        if hasattr(self, 'action_control_templates') and self.action_control_templates is not None:
+            action_control_templates_list = []
+            for v in self.action_control_templates:
+                if isinstance(v, dict):
+                    action_control_templates_list.append(v)
+                else:
+                    action_control_templates_list.append(v.to_dict())
+            _dict['action_control_templates'] = action_control_templates_list
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this ActionControlTemplateCollection object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'ActionControlTemplateCollection') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'ActionControlTemplateCollection') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class ActionControlTemplateVersionsCollection:
+    """
+    A collection of versions for a specific action control template.
+
+    :param int limit: (optional) The number of documents to include per each page of
+          the collection.
+    :param First first: (optional) Details with linking href to first page of
+          requested collection.
+    :param Next next: (optional) Details with href linking to the following page of
+          requested collection.
+    :param Previous previous: (optional) Details with linking href to previous page
+          of requested collection.
+    :param List[ActionControlTemplate] versions: List of action control templates
+          versions.
+    """
+
+    def __init__(
+        self,
+        versions: List['ActionControlTemplate'],
+        *,
+        limit: Optional[int] = None,
+        first: Optional['First'] = None,
+        next: Optional['Next'] = None,
+        previous: Optional['Previous'] = None,
+    ) -> None:
+        """
+        Initialize a ActionControlTemplateVersionsCollection object.
+
+        :param List[ActionControlTemplate] versions: List of action control
+               templates versions.
+        :param int limit: (optional) The number of documents to include per each
+               page of the collection.
+        :param First first: (optional) Details with linking href to first page of
+               requested collection.
+        :param Next next: (optional) Details with href linking to the following
+               page of requested collection.
+        :param Previous previous: (optional) Details with linking href to previous
+               page of requested collection.
+        """
+        self.limit = limit
+        self.first = first
+        self.next = next
+        self.previous = previous
+        self.versions = versions
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'ActionControlTemplateVersionsCollection':
+        """Initialize a ActionControlTemplateVersionsCollection object from a json dictionary."""
+        args = {}
+        if (limit := _dict.get('limit')) is not None:
+            args['limit'] = limit
+        if (first := _dict.get('first')) is not None:
+            args['first'] = First.from_dict(first)
+        if (next := _dict.get('next')) is not None:
+            args['next'] = Next.from_dict(next)
+        if (previous := _dict.get('previous')) is not None:
+            args['previous'] = Previous.from_dict(previous)
+        if (versions := _dict.get('versions')) is not None:
+            args['versions'] = [ActionControlTemplate.from_dict(v) for v in versions]
+        else:
+            raise ValueError(
+                'Required property \'versions\' not present in ActionControlTemplateVersionsCollection JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a ActionControlTemplateVersionsCollection object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'limit') and self.limit is not None:
+            _dict['limit'] = self.limit
+        if hasattr(self, 'first') and self.first is not None:
+            if isinstance(self.first, dict):
+                _dict['first'] = self.first
+            else:
+                _dict['first'] = self.first.to_dict()
+        if hasattr(self, 'next') and self.next is not None:
+            if isinstance(self.next, dict):
+                _dict['next'] = self.next
+            else:
+                _dict['next'] = self.next.to_dict()
+        if hasattr(self, 'previous') and self.previous is not None:
+            if isinstance(self.previous, dict):
+                _dict['previous'] = self.previous
+            else:
+                _dict['previous'] = self.previous.to_dict()
+        if hasattr(self, 'versions') and self.versions is not None:
+            versions_list = []
+            for v in self.versions:
+                if isinstance(v, dict):
+                    versions_list.append(v)
+                else:
+                    versions_list.append(v.to_dict())
+            _dict['versions'] = versions_list
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this ActionControlTemplateVersionsCollection object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'ActionControlTemplateVersionsCollection') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'ActionControlTemplateVersionsCollection') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class AssignmentResourceCreated:
+    """
+    On success, includes the  policy that is assigned.
+
+    :param str id: (optional) Policy id.
+    """
+
+    def __init__(
+        self,
+        *,
+        id: Optional[str] = None,
+    ) -> None:
+        """
+        Initialize a AssignmentResourceCreated object.
+
+        :param str id: (optional) Policy id.
+        """
+        self.id = id
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'AssignmentResourceCreated':
+        """Initialize a AssignmentResourceCreated object from a json dictionary."""
+        args = {}
+        if (id := _dict.get('id')) is not None:
+            args['id'] = id
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a AssignmentResourceCreated object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this AssignmentResourceCreated object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'AssignmentResourceCreated') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'AssignmentResourceCreated') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class AssignmentResourceError:
+    """
+    Body parameters for assignment error.
+
+    :param str name: (optional) Name of the error.
+    :param str error_code: (optional) error code.
+    :param str message: (optional) Error message detailing the nature of the error.
+    :param str code: (optional) Internal status code for the error.
+    :param List[ErrorObject] errors: (optional) The errors encountered during the
+          response.
+    """
+
+    def __init__(
+        self,
+        *,
+        name: Optional[str] = None,
+        error_code: Optional[str] = None,
+        message: Optional[str] = None,
+        code: Optional[str] = None,
+        errors: Optional[List['ErrorObject']] = None,
+    ) -> None:
+        """
+        Initialize a AssignmentResourceError object.
+
+        :param str name: (optional) Name of the error.
+        :param str error_code: (optional) error code.
+        :param str message: (optional) Error message detailing the nature of the
+               error.
+        :param str code: (optional) Internal status code for the error.
+        :param List[ErrorObject] errors: (optional) The errors encountered during
+               the response.
+        """
+        self.name = name
+        self.error_code = error_code
+        self.message = message
+        self.code = code
+        self.errors = errors
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'AssignmentResourceError':
+        """Initialize a AssignmentResourceError object from a json dictionary."""
+        args = {}
+        if (name := _dict.get('name')) is not None:
+            args['name'] = name
+        if (error_code := _dict.get('errorCode')) is not None:
+            args['error_code'] = error_code
+        if (message := _dict.get('message')) is not None:
+            args['message'] = message
+        if (code := _dict.get('code')) is not None:
+            args['code'] = code
+        if (errors := _dict.get('errors')) is not None:
+            args['errors'] = [ErrorObject.from_dict(v) for v in errors]
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a AssignmentResourceError object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'error_code') and self.error_code is not None:
+            _dict['errorCode'] = self.error_code
+        if hasattr(self, 'message') and self.message is not None:
+            _dict['message'] = self.message
+        if hasattr(self, 'code') and self.code is not None:
+            _dict['code'] = self.code
+        if hasattr(self, 'errors') and self.errors is not None:
+            errors_list = []
+            for v in self.errors:
+                if isinstance(v, dict):
+                    errors_list.append(v)
+                else:
+                    errors_list.append(v.to_dict())
+            _dict['errors'] = errors_list
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this AssignmentResourceError object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'AssignmentResourceError') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'AssignmentResourceError') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class AssignmentTargetDetails:
+    """
+    assignment target account and type.
+
+    :param str type: Assignment target type.
+    :param str id: ID of the target account.
+    """
+
+    def __init__(
+        self,
+        type: str,
+        id: str,
+    ) -> None:
+        """
+        Initialize a AssignmentTargetDetails object.
+
+        :param str type: Assignment target type.
+        :param str id: ID of the target account.
+        """
+        self.type = type
+        self.id = id
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'AssignmentTargetDetails':
+        """Initialize a AssignmentTargetDetails object from a json dictionary."""
+        args = {}
+        if (type := _dict.get('type')) is not None:
+            args['type'] = type
+        else:
+            raise ValueError('Required property \'type\' not present in AssignmentTargetDetails JSON')
+        if (id := _dict.get('id')) is not None:
+            args['id'] = id
+        else:
+            raise ValueError('Required property \'id\' not present in AssignmentTargetDetails JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a AssignmentTargetDetails object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this AssignmentTargetDetails object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'AssignmentTargetDetails') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'AssignmentTargetDetails') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        Assignment target type.
+        """
+
+        ACCOUNT = 'Account'
+
+
+class AssignmentTemplateDetails:
+    """
+    policy template details.
+
+    :param str id: (optional) Policy template ID.
+    :param str version: (optional) Policy template version.
+    """
+
+    def __init__(
+        self,
+        *,
+        id: Optional[str] = None,
+        version: Optional[str] = None,
+    ) -> None:
+        """
+        Initialize a AssignmentTemplateDetails object.
+
+        :param str id: (optional) Policy template ID.
+        :param str version: (optional) Policy template version.
+        """
+        self.id = id
+        self.version = version
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'AssignmentTemplateDetails':
+        """Initialize a AssignmentTemplateDetails object from a json dictionary."""
+        args = {}
+        if (id := _dict.get('id')) is not None:
+            args['id'] = id
+        if (version := _dict.get('version')) is not None:
+            args['version'] = version
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a AssignmentTemplateDetails object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        if hasattr(self, 'version') and self.version is not None:
+            _dict['version'] = self.version
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this AssignmentTemplateDetails object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'AssignmentTemplateDetails') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'AssignmentTemplateDetails') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class ConflictsWith:
+    """
+    Details of conflicting resource.
+
+    :param str etag: (optional) The revision number of the resource.
+    :param str role: (optional) The conflicting role of ID.
+    :param str policy: (optional) The conflicting policy ID.
+    """
+
+    def __init__(
+        self,
+        *,
+        etag: Optional[str] = None,
+        role: Optional[str] = None,
+        policy: Optional[str] = None,
+    ) -> None:
+        """
+        Initialize a ConflictsWith object.
+
+        :param str etag: (optional) The revision number of the resource.
+        :param str role: (optional) The conflicting role of ID.
+        :param str policy: (optional) The conflicting policy ID.
+        """
+        self.etag = etag
+        self.role = role
+        self.policy = policy
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'ConflictsWith':
+        """Initialize a ConflictsWith object from a json dictionary."""
+        args = {}
+        if (etag := _dict.get('etag')) is not None:
+            args['etag'] = etag
+        if (role := _dict.get('role')) is not None:
+            args['role'] = role
+        if (policy := _dict.get('policy')) is not None:
+            args['policy'] = policy
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a ConflictsWith object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'etag') and self.etag is not None:
+            _dict['etag'] = self.etag
+        if hasattr(self, 'role') and self.role is not None:
+            _dict['role'] = self.role
+        if hasattr(self, 'policy') and self.policy is not None:
+            _dict['policy'] = self.policy
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this ConflictsWith object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'ConflictsWith') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'ConflictsWith') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class Control:
+    """
+    Specifies the type of access that is granted by the policy.
+
+    :param Grant grant: Permission is granted by the policy.
+    """
+
+    def __init__(
+        self,
+        grant: 'Grant',
+    ) -> None:
+        """
+        Initialize a Control object.
+
+        :param Grant grant: Permission is granted by the policy.
+        """
+        self.grant = grant
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'Control':
+        """Initialize a Control object from a json dictionary."""
+        args = {}
+        if (grant := _dict.get('grant')) is not None:
+            args['grant'] = Grant.from_dict(grant)
+        else:
+            raise ValueError('Required property \'grant\' not present in Control JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a Control object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'grant') and self.grant is not None:
+            if isinstance(self.grant, dict):
+                _dict['grant'] = self.grant
+            else:
+                _dict['grant'] = self.grant.to_dict()
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this Control object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'Control') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'Control') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class ControlResponse:
+    """
+    ControlResponse.
+
+    """
+
+    def __init__(
+        self,
+    ) -> None:
+        """
+        Initialize a ControlResponse object.
+
+        """
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+            ", ".join(['ControlResponseControl', 'ControlResponseControlWithEnrichedRoles'])
+        )
+        raise Exception(msg)
+
+
+class CustomRole:
+    """
+    An additional set of properties associated with a role.
+
+    :param str id: (optional) The role ID. Composed of hexadecimal characters.
+    :param str display_name: The display the name of the role that is shown in the
+          console.
+    :param str description: (optional) The description of the role.
+    :param List[str] actions: The actions of the role. For more information, see
+          [IAM roles and
+          actions](https://cloud.ibm.com/docs/account?topic=account-iam-service-roles-actions).
+    :param str crn: (optional) The role Cloud Resource Name (CRN). Example CRN:
+          'crn:v1:ibmcloud:public:iam-access-management::a/exampleAccountId::customRole:ExampleRoleName'.
+    :param str name: The name of the role that is used in the CRN. This must be
+          alphanumeric and capitalized.
+    :param str account_id: The account GUID.
+    :param str service_name: The service name.
+    :param datetime created_at: (optional) The UTC timestamp when the role was
+          created.
+    :param str created_by_id: (optional) The IAM ID of the entity that created the
+          role.
+    :param datetime last_modified_at: (optional) The UTC timestamp when the role was
+          last modified.
+    :param str last_modified_by_id: (optional) The IAM ID of the entity that last
+          modified the policy.
+    :param str href: (optional) The href links back to the role.
+    """
+
+    def __init__(
+        self,
+        display_name: str,
+        actions: List[str],
+        name: str,
+        account_id: str,
+        service_name: str,
+        *,
+        id: Optional[str] = None,
+        description: Optional[str] = None,
+        crn: Optional[str] = None,
+        created_at: Optional[datetime] = None,
+        created_by_id: Optional[str] = None,
+        last_modified_at: Optional[datetime] = None,
+        last_modified_by_id: Optional[str] = None,
+        href: Optional[str] = None,
+    ) -> None:
+        """
+        Initialize a CustomRole object.
+
+        :param str display_name: The display the name of the role that is shown in
+               the console.
+        :param List[str] actions: The actions of the role. For more information,
+               see [IAM roles and
+               actions](https://cloud.ibm.com/docs/account?topic=account-iam-service-roles-actions).
+        :param str name: The name of the role that is used in the CRN. This must be
+               alphanumeric and capitalized.
+        :param str account_id: The account GUID.
+        :param str service_name: The service name.
+        :param str description: (optional) The description of the role.
+        """
+        self.id = id
+        self.display_name = display_name
+        self.description = description
+        self.actions = actions
+        self.crn = crn
+        self.name = name
+        self.account_id = account_id
+        self.service_name = service_name
+        self.created_at = created_at
+        self.created_by_id = created_by_id
+        self.last_modified_at = last_modified_at
+        self.last_modified_by_id = last_modified_by_id
+        self.href = href
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'CustomRole':
+        """Initialize a CustomRole object from a json dictionary."""
+        args = {}
+        if (id := _dict.get('id')) is not None:
+            args['id'] = id
+        if (display_name := _dict.get('display_name')) is not None:
+            args['display_name'] = display_name
+        else:
+            raise ValueError('Required property \'display_name\' not present in CustomRole JSON')
+        if (description := _dict.get('description')) is not None:
+            args['description'] = description
+        if (actions := _dict.get('actions')) is not None:
+            args['actions'] = actions
+        else:
+            raise ValueError('Required property \'actions\' not present in CustomRole JSON')
+        if (crn := _dict.get('crn')) is not None:
+            args['crn'] = crn
+        if (name := _dict.get('name')) is not None:
+            args['name'] = name
+        else:
+            raise ValueError('Required property \'name\' not present in CustomRole JSON')
+        if (account_id := _dict.get('account_id')) is not None:
+            args['account_id'] = account_id
+        else:
+            raise ValueError('Required property \'account_id\' not present in CustomRole JSON')
+        if (service_name := _dict.get('service_name')) is not None:
+            args['service_name'] = service_name
+        else:
+            raise ValueError('Required property \'service_name\' not present in CustomRole JSON')
+        if (created_at := _dict.get('created_at')) is not None:
+            args['created_at'] = string_to_datetime(created_at)
+        if (created_by_id := _dict.get('created_by_id')) is not None:
+            args['created_by_id'] = created_by_id
+        if (last_modified_at := _dict.get('last_modified_at')) is not None:
+            args['last_modified_at'] = string_to_datetime(last_modified_at)
+        if (last_modified_by_id := _dict.get('last_modified_by_id')) is not None:
+            args['last_modified_by_id'] = last_modified_by_id
+        if (href := _dict.get('href')) is not None:
+            args['href'] = href
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a CustomRole object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'id') and getattr(self, 'id') is not None:
+            _dict['id'] = getattr(self, 'id')
+        if hasattr(self, 'display_name') and self.display_name is not None:
+            _dict['display_name'] = self.display_name
+        if hasattr(self, 'description') and self.description is not None:
+            _dict['description'] = self.description
+        if hasattr(self, 'actions') and self.actions is not None:
+            _dict['actions'] = self.actions
+        if hasattr(self, 'crn') and getattr(self, 'crn') is not None:
+            _dict['crn'] = getattr(self, 'crn')
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'account_id') and self.account_id is not None:
+            _dict['account_id'] = self.account_id
+        if hasattr(self, 'service_name') and self.service_name is not None:
+            _dict['service_name'] = self.service_name
+        if hasattr(self, 'created_at') and getattr(self, 'created_at') is not None:
+            _dict['created_at'] = datetime_to_string(getattr(self, 'created_at'))
+        if hasattr(self, 'created_by_id') and getattr(self, 'created_by_id') is not None:
+            _dict['created_by_id'] = getattr(self, 'created_by_id')
+        if hasattr(self, 'last_modified_at') and getattr(self, 'last_modified_at') is not None:
+            _dict['last_modified_at'] = datetime_to_string(getattr(self, 'last_modified_at'))
+        if hasattr(self, 'last_modified_by_id') and getattr(self, 'last_modified_by_id') is not None:
+            _dict['last_modified_by_id'] = getattr(self, 'last_modified_by_id')
+        if hasattr(self, 'href') and getattr(self, 'href') is not None:
+            _dict['href'] = getattr(self, 'href')
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this CustomRole object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'CustomRole') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'CustomRole') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class EnrichedRoles:
+    """
+    A role associated with a policy with additional information (display_name,
+    description, actions) when `format=display`.
+
+    :param str role_id: The role Cloud Resource Name (CRN) granted by the policy.
+          Example CRN: 'crn:v1:bluemix:public:iam::::role:Editor'.
+    :param str display_name: (optional) The display name of the role, either
+          service-defined or user-defined for custom roles.
+    :param str description: (optional) The role description, either service-defined
+          or user-defined for custom roles.
+    :param List[RoleAction] actions: The actions of the role. For more information,
+          see [IAM roles and
+          actions](https://cloud.ibm.com/docs/account?topic=account-iam-service-roles-actions).
+    """
+
+    def __init__(
+        self,
+        role_id: str,
+        actions: List['RoleAction'],
+        *,
+        display_name: Optional[str] = None,
+        description: Optional[str] = None,
+    ) -> None:
+        """
+        Initialize a EnrichedRoles object.
+
+        :param str role_id: The role Cloud Resource Name (CRN) granted by the
+               policy. Example CRN: 'crn:v1:bluemix:public:iam::::role:Editor'.
+        :param List[RoleAction] actions: The actions of the role. For more
+               information, see [IAM roles and
+               actions](https://cloud.ibm.com/docs/account?topic=account-iam-service-roles-actions).
+        """
+        self.role_id = role_id
+        self.display_name = display_name
+        self.description = description
+        self.actions = actions
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'EnrichedRoles':
+        """Initialize a EnrichedRoles object from a json dictionary."""
+        args = {}
+        if (role_id := _dict.get('role_id')) is not None:
+            args['role_id'] = role_id
+        else:
+            raise ValueError('Required property \'role_id\' not present in EnrichedRoles JSON')
+        if (display_name := _dict.get('display_name')) is not None:
+            args['display_name'] = display_name
+        if (description := _dict.get('description')) is not None:
+            args['description'] = description
+        if (actions := _dict.get('actions')) is not None:
+            args['actions'] = [RoleAction.from_dict(v) for v in actions]
+        else:
+            raise ValueError('Required property \'actions\' not present in EnrichedRoles JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a EnrichedRoles object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'role_id') and self.role_id is not None:
+            _dict['role_id'] = self.role_id
+        if hasattr(self, 'display_name') and getattr(self, 'display_name') is not None:
+            _dict['display_name'] = getattr(self, 'display_name')
+        if hasattr(self, 'description') and getattr(self, 'description') is not None:
+            _dict['description'] = getattr(self, 'description')
+        if hasattr(self, 'actions') and self.actions is not None:
+            actions_list = []
+            for v in self.actions:
+                if isinstance(v, dict):
+                    actions_list.append(v)
+                else:
+                    actions_list.append(v.to_dict())
+            _dict['actions'] = actions_list
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this EnrichedRoles object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'EnrichedRoles') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'EnrichedRoles') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class ErrorDetails:
+    """
+    Additional error details.
+
+    :param ConflictsWith conflicts_with: (optional) Details of conflicting resource.
+    """
+
+    def __init__(
+        self,
+        *,
+        conflicts_with: Optional['ConflictsWith'] = None,
+    ) -> None:
+        """
+        Initialize a ErrorDetails object.
+
+        :param ConflictsWith conflicts_with: (optional) Details of conflicting
+               resource.
+        """
+        self.conflicts_with = conflicts_with
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'ErrorDetails':
+        """Initialize a ErrorDetails object from a json dictionary."""
+        args = {}
+        if (conflicts_with := _dict.get('conflicts_with')) is not None:
+            args['conflicts_with'] = ConflictsWith.from_dict(conflicts_with)
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a ErrorDetails object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'conflicts_with') and self.conflicts_with is not None:
+            if isinstance(self.conflicts_with, dict):
+                _dict['conflicts_with'] = self.conflicts_with
+            else:
+                _dict['conflicts_with'] = self.conflicts_with.to_dict()
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this ErrorDetails object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'ErrorDetails') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'ErrorDetails') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class ErrorObject:
+    """
+    ErrorObject.
+
+    :param str code: The API error code for the error.
+    :param str message: The error message returned by the API.
+    :param ErrorDetails details: (optional) Additional error details.
+    :param str more_info: (optional) Additional info for error.
+    """
+
+    def __init__(
+        self,
+        code: str,
+        message: str,
+        *,
+        details: Optional['ErrorDetails'] = None,
+        more_info: Optional[str] = None,
+    ) -> None:
+        """
+        Initialize a ErrorObject object.
+
+        :param str code: The API error code for the error.
+        :param str message: The error message returned by the API.
+        :param ErrorDetails details: (optional) Additional error details.
+        :param str more_info: (optional) Additional info for error.
+        """
+        self.code = code
+        self.message = message
+        self.details = details
+        self.more_info = more_info
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'ErrorObject':
+        """Initialize a ErrorObject object from a json dictionary."""
+        args = {}
+        if (code := _dict.get('code')) is not None:
+            args['code'] = code
+        else:
+            raise ValueError('Required property \'code\' not present in ErrorObject JSON')
+        if (message := _dict.get('message')) is not None:
+            args['message'] = message
+        else:
+            raise ValueError('Required property \'message\' not present in ErrorObject JSON')
+        if (details := _dict.get('details')) is not None:
+            args['details'] = ErrorDetails.from_dict(details)
+        if (more_info := _dict.get('more_info')) is not None:
+            args['more_info'] = more_info
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a ErrorObject object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'code') and self.code is not None:
+            _dict['code'] = self.code
+        if hasattr(self, 'message') and self.message is not None:
+            _dict['message'] = self.message
+        if hasattr(self, 'details') and self.details is not None:
+            if isinstance(self.details, dict):
+                _dict['details'] = self.details
+            else:
+                _dict['details'] = self.details.to_dict()
+        if hasattr(self, 'more_info') and self.more_info is not None:
+            _dict['more_info'] = self.more_info
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this ErrorObject object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'ErrorObject') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'ErrorObject') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class CodeEnum(str, Enum):
+        """
+        The API error code for the error.
+        """
+
+        INSUFFICENT_PERMISSIONS = 'insufficent_permissions'
+        INVALID_BODY = 'invalid_body'
+        INVALID_TOKEN = 'invalid_token'
+        MISSING_REQUIRED_QUERY_PARAMETER = 'missing_required_query_parameter'
+        NOT_FOUND = 'not_found'
+        POLICY_CONFLICT_ERROR = 'policy_conflict_error'
+        POLICY_NOT_FOUND = 'policy_not_found'
+        REQUEST_NOT_PROCESSED = 'request_not_processed'
+        ROLE_CONFLICT_ERROR = 'role_conflict_error'
+        ROLE_NOT_FOUND = 'role_not_found'
+        TOO_MANY_REQUESTS = 'too_many_requests'
+        UNABLE_TO_PROCESS = 'unable_to_process'
+        UNSUPPORTED_CONTENT_TYPE = 'unsupported_content_type'
+        POLICY_TEMPLATE_CONFLICT_ERROR = 'policy_template_conflict_error'
+        POLICY_TEMPLATE_NOT_FOUND = 'policy_template_not_found'
+        POLICY_ASSIGNMENT_NOT_FOUND = 'policy_assignment_not_found'
+        POLICY_ASSIGNMENT_CONFLICT_ERROR = 'policy_assignment_conflict_error'
+        RESOURCE_NOT_FOUND = 'resource_not_found'
+        ACTION_CONTROL_TEMPLATE_NOT_FOUND = 'action_control_template_not_found'
+        ACTION_CONTROL_ASSIGNMENT_NOT_FOUND = 'action_control_assignment_not_found'
+        ROLE_TEMPLATE_CONFLICT_ERROR = 'role_template_conflict_error'
+        ROLE_TEMPLATE_NOT_FOUND = 'role_template_not_found'
+        ROLE_ASSIGNMENT_NOT_FOUND = 'role_assignment_not_found'
+
+
+class ExternalAccountIdentityInteraction:
+    """
+    How external accounts can interact in relation to the requested account.
+
+    :param IdentityTypes identity_types: The settings for each identity type.
+    """
+
+    def __init__(
+        self,
+        identity_types: 'IdentityTypes',
+    ) -> None:
+        """
+        Initialize a ExternalAccountIdentityInteraction object.
+
+        :param IdentityTypes identity_types: The settings for each identity type.
+        """
+        self.identity_types = identity_types
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'ExternalAccountIdentityInteraction':
+        """Initialize a ExternalAccountIdentityInteraction object from a json dictionary."""
+        args = {}
+        if (identity_types := _dict.get('identity_types')) is not None:
+            args['identity_types'] = IdentityTypes.from_dict(identity_types)
+        else:
+            raise ValueError(
+                'Required property \'identity_types\' not present in ExternalAccountIdentityInteraction JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a ExternalAccountIdentityInteraction object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'identity_types') and self.identity_types is not None:
+            if isinstance(self.identity_types, dict):
+                _dict['identity_types'] = self.identity_types
+            else:
+                _dict['identity_types'] = self.identity_types.to_dict()
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this ExternalAccountIdentityInteraction object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'ExternalAccountIdentityInteraction') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'ExternalAccountIdentityInteraction') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class ExternalAccountIdentityInteractionPatch:
+    """
+    Update to how external accounts can interact in relation to the requested account.
+
+    :param IdentityTypesPatch identity_types: (optional) The settings to apply for
+          each identity type for a request.
+    """
+
+    def __init__(
+        self,
+        *,
+        identity_types: Optional['IdentityTypesPatch'] = None,
+    ) -> None:
+        """
+        Initialize a ExternalAccountIdentityInteractionPatch object.
+
+        :param IdentityTypesPatch identity_types: (optional) The settings to apply
+               for each identity type for a request.
+        """
+        self.identity_types = identity_types
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'ExternalAccountIdentityInteractionPatch':
+        """Initialize a ExternalAccountIdentityInteractionPatch object from a json dictionary."""
+        args = {}
+        if (identity_types := _dict.get('identity_types')) is not None:
+            args['identity_types'] = IdentityTypesPatch.from_dict(identity_types)
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a ExternalAccountIdentityInteractionPatch object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'identity_types') and self.identity_types is not None:
+            if isinstance(self.identity_types, dict):
+                _dict['identity_types'] = self.identity_types
+            else:
+                _dict['identity_types'] = self.identity_types.to_dict()
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this ExternalAccountIdentityInteractionPatch object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'ExternalAccountIdentityInteractionPatch') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'ExternalAccountIdentityInteractionPatch') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class First:
+    """
+    Details with linking href to first page of requested collection.
+
+    :param str href: (optional) The href linking to the page of requested
+          collection.
+    """
+
+    def __init__(
+        self,
+        *,
+        href: Optional[str] = None,
+    ) -> None:
+        """
+        Initialize a First object.
+
+        """
+        self.href = href
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'First':
+        """Initialize a First object from a json dictionary."""
+        args = {}
+        if (href := _dict.get('href')) is not None:
+            args['href'] = href
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a First object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'href') and getattr(self, 'href') is not None:
+            _dict['href'] = getattr(self, 'href')
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this First object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'First') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'First') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class Grant:
+    """
+    Permission is granted by the policy.
+
+    :param List[Roles] roles: A set of role Cloud Resource Names (CRNs) granted by
+          the policy.
+    """
+
+    def __init__(
+        self,
+        roles: List['Roles'],
+    ) -> None:
+        """
+        Initialize a Grant object.
+
+        :param List[Roles] roles: A set of role Cloud Resource Names (CRNs) granted
+               by the policy.
+        """
+        self.roles = roles
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'Grant':
+        """Initialize a Grant object from a json dictionary."""
+        args = {}
+        if (roles := _dict.get('roles')) is not None:
+            args['roles'] = [Roles.from_dict(v) for v in roles]
+        else:
+            raise ValueError('Required property \'roles\' not present in Grant JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a Grant object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'roles') and self.roles is not None:
+            roles_list = []
+            for v in self.roles:
+                if isinstance(v, dict):
+                    roles_list.append(v)
+                else:
+                    roles_list.append(v.to_dict())
+            _dict['roles'] = roles_list
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this Grant object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'Grant') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'Grant') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class GrantWithEnrichedRoles:
+    """
+    Permission granted by the policy with translated roles and additional role
+    information.
+
+    :param List[EnrichedRoles] roles: A set of roles granted by the policy.
+    """
+
+    def __init__(
+        self,
+        roles: List['EnrichedRoles'],
+    ) -> None:
+        """
+        Initialize a GrantWithEnrichedRoles object.
+
+        :param List[EnrichedRoles] roles: A set of roles granted by the policy.
+        """
+        self.roles = roles
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'GrantWithEnrichedRoles':
+        """Initialize a GrantWithEnrichedRoles object from a json dictionary."""
+        args = {}
+        if (roles := _dict.get('roles')) is not None:
+            args['roles'] = [EnrichedRoles.from_dict(v) for v in roles]
+        else:
+            raise ValueError('Required property \'roles\' not present in GrantWithEnrichedRoles JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a GrantWithEnrichedRoles object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'roles') and self.roles is not None:
+            roles_list = []
+            for v in self.roles:
+                if isinstance(v, dict):
+                    roles_list.append(v)
+                else:
+                    roles_list.append(v.to_dict())
+            _dict['roles'] = roles_list
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this GrantWithEnrichedRoles object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'GrantWithEnrichedRoles') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'GrantWithEnrichedRoles') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class IdentityTypes:
+    """
+    The settings for each identity type.
+
+    :param IdentityTypesBase user: The core set of properties associated with an
+          identity type.
+    :param IdentityTypesBase service_id: The core set of properties associated with
+          an identity type.
+    :param IdentityTypesBase service: The core set of properties associated with an
+          identity type.
+    """
+
+    def __init__(
+        self,
+        user: 'IdentityTypesBase',
+        service_id: 'IdentityTypesBase',
+        service: 'IdentityTypesBase',
+    ) -> None:
+        """
+        Initialize a IdentityTypes object.
+
+        :param IdentityTypesBase user: The core set of properties associated with
+               an identity type.
+        :param IdentityTypesBase service_id: The core set of properties associated
+               with an identity type.
+        :param IdentityTypesBase service: The core set of properties associated
+               with an identity type.
+        """
+        self.user = user
+        self.service_id = service_id
+        self.service = service
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'IdentityTypes':
+        """Initialize a IdentityTypes object from a json dictionary."""
+        args = {}
+        if (user := _dict.get('user')) is not None:
+            args['user'] = IdentityTypesBase.from_dict(user)
+        else:
+            raise ValueError('Required property \'user\' not present in IdentityTypes JSON')
+        if (service_id := _dict.get('service_id')) is not None:
+            args['service_id'] = IdentityTypesBase.from_dict(service_id)
+        else:
+            raise ValueError('Required property \'service_id\' not present in IdentityTypes JSON')
+        if (service := _dict.get('service')) is not None:
+            args['service'] = IdentityTypesBase.from_dict(service)
+        else:
+            raise ValueError('Required property \'service\' not present in IdentityTypes JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a IdentityTypes object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'user') and self.user is not None:
+            if isinstance(self.user, dict):
+                _dict['user'] = self.user
+            else:
+                _dict['user'] = self.user.to_dict()
+        if hasattr(self, 'service_id') and self.service_id is not None:
+            if isinstance(self.service_id, dict):
+                _dict['service_id'] = self.service_id
+            else:
+                _dict['service_id'] = self.service_id.to_dict()
+        if hasattr(self, 'service') and self.service is not None:
+            if isinstance(self.service, dict):
+                _dict['service'] = self.service
+            else:
+                _dict['service'] = self.service.to_dict()
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this IdentityTypes object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'IdentityTypes') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'IdentityTypes') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class IdentityTypesBase:
+    """
+    The core set of properties associated with an identity type.
+
+    :param str state: The state of the identity type.
+    :param List[str] external_allowed_accounts: List of accounts that the state
+          applies to for a given identity.
+    """
+
+    def __init__(
+        self,
+        state: str,
+        external_allowed_accounts: List[str],
+    ) -> None:
+        """
+        Initialize a IdentityTypesBase object.
+
+        :param str state: The state of the identity type.
+        :param List[str] external_allowed_accounts: List of accounts that the state
+               applies to for a given identity.
+        """
+        self.state = state
+        self.external_allowed_accounts = external_allowed_accounts
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'IdentityTypesBase':
+        """Initialize a IdentityTypesBase object from a json dictionary."""
+        args = {}
+        if (state := _dict.get('state')) is not None:
+            args['state'] = state
+        else:
+            raise ValueError('Required property \'state\' not present in IdentityTypesBase JSON')
+        if (external_allowed_accounts := _dict.get('external_allowed_accounts')) is not None:
+            args['external_allowed_accounts'] = external_allowed_accounts
+        else:
+            raise ValueError('Required property \'external_allowed_accounts\' not present in IdentityTypesBase JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a IdentityTypesBase object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'state') and self.state is not None:
+            _dict['state'] = self.state
+        if hasattr(self, 'external_allowed_accounts') and self.external_allowed_accounts is not None:
+            _dict['external_allowed_accounts'] = self.external_allowed_accounts
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this IdentityTypesBase object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'IdentityTypesBase') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'IdentityTypesBase') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class StateEnum(str, Enum):
+        """
+        The state of the identity type.
+        """
+
+        ENABLED = 'enabled'
+        MONITOR = 'monitor'
+        LIMITED = 'limited'
+
+
+class IdentityTypesPatch:
+    """
+    The settings to apply for each identity type for a request.
+
+    :param IdentityTypesBase user: (optional) The core set of properties associated
+          with an identity type.
+    :param IdentityTypesBase service_id: (optional) The core set of properties
+          associated with an identity type.
+    :param IdentityTypesBase service: (optional) The core set of properties
+          associated with an identity type.
+    """
+
+    def __init__(
+        self,
+        *,
+        user: Optional['IdentityTypesBase'] = None,
+        service_id: Optional['IdentityTypesBase'] = None,
+        service: Optional['IdentityTypesBase'] = None,
+    ) -> None:
+        """
+        Initialize a IdentityTypesPatch object.
+
+        :param IdentityTypesBase user: (optional) The core set of properties
+               associated with an identity type.
+        :param IdentityTypesBase service_id: (optional) The core set of properties
+               associated with an identity type.
+        :param IdentityTypesBase service: (optional) The core set of properties
+               associated with an identity type.
+        """
+        self.user = user
+        self.service_id = service_id
+        self.service = service
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'IdentityTypesPatch':
+        """Initialize a IdentityTypesPatch object from a json dictionary."""
+        args = {}
+        if (user := _dict.get('user')) is not None:
+            args['user'] = IdentityTypesBase.from_dict(user)
+        if (service_id := _dict.get('service_id')) is not None:
+            args['service_id'] = IdentityTypesBase.from_dict(service_id)
+        if (service := _dict.get('service')) is not None:
+            args['service'] = IdentityTypesBase.from_dict(service)
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a IdentityTypesPatch object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'user') and self.user is not None:
+            if isinstance(self.user, dict):
+                _dict['user'] = self.user
+            else:
+                _dict['user'] = self.user.to_dict()
+        if hasattr(self, 'service_id') and self.service_id is not None:
+            if isinstance(self.service_id, dict):
+                _dict['service_id'] = self.service_id
+            else:
+                _dict['service_id'] = self.service_id.to_dict()
+        if hasattr(self, 'service') and self.service is not None:
+            if isinstance(self.service, dict):
+                _dict['service'] = self.service
+            else:
+                _dict['service'] = self.service.to_dict()
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this IdentityTypesPatch object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'IdentityTypesPatch') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'IdentityTypesPatch') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class LimitData:
+    """
+    policy template current and limit details with in an account.
+
+    :param int current: (optional) policy template current count.
+    :param int limit: (optional) policy template limit count.
+    """
+
+    def __init__(
+        self,
+        *,
+        current: Optional[int] = None,
+        limit: Optional[int] = None,
+    ) -> None:
+        """
+        Initialize a LimitData object.
+
+        """
+        self.current = current
+        self.limit = limit
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'LimitData':
+        """Initialize a LimitData object from a json dictionary."""
+        args = {}
+        if (current := _dict.get('current')) is not None:
+            args['current'] = current
+        if (limit := _dict.get('limit')) is not None:
+            args['limit'] = limit
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a LimitData object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'current') and getattr(self, 'current') is not None:
+            _dict['current'] = getattr(self, 'current')
+        if hasattr(self, 'limit') and getattr(self, 'limit') is not None:
+            _dict['limit'] = getattr(self, 'limit')
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this LimitData object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'LimitData') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'LimitData') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class NestedCondition:
+    """
+    Condition that specifies additional conditions or RuleAttribute to grant access.
+
+    """
+
+    def __init__(
+        self,
+    ) -> None:
+        """
+        Initialize a NestedCondition object.
+
+        """
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+            ", ".join(['NestedConditionRuleAttribute', 'NestedConditionRuleWithConditions'])
+        )
+        raise Exception(msg)
+
+
+class Next:
+    """
+    Details with href linking to the following page of requested collection.
+
+    :param str href: (optional) The href linking to the page of requested
+          collection.
+    :param str start: (optional) Page token that refers to the page of the
+          collection.
+    """
+
+    def __init__(
+        self,
+        *,
+        href: Optional[str] = None,
+        start: Optional[str] = None,
+    ) -> None:
+        """
+        Initialize a Next object.
+
+        :param str start: (optional) Page token that refers to the page of the
+               collection.
+        """
+        self.href = href
+        self.start = start
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'Next':
+        """Initialize a Next object from a json dictionary."""
+        args = {}
+        if (href := _dict.get('href')) is not None:
+            args['href'] = href
+        if (start := _dict.get('start')) is not None:
+            args['start'] = start
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a Next object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'href') and getattr(self, 'href') is not None:
+            _dict['href'] = getattr(self, 'href')
+        if hasattr(self, 'start') and self.start is not None:
+            _dict['start'] = self.start
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this Next object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'Next') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'Next') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class Policy:
+    """
+    The core set of properties associated with a policy.
+
+    :param str id: (optional) The policy ID.
+    :param str type: The policy type; either 'access' or 'authorization'.
+    :param str description: (optional) Customer-defined description.
+    :param List[PolicySubject] subjects: The subjects associated with a policy.
+    :param List[PolicyRole] roles: A set of role Cloud Resource Names (CRNs) granted
+          by the policy.
+    :param List[PolicyResource] resources: The resources associated with a policy.
+    :param str href: (optional) The href links back to the policy.
+    :param datetime created_at: (optional) The UTC timestamp when the policy was
+          created.
+    :param str created_by_id: (optional) The IAM ID of the entity that created the
+          policy.
+    :param datetime last_modified_at: (optional) The UTC timestamp when the policy
+          was last modified.
+    :param str last_modified_by_id: (optional) The IAM ID of the entity that last
+          modified the policy.
+    :param str state: (optional) The policy state.
+    """
+
+    def __init__(
+        self,
+        type: str,
+        subjects: List['PolicySubject'],
+        roles: List['PolicyRole'],
+        resources: List['PolicyResource'],
+        *,
+        id: Optional[str] = None,
+        description: Optional[str] = None,
+        href: Optional[str] = None,
+        created_at: Optional[datetime] = None,
+        created_by_id: Optional[str] = None,
+        last_modified_at: Optional[datetime] = None,
+        last_modified_by_id: Optional[str] = None,
+        state: Optional[str] = None,
+    ) -> None:
+        """
+        Initialize a Policy object.
+
+        :param str type: The policy type; either 'access' or 'authorization'.
+        :param List[PolicySubject] subjects: The subjects associated with a policy.
+        :param List[PolicyRole] roles: A set of role Cloud Resource Names (CRNs)
+               granted by the policy.
+        :param List[PolicyResource] resources: The resources associated with a
+               policy.
+        :param str description: (optional) Customer-defined description.
+        :param str state: (optional) The policy state.
+        """
+        self.id = id
+        self.type = type
+        self.description = description
+        self.subjects = subjects
+        self.roles = roles
+        self.resources = resources
+        self.href = href
+        self.created_at = created_at
+        self.created_by_id = created_by_id
+        self.last_modified_at = last_modified_at
+        self.last_modified_by_id = last_modified_by_id
+        self.state = state
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'Policy':
+        """Initialize a Policy object from a json dictionary."""
+        args = {}
+        if (id := _dict.get('id')) is not None:
+            args['id'] = id
+        if (type := _dict.get('type')) is not None:
+            args['type'] = type
+        else:
+            raise ValueError('Required property \'type\' not present in Policy JSON')
+        if (description := _dict.get('description')) is not None:
+            args['description'] = description
+        if (subjects := _dict.get('subjects')) is not None:
+            args['subjects'] = [PolicySubject.from_dict(v) for v in subjects]
+        else:
+            raise ValueError('Required property \'subjects\' not present in Policy JSON')
+        if (roles := _dict.get('roles')) is not None:
+            args['roles'] = [PolicyRole.from_dict(v) for v in roles]
+        else:
+            raise ValueError('Required property \'roles\' not present in Policy JSON')
+        if (resources := _dict.get('resources')) is not None:
+            args['resources'] = [PolicyResource.from_dict(v) for v in resources]
+        else:
+            raise ValueError('Required property \'resources\' not present in Policy JSON')
+        if (href := _dict.get('href')) is not None:
+            args['href'] = href
+        if (created_at := _dict.get('created_at')) is not None:
+            args['created_at'] = string_to_datetime(created_at)
+        if (created_by_id := _dict.get('created_by_id')) is not None:
+            args['created_by_id'] = created_by_id
+        if (last_modified_at := _dict.get('last_modified_at')) is not None:
+            args['last_modified_at'] = string_to_datetime(last_modified_at)
+        if (last_modified_by_id := _dict.get('last_modified_by_id')) is not None:
+            args['last_modified_by_id'] = last_modified_by_id
+        if (state := _dict.get('state')) is not None:
+            args['state'] = state
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a Policy object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'id') and getattr(self, 'id') is not None:
+            _dict['id'] = getattr(self, 'id')
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        if hasattr(self, 'description') and self.description is not None:
+            _dict['description'] = self.description
+        if hasattr(self, 'subjects') and self.subjects is not None:
+            subjects_list = []
+            for v in self.subjects:
+                if isinstance(v, dict):
+                    subjects_list.append(v)
+                else:
+                    subjects_list.append(v.to_dict())
+            _dict['subjects'] = subjects_list
+        if hasattr(self, 'roles') and self.roles is not None:
+            roles_list = []
+            for v in self.roles:
+                if isinstance(v, dict):
+                    roles_list.append(v)
+                else:
+                    roles_list.append(v.to_dict())
+            _dict['roles'] = roles_list
+        if hasattr(self, 'resources') and self.resources is not None:
+            resources_list = []
+            for v in self.resources:
+                if isinstance(v, dict):
+                    resources_list.append(v)
+                else:
+                    resources_list.append(v.to_dict())
+            _dict['resources'] = resources_list
+        if hasattr(self, 'href') and getattr(self, 'href') is not None:
+            _dict['href'] = getattr(self, 'href')
+        if hasattr(self, 'created_at') and getattr(self, 'created_at') is not None:
+            _dict['created_at'] = datetime_to_string(getattr(self, 'created_at'))
+        if hasattr(self, 'created_by_id') and getattr(self, 'created_by_id') is not None:
+            _dict['created_by_id'] = getattr(self, 'created_by_id')
+        if hasattr(self, 'last_modified_at') and getattr(self, 'last_modified_at') is not None:
+            _dict['last_modified_at'] = datetime_to_string(getattr(self, 'last_modified_at'))
+        if hasattr(self, 'last_modified_by_id') and getattr(self, 'last_modified_by_id') is not None:
+            _dict['last_modified_by_id'] = getattr(self, 'last_modified_by_id')
+        if hasattr(self, 'state') and self.state is not None:
+            _dict['state'] = self.state
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this Policy object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'Policy') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'Policy') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class StateEnum(str, Enum):
+        """
+        The policy state.
+        """
+
+        ACTIVE = 'active'
+        DELETED = 'deleted'
+
+
+class PolicyAssignmentResourcePolicy:
+    """
+    Set of properties for the assigned resource.
+
+    :param AssignmentResourceCreated resource_created: (optional) On success,
+          includes the  policy that is assigned.
+    :param str status: (optional) policy status.
+    :param AssignmentResourceError error_message: (optional) Body parameters for
+          assignment error.
+    """
+
+    def __init__(
+        self,
+        *,
+        resource_created: Optional['AssignmentResourceCreated'] = None,
+        status: Optional[str] = None,
+        error_message: Optional['AssignmentResourceError'] = None,
+    ) -> None:
+        """
+        Initialize a PolicyAssignmentResourcePolicy object.
+
+        :param AssignmentResourceCreated resource_created: (optional) On success,
+               includes the  policy that is assigned.
+        :param str status: (optional) policy status.
+        :param AssignmentResourceError error_message: (optional) Body parameters
+               for assignment error.
+        """
+        self.resource_created = resource_created
+        self.status = status
+        self.error_message = error_message
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'PolicyAssignmentResourcePolicy':
+        """Initialize a PolicyAssignmentResourcePolicy object from a json dictionary."""
+        args = {}
+        if (resource_created := _dict.get('resource_created')) is not None:
+            args['resource_created'] = AssignmentResourceCreated.from_dict(resource_created)
+        if (status := _dict.get('status')) is not None:
+            args['status'] = status
+        if (error_message := _dict.get('error_message')) is not None:
+            args['error_message'] = AssignmentResourceError.from_dict(error_message)
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a PolicyAssignmentResourcePolicy object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'resource_created') and self.resource_created is not None:
+            if isinstance(self.resource_created, dict):
+                _dict['resource_created'] = self.resource_created
+            else:
+                _dict['resource_created'] = self.resource_created.to_dict()
+        if hasattr(self, 'status') and self.status is not None:
+            _dict['status'] = self.status
+        if hasattr(self, 'error_message') and self.error_message is not None:
+            if isinstance(self.error_message, dict):
+                _dict['error_message'] = self.error_message
+            else:
+                _dict['error_message'] = self.error_message.to_dict()
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this PolicyAssignmentResourcePolicy object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'PolicyAssignmentResourcePolicy') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'PolicyAssignmentResourcePolicy') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class PolicyAssignmentResources:
+    """
+    The policy assignment resources.
+
+    :param str target: (optional) Account ID where resources are assigned.
+    :param PolicyAssignmentResourcePolicy policy: (optional) Set of properties for
+          the assigned resource.
+    """
+
+    def __init__(
+        self,
+        *,
+        target: Optional[str] = None,
+        policy: Optional['PolicyAssignmentResourcePolicy'] = None,
+    ) -> None:
+        """
+        Initialize a PolicyAssignmentResources object.
+
+        :param str target: (optional) Account ID where resources are assigned.
+        :param PolicyAssignmentResourcePolicy policy: (optional) Set of properties
+               for the assigned resource.
+        """
+        self.target = target
+        self.policy = policy
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'PolicyAssignmentResources':
+        """Initialize a PolicyAssignmentResources object from a json dictionary."""
+        args = {}
+        if (target := _dict.get('target')) is not None:
+            args['target'] = target
+        if (policy := _dict.get('policy')) is not None:
+            args['policy'] = PolicyAssignmentResourcePolicy.from_dict(policy)
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a PolicyAssignmentResources object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'target') and self.target is not None:
+            _dict['target'] = self.target
+        if hasattr(self, 'policy') and self.policy is not None:
+            if isinstance(self.policy, dict):
+                _dict['policy'] = self.policy
+            else:
+                _dict['policy'] = self.policy.to_dict()
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this PolicyAssignmentResources object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'PolicyAssignmentResources') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'PolicyAssignmentResources') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class PolicyAssignmentV1:
+    """
+    The set of properties associated with the policy template assignment.
+
+    :param AssignmentTargetDetails target: assignment target account and type.
+    :param str id: (optional) Policy assignment ID.
+    :param str account_id: (optional) The account GUID that the policies assignments
+          belong to.
+    :param str href: (optional) The href URL that links to the policies assignments
+          API by policy assignment ID.
+    :param datetime created_at: (optional) The UTC timestamp when the policy
+          assignment was created.
+    :param str created_by_id: (optional) The IAM ID of the entity that created the
+          policy assignment.
+    :param datetime last_modified_at: (optional) The UTC timestamp when the policy
+          assignment was last modified.
+    :param str last_modified_by_id: (optional) The IAM ID of the entity that last
+          modified the policy assignment.
+    :param List[PolicyAssignmentV1Resources] resources: Object for each account
+          assigned.
+    :param PolicyAssignmentV1Subject subject: (optional) Subject details of access
+          type assignment.
+    :param AssignmentTemplateDetails template: policy template details.
+    :param str status: The policy assignment status.
+    """
+
+    def __init__(
+        self,
+        target: 'AssignmentTargetDetails',
+        resources: List['PolicyAssignmentV1Resources'],
+        template: 'AssignmentTemplateDetails',
+        status: str,
+        *,
+        id: Optional[str] = None,
+        account_id: Optional[str] = None,
+        href: Optional[str] = None,
+        created_at: Optional[datetime] = None,
+        created_by_id: Optional[str] = None,
+        last_modified_at: Optional[datetime] = None,
+        last_modified_by_id: Optional[str] = None,
+        subject: Optional['PolicyAssignmentV1Subject'] = None,
+    ) -> None:
+        """
+        Initialize a PolicyAssignmentV1 object.
+
+        :param AssignmentTargetDetails target: assignment target account and type.
+        :param List[PolicyAssignmentV1Resources] resources: Object for each account
+               assigned.
+        :param AssignmentTemplateDetails template: policy template details.
+        :param str status: The policy assignment status.
+        :param PolicyAssignmentV1Subject subject: (optional) Subject details of
+               access type assignment.
+        """
+        self.target = target
+        self.id = id
+        self.account_id = account_id
+        self.href = href
+        self.created_at = created_at
+        self.created_by_id = created_by_id
+        self.last_modified_at = last_modified_at
+        self.last_modified_by_id = last_modified_by_id
+        self.resources = resources
+        self.subject = subject
+        self.template = template
+        self.status = status
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'PolicyAssignmentV1':
+        """Initialize a PolicyAssignmentV1 object from a json dictionary."""
+        args = {}
+        if (target := _dict.get('target')) is not None:
+            args['target'] = AssignmentTargetDetails.from_dict(target)
+        else:
+            raise ValueError('Required property \'target\' not present in PolicyAssignmentV1 JSON')
+        if (id := _dict.get('id')) is not None:
+            args['id'] = id
+        if (account_id := _dict.get('account_id')) is not None:
+            args['account_id'] = account_id
+        if (href := _dict.get('href')) is not None:
+            args['href'] = href
+        if (created_at := _dict.get('created_at')) is not None:
+            args['created_at'] = string_to_datetime(created_at)
+        if (created_by_id := _dict.get('created_by_id')) is not None:
+            args['created_by_id'] = created_by_id
+        if (last_modified_at := _dict.get('last_modified_at')) is not None:
+            args['last_modified_at'] = string_to_datetime(last_modified_at)
+        if (last_modified_by_id := _dict.get('last_modified_by_id')) is not None:
+            args['last_modified_by_id'] = last_modified_by_id
+        if (resources := _dict.get('resources')) is not None:
+            args['resources'] = [PolicyAssignmentV1Resources.from_dict(v) for v in resources]
+        else:
+            raise ValueError('Required property \'resources\' not present in PolicyAssignmentV1 JSON')
+        if (subject := _dict.get('subject')) is not None:
+            args['subject'] = PolicyAssignmentV1Subject.from_dict(subject)
+        if (template := _dict.get('template')) is not None:
+            args['template'] = AssignmentTemplateDetails.from_dict(template)
+        else:
+            raise ValueError('Required property \'template\' not present in PolicyAssignmentV1 JSON')
+        if (status := _dict.get('status')) is not None:
+            args['status'] = status
+        else:
+            raise ValueError('Required property \'status\' not present in PolicyAssignmentV1 JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a PolicyAssignmentV1 object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'target') and self.target is not None:
+            if isinstance(self.target, dict):
+                _dict['target'] = self.target
+            else:
+                _dict['target'] = self.target.to_dict()
+        if hasattr(self, 'id') and getattr(self, 'id') is not None:
+            _dict['id'] = getattr(self, 'id')
+        if hasattr(self, 'account_id') and getattr(self, 'account_id') is not None:
+            _dict['account_id'] = getattr(self, 'account_id')
+        if hasattr(self, 'href') and getattr(self, 'href') is not None:
+            _dict['href'] = getattr(self, 'href')
+        if hasattr(self, 'created_at') and getattr(self, 'created_at') is not None:
+            _dict['created_at'] = datetime_to_string(getattr(self, 'created_at'))
+        if hasattr(self, 'created_by_id') and getattr(self, 'created_by_id') is not None:
+            _dict['created_by_id'] = getattr(self, 'created_by_id')
+        if hasattr(self, 'last_modified_at') and getattr(self, 'last_modified_at') is not None:
+            _dict['last_modified_at'] = datetime_to_string(getattr(self, 'last_modified_at'))
+        if hasattr(self, 'last_modified_by_id') and getattr(self, 'last_modified_by_id') is not None:
+            _dict['last_modified_by_id'] = getattr(self, 'last_modified_by_id')
+        if hasattr(self, 'resources') and self.resources is not None:
+            resources_list = []
+            for v in self.resources:
+                if isinstance(v, dict):
+                    resources_list.append(v)
+                else:
+                    resources_list.append(v.to_dict())
+            _dict['resources'] = resources_list
+        if hasattr(self, 'subject') and self.subject is not None:
+            if isinstance(self.subject, dict):
+                _dict['subject'] = self.subject
+            else:
+                _dict['subject'] = self.subject.to_dict()
+        if hasattr(self, 'template') and self.template is not None:
+            if isinstance(self.template, dict):
+                _dict['template'] = self.template
+            else:
+                _dict['template'] = self.template.to_dict()
+        if hasattr(self, 'status') and self.status is not None:
+            _dict['status'] = self.status
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this PolicyAssignmentV1 object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'PolicyAssignmentV1') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'PolicyAssignmentV1') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class StatusEnum(str, Enum):
+        """
+        The policy assignment status.
+        """
+
+        IN_PROGRESS = 'in_progress'
+        SUCCEEDED = 'succeeded'
+        SUCCEED_WITH_ERRORS = 'succeed_with_errors'
+        FAILED = 'failed'
+
+
+class PolicyAssignmentV1Collection:
+    """
+    Policy assignment response.
+
+    :param int limit: (optional) The number of documents to include per each page of
+          the collection.
+    :param First first: (optional) Details with linking href to first page of
+          requested collection.
+    :param Next next: (optional) Details with href linking to the following page of
+          requested collection.
+    :param Previous previous: (optional) Details with linking href to previous page
+          of requested collection.
+    :param List[PolicyAssignmentV1] assignments: Response of policy assignments.
+    """
+
+    def __init__(
+        self,
+        assignments: List['PolicyAssignmentV1'],
+        *,
+        limit: Optional[int] = None,
+        first: Optional['First'] = None,
+        next: Optional['Next'] = None,
+        previous: Optional['Previous'] = None,
+    ) -> None:
+        """
+        Initialize a PolicyAssignmentV1Collection object.
+
+        :param List[PolicyAssignmentV1] assignments: Response of policy
+               assignments.
+        :param int limit: (optional) The number of documents to include per each
+               page of the collection.
+        :param First first: (optional) Details with linking href to first page of
+               requested collection.
+        :param Next next: (optional) Details with href linking to the following
+               page of requested collection.
+        :param Previous previous: (optional) Details with linking href to previous
+               page of requested collection.
+        """
+        self.limit = limit
+        self.first = first
+        self.next = next
+        self.previous = previous
+        self.assignments = assignments
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'PolicyAssignmentV1Collection':
+        """Initialize a PolicyAssignmentV1Collection object from a json dictionary."""
+        args = {}
+        if (limit := _dict.get('limit')) is not None:
+            args['limit'] = limit
+        if (first := _dict.get('first')) is not None:
+            args['first'] = First.from_dict(first)
+        if (next := _dict.get('next')) is not None:
+            args['next'] = Next.from_dict(next)
+        if (previous := _dict.get('previous')) is not None:
+            args['previous'] = Previous.from_dict(previous)
+        if (assignments := _dict.get('assignments')) is not None:
+            args['assignments'] = [PolicyAssignmentV1.from_dict(v) for v in assignments]
+        else:
+            raise ValueError('Required property \'assignments\' not present in PolicyAssignmentV1Collection JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a PolicyAssignmentV1Collection object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'limit') and self.limit is not None:
+            _dict['limit'] = self.limit
+        if hasattr(self, 'first') and self.first is not None:
+            if isinstance(self.first, dict):
+                _dict['first'] = self.first
+            else:
+                _dict['first'] = self.first.to_dict()
+        if hasattr(self, 'next') and self.next is not None:
+            if isinstance(self.next, dict):
+                _dict['next'] = self.next
+            else:
+                _dict['next'] = self.next.to_dict()
+        if hasattr(self, 'previous') and self.previous is not None:
+            if isinstance(self.previous, dict):
+                _dict['previous'] = self.previous
+            else:
+                _dict['previous'] = self.previous.to_dict()
+        if hasattr(self, 'assignments') and self.assignments is not None:
+            assignments_list = []
+            for v in self.assignments:
+                if isinstance(v, dict):
+                    assignments_list.append(v)
+                else:
+                    assignments_list.append(v.to_dict())
+            _dict['assignments'] = assignments_list
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this PolicyAssignmentV1Collection object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'PolicyAssignmentV1Collection') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'PolicyAssignmentV1Collection') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class PolicyAssignmentV1Resources:
+    """
+    The policy assignment resources.
+
+    :param AssignmentTargetDetails target: (optional) assignment target account and
+          type.
+    :param PolicyAssignmentResourcePolicy policy: (optional) Set of properties for
+          the assigned resource.
+    """
+
+    def __init__(
+        self,
+        *,
+        target: Optional['AssignmentTargetDetails'] = None,
+        policy: Optional['PolicyAssignmentResourcePolicy'] = None,
+    ) -> None:
+        """
+        Initialize a PolicyAssignmentV1Resources object.
+
+        :param AssignmentTargetDetails target: (optional) assignment target account
+               and type.
+        :param PolicyAssignmentResourcePolicy policy: (optional) Set of properties
+               for the assigned resource.
+        """
+        self.target = target
+        self.policy = policy
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'PolicyAssignmentV1Resources':
+        """Initialize a PolicyAssignmentV1Resources object from a json dictionary."""
+        args = {}
+        if (target := _dict.get('target')) is not None:
+            args['target'] = AssignmentTargetDetails.from_dict(target)
+        if (policy := _dict.get('policy')) is not None:
+            args['policy'] = PolicyAssignmentResourcePolicy.from_dict(policy)
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a PolicyAssignmentV1Resources object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'target') and self.target is not None:
+            if isinstance(self.target, dict):
+                _dict['target'] = self.target
+            else:
+                _dict['target'] = self.target.to_dict()
+        if hasattr(self, 'policy') and self.policy is not None:
+            if isinstance(self.policy, dict):
+                _dict['policy'] = self.policy
+            else:
+                _dict['policy'] = self.policy.to_dict()
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this PolicyAssignmentV1Resources object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'PolicyAssignmentV1Resources') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'PolicyAssignmentV1Resources') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class PolicyAssignmentV1Subject:
+    """
+    Subject details of access type assignment.
+
+    :param str id: (optional) The unique identifier of the subject of the
+          assignment.
+    :param str type: (optional) The identity type of the subject of the assignment.
+    """
+
+    def __init__(
+        self,
+        *,
+        id: Optional[str] = None,
+        type: Optional[str] = None,
+    ) -> None:
+        """
+        Initialize a PolicyAssignmentV1Subject object.
+
+        """
+        self.id = id
+        self.type = type
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'PolicyAssignmentV1Subject':
+        """Initialize a PolicyAssignmentV1Subject object from a json dictionary."""
+        args = {}
+        if (id := _dict.get('id')) is not None:
+            args['id'] = id
+        if (type := _dict.get('type')) is not None:
+            args['type'] = type
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a PolicyAssignmentV1Subject object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'id') and getattr(self, 'id') is not None:
+            _dict['id'] = getattr(self, 'id')
+        if hasattr(self, 'type') and getattr(self, 'type') is not None:
+            _dict['type'] = getattr(self, 'type')
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this PolicyAssignmentV1Subject object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'PolicyAssignmentV1Subject') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'PolicyAssignmentV1Subject') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The identity type of the subject of the assignment.
+        """
+
+        IAM_ID = 'iam_id'
+        ACCESS_GROUP_ID = 'access_group_id'
+
+
+class PolicyCollection:
+    """
+    A collection of policies.
+
+    :param int limit: (optional) The number of documents to include per each page of
+          the collection.
+    :param First first: (optional) Details with linking href to first page of
+          requested collection.
+    :param Next next: (optional) Details with href linking to the following page of
+          requested collection.
+    :param Previous previous: (optional) Details with linking href to previous page
+          of requested collection.
+    :param List[PolicyTemplateMetaData] policies: List of policies.
+    """
+
+    def __init__(
+        self,
+        policies: List['PolicyTemplateMetaData'],
+        *,
+        limit: Optional[int] = None,
+        first: Optional['First'] = None,
+        next: Optional['Next'] = None,
+        previous: Optional['Previous'] = None,
+    ) -> None:
+        """
+        Initialize a PolicyCollection object.
+
+        :param List[PolicyTemplateMetaData] policies: List of policies.
+        :param int limit: (optional) The number of documents to include per each
+               page of the collection.
+        :param First first: (optional) Details with linking href to first page of
+               requested collection.
+        :param Next next: (optional) Details with href linking to the following
+               page of requested collection.
+        :param Previous previous: (optional) Details with linking href to previous
+               page of requested collection.
+        """
+        self.limit = limit
+        self.first = first
+        self.next = next
+        self.previous = previous
+        self.policies = policies
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'PolicyCollection':
+        """Initialize a PolicyCollection object from a json dictionary."""
+        args = {}
+        if (limit := _dict.get('limit')) is not None:
+            args['limit'] = limit
+        if (first := _dict.get('first')) is not None:
+            args['first'] = First.from_dict(first)
+        if (next := _dict.get('next')) is not None:
+            args['next'] = Next.from_dict(next)
+        if (previous := _dict.get('previous')) is not None:
+            args['previous'] = Previous.from_dict(previous)
+        if (policies := _dict.get('policies')) is not None:
+            args['policies'] = [PolicyTemplateMetaData.from_dict(v) for v in policies]
+        else:
+            raise ValueError('Required property \'policies\' not present in PolicyCollection JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a PolicyCollection object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'limit') and self.limit is not None:
+            _dict['limit'] = self.limit
+        if hasattr(self, 'first') and self.first is not None:
+            if isinstance(self.first, dict):
+                _dict['first'] = self.first
+            else:
+                _dict['first'] = self.first.to_dict()
+        if hasattr(self, 'next') and self.next is not None:
+            if isinstance(self.next, dict):
+                _dict['next'] = self.next
+            else:
+                _dict['next'] = self.next.to_dict()
+        if hasattr(self, 'previous') and self.previous is not None:
+            if isinstance(self.previous, dict):
+                _dict['previous'] = self.previous
+            else:
+                _dict['previous'] = self.previous.to_dict()
+        if hasattr(self, 'policies') and self.policies is not None:
+            policies_list = []
+            for v in self.policies:
+                if isinstance(v, dict):
+                    policies_list.append(v)
+                else:
+                    policies_list.append(v.to_dict())
+            _dict['policies'] = policies_list
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this PolicyCollection object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'PolicyCollection') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'PolicyCollection') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class PolicyResource:
+    """
+    The attributes of the resource. Note that only one resource is allowed in a policy.
+
+    :param List[ResourceAttribute] attributes: List of resource attributes.
+    :param List[ResourceTag] tags: (optional) List of access management tags.
+    """
+
+    def __init__(
+        self,
+        attributes: List['ResourceAttribute'],
+        *,
+        tags: Optional[List['ResourceTag']] = None,
+    ) -> None:
+        """
+        Initialize a PolicyResource object.
+
+        :param List[ResourceAttribute] attributes: List of resource attributes.
+        :param List[ResourceTag] tags: (optional) List of access management tags.
+        """
+        self.attributes = attributes
+        self.tags = tags
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'PolicyResource':
+        """Initialize a PolicyResource object from a json dictionary."""
+        args = {}
+        if (attributes := _dict.get('attributes')) is not None:
+            args['attributes'] = [ResourceAttribute.from_dict(v) for v in attributes]
+        else:
+            raise ValueError('Required property \'attributes\' not present in PolicyResource JSON')
+        if (tags := _dict.get('tags')) is not None:
+            args['tags'] = [ResourceTag.from_dict(v) for v in tags]
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a PolicyResource object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'attributes') and self.attributes is not None:
+            attributes_list = []
+            for v in self.attributes:
+                if isinstance(v, dict):
+                    attributes_list.append(v)
+                else:
+                    attributes_list.append(v.to_dict())
+            _dict['attributes'] = attributes_list
+        if hasattr(self, 'tags') and self.tags is not None:
+            tags_list = []
+            for v in self.tags:
+                if isinstance(v, dict):
+                    tags_list.append(v)
+                else:
+                    tags_list.append(v.to_dict())
+            _dict['tags'] = tags_list
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this PolicyResource object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'PolicyResource') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'PolicyResource') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class PolicyRole:
+    """
+    A role associated with a policy.
+
+    :param str role_id: The role Cloud Resource Name (CRN) granted by the policy.
+          Example CRN: 'crn:v1:bluemix:public:iam::::role:Editor'.
+    :param str display_name: (optional) The display name of the role.
+    :param str description: (optional) The description of the role.
+    """
+
+    def __init__(
+        self,
+        role_id: str,
+        *,
+        display_name: Optional[str] = None,
+        description: Optional[str] = None,
+    ) -> None:
+        """
+        Initialize a PolicyRole object.
+
+        :param str role_id: The role Cloud Resource Name (CRN) granted by the
+               policy. Example CRN: 'crn:v1:bluemix:public:iam::::role:Editor'.
+        """
+        self.role_id = role_id
+        self.display_name = display_name
+        self.description = description
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'PolicyRole':
+        """Initialize a PolicyRole object from a json dictionary."""
+        args = {}
+        if (role_id := _dict.get('role_id')) is not None:
+            args['role_id'] = role_id
+        else:
+            raise ValueError('Required property \'role_id\' not present in PolicyRole JSON')
+        if (display_name := _dict.get('display_name')) is not None:
+            args['display_name'] = display_name
+        if (description := _dict.get('description')) is not None:
+            args['description'] = description
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a PolicyRole object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'role_id') and self.role_id is not None:
+            _dict['role_id'] = self.role_id
+        if hasattr(self, 'display_name') and getattr(self, 'display_name') is not None:
+            _dict['display_name'] = getattr(self, 'display_name')
+        if hasattr(self, 'description') and getattr(self, 'description') is not None:
+            _dict['description'] = getattr(self, 'description')
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this PolicyRole object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'PolicyRole') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'PolicyRole') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class PolicySubject:
+    """
+    The subject attribute values that must match in order for this policy to apply in a
+    permission decision.
+
+    :param List[SubjectAttribute] attributes: List of subject attributes.
+    """
+
+    def __init__(
+        self,
+        attributes: List['SubjectAttribute'],
+    ) -> None:
+        """
+        Initialize a PolicySubject object.
+
+        :param List[SubjectAttribute] attributes: List of subject attributes.
+        """
+        self.attributes = attributes
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'PolicySubject':
+        """Initialize a PolicySubject object from a json dictionary."""
+        args = {}
+        if (attributes := _dict.get('attributes')) is not None:
+            args['attributes'] = [SubjectAttribute.from_dict(v) for v in attributes]
+        else:
+            raise ValueError('Required property \'attributes\' not present in PolicySubject JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a PolicySubject object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'attributes') and self.attributes is not None:
+            attributes_list = []
+            for v in self.attributes:
+                if isinstance(v, dict):
+                    attributes_list.append(v)
+                else:
+                    attributes_list.append(v.to_dict())
+            _dict['attributes'] = attributes_list
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this PolicySubject object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'PolicySubject') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'PolicySubject') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class PolicyTemplate:
+    """
+    The core set of properties associated with the policy template.
+
+    :param str name: Required field when creating a new template. Otherwise, this
+          field is optional. If the field is included, it changes the name value for all
+          existing versions of the template.
+    :param str description: (optional) Description of the policy template. This is
+          shown to users in the enterprise account. Use this to describe the purpose or
+          context of the policy for enterprise users managing IAM templates.
+    :param str account_id: Enterprise account ID where this template is created.
+    :param str version: Template version.
+    :param bool committed: (optional) Committed status of the template version.
+    :param TemplatePolicy policy: The core set of properties associated with the
+          template's policy object.
+    :param str state: State of policy template.
+    :param str id: (optional) The policy template ID.
+    :param str href: (optional) The href URL that links to the policy templates API
+          by policy template ID.
+    :param datetime created_at: (optional) The UTC timestamp when the policy
+          template was created.
+    :param str created_by_id: (optional) The IAM ID of the entity that created the
+          policy template.
+    :param datetime last_modified_at: (optional) The UTC timestamp when the policy
+          template was last modified.
+    :param str last_modified_by_id: (optional) The IAM ID of the entity that last
+          modified the policy template.
+    """
+
+    def __init__(
+        self,
+        name: str,
+        account_id: str,
+        version: str,
+        policy: 'TemplatePolicy',
+        state: str,
+        *,
+        description: Optional[str] = None,
+        committed: Optional[bool] = None,
+        id: Optional[str] = None,
+        href: Optional[str] = None,
+        created_at: Optional[datetime] = None,
+        created_by_id: Optional[str] = None,
+        last_modified_at: Optional[datetime] = None,
+        last_modified_by_id: Optional[str] = None,
+    ) -> None:
+        """
+        Initialize a PolicyTemplate object.
+
+        :param str name: Required field when creating a new template. Otherwise,
+               this field is optional. If the field is included, it changes the name value
+               for all existing versions of the template.
+        :param str account_id: Enterprise account ID where this template is
+               created.
+        :param str version: Template version.
+        :param TemplatePolicy policy: The core set of properties associated with
+               the template's policy object.
+        :param str state: State of policy template.
+        :param str description: (optional) Description of the policy template. This
+               is shown to users in the enterprise account. Use this to describe the
+               purpose or context of the policy for enterprise users managing IAM
+               templates.
+        :param bool committed: (optional) Committed status of the template version.
+        """
+        self.name = name
+        self.description = description
+        self.account_id = account_id
+        self.version = version
+        self.committed = committed
+        self.policy = policy
+        self.state = state
+        self.id = id
+        self.href = href
+        self.created_at = created_at
+        self.created_by_id = created_by_id
+        self.last_modified_at = last_modified_at
+        self.last_modified_by_id = last_modified_by_id
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'PolicyTemplate':
+        """Initialize a PolicyTemplate object from a json dictionary."""
+        args = {}
+        if (name := _dict.get('name')) is not None:
+            args['name'] = name
+        else:
+            raise ValueError('Required property \'name\' not present in PolicyTemplate JSON')
+        if (description := _dict.get('description')) is not None:
+            args['description'] = description
+        if (account_id := _dict.get('account_id')) is not None:
+            args['account_id'] = account_id
+        else:
+            raise ValueError('Required property \'account_id\' not present in PolicyTemplate JSON')
+        if (version := _dict.get('version')) is not None:
+            args['version'] = version
+        else:
+            raise ValueError('Required property \'version\' not present in PolicyTemplate JSON')
+        if (committed := _dict.get('committed')) is not None:
+            args['committed'] = committed
+        if (policy := _dict.get('policy')) is not None:
+            args['policy'] = TemplatePolicy.from_dict(policy)
+        else:
+            raise ValueError('Required property \'policy\' not present in PolicyTemplate JSON')
+        if (state := _dict.get('state')) is not None:
+            args['state'] = state
+        else:
+            raise ValueError('Required property \'state\' not present in PolicyTemplate JSON')
+        if (id := _dict.get('id')) is not None:
+            args['id'] = id
+        if (href := _dict.get('href')) is not None:
+            args['href'] = href
+        if (created_at := _dict.get('created_at')) is not None:
+            args['created_at'] = string_to_datetime(created_at)
+        if (created_by_id := _dict.get('created_by_id')) is not None:
+            args['created_by_id'] = created_by_id
+        if (last_modified_at := _dict.get('last_modified_at')) is not None:
+            args['last_modified_at'] = string_to_datetime(last_modified_at)
+        if (last_modified_by_id := _dict.get('last_modified_by_id')) is not None:
+            args['last_modified_by_id'] = last_modified_by_id
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a PolicyTemplate object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'description') and self.description is not None:
+            _dict['description'] = self.description
+        if hasattr(self, 'account_id') and self.account_id is not None:
+            _dict['account_id'] = self.account_id
+        if hasattr(self, 'version') and self.version is not None:
+            _dict['version'] = self.version
+        if hasattr(self, 'committed') and self.committed is not None:
+            _dict['committed'] = self.committed
+        if hasattr(self, 'policy') and self.policy is not None:
+            if isinstance(self.policy, dict):
+                _dict['policy'] = self.policy
+            else:
+                _dict['policy'] = self.policy.to_dict()
+        if hasattr(self, 'state') and self.state is not None:
+            _dict['state'] = self.state
+        if hasattr(self, 'id') and getattr(self, 'id') is not None:
+            _dict['id'] = getattr(self, 'id')
+        if hasattr(self, 'href') and getattr(self, 'href') is not None:
+            _dict['href'] = getattr(self, 'href')
+        if hasattr(self, 'created_at') and getattr(self, 'created_at') is not None:
+            _dict['created_at'] = datetime_to_string(getattr(self, 'created_at'))
+        if hasattr(self, 'created_by_id') and getattr(self, 'created_by_id') is not None:
+            _dict['created_by_id'] = getattr(self, 'created_by_id')
+        if hasattr(self, 'last_modified_at') and getattr(self, 'last_modified_at') is not None:
+            _dict['last_modified_at'] = datetime_to_string(getattr(self, 'last_modified_at'))
+        if hasattr(self, 'last_modified_by_id') and getattr(self, 'last_modified_by_id') is not None:
+            _dict['last_modified_by_id'] = getattr(self, 'last_modified_by_id')
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this PolicyTemplate object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'PolicyTemplate') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'PolicyTemplate') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class StateEnum(str, Enum):
+        """
+        State of policy template.
+        """
+
+        ACTIVE = 'active'
+        DELETED = 'deleted'
+
+
+class PolicyTemplateAssignmentCollection:
+    """
+    A collection of policies assignments.
+
+    :param int limit: (optional) The number of documents to include per each page of
+          the collection.
+    :param First first: (optional) Details with linking href to first page of
+          requested collection.
+    :param Next next: (optional) Details with href linking to the following page of
+          requested collection.
+    :param Previous previous: (optional) Details with linking href to previous page
+          of requested collection.
+    :param List[PolicyTemplateAssignmentItems] assignments: List of policy
+          assignments.
+    """
+
+    def __init__(
+        self,
+        assignments: List['PolicyTemplateAssignmentItems'],
+        *,
+        limit: Optional[int] = None,
+        first: Optional['First'] = None,
+        next: Optional['Next'] = None,
+        previous: Optional['Previous'] = None,
+    ) -> None:
+        """
+        Initialize a PolicyTemplateAssignmentCollection object.
+
+        :param List[PolicyTemplateAssignmentItems] assignments: List of policy
+               assignments.
+        :param int limit: (optional) The number of documents to include per each
+               page of the collection.
+        :param First first: (optional) Details with linking href to first page of
+               requested collection.
+        :param Next next: (optional) Details with href linking to the following
+               page of requested collection.
+        :param Previous previous: (optional) Details with linking href to previous
+               page of requested collection.
+        """
+        self.limit = limit
+        self.first = first
+        self.next = next
+        self.previous = previous
+        self.assignments = assignments
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'PolicyTemplateAssignmentCollection':
+        """Initialize a PolicyTemplateAssignmentCollection object from a json dictionary."""
+        args = {}
+        if (limit := _dict.get('limit')) is not None:
+            args['limit'] = limit
+        if (first := _dict.get('first')) is not None:
+            args['first'] = First.from_dict(first)
+        if (next := _dict.get('next')) is not None:
+            args['next'] = Next.from_dict(next)
+        if (previous := _dict.get('previous')) is not None:
+            args['previous'] = Previous.from_dict(previous)
+        if (assignments := _dict.get('assignments')) is not None:
+            args['assignments'] = assignments
+        else:
+            raise ValueError('Required property \'assignments\' not present in PolicyTemplateAssignmentCollection JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a PolicyTemplateAssignmentCollection object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'limit') and self.limit is not None:
+            _dict['limit'] = self.limit
+        if hasattr(self, 'first') and self.first is not None:
+            if isinstance(self.first, dict):
+                _dict['first'] = self.first
+            else:
+                _dict['first'] = self.first.to_dict()
+        if hasattr(self, 'next') and self.next is not None:
+            if isinstance(self.next, dict):
+                _dict['next'] = self.next
+            else:
+                _dict['next'] = self.next.to_dict()
+        if hasattr(self, 'previous') and self.previous is not None:
+            if isinstance(self.previous, dict):
+                _dict['previous'] = self.previous
+            else:
+                _dict['previous'] = self.previous.to_dict()
+        if hasattr(self, 'assignments') and self.assignments is not None:
+            assignments_list = []
+            for v in self.assignments:
+                if isinstance(v, dict):
+                    assignments_list.append(v)
+                else:
+                    assignments_list.append(v.to_dict())
+            _dict['assignments'] = assignments_list
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this PolicyTemplateAssignmentCollection object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'PolicyTemplateAssignmentCollection') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'PolicyTemplateAssignmentCollection') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class PolicyTemplateAssignmentItems:
+    """
+    PolicyTemplateAssignmentItems.
+
+    """
+
+    def __init__(
+        self,
+    ) -> None:
+        """
+        Initialize a PolicyTemplateAssignmentItems object.
+
+        """
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+            ", ".join(
+                ['PolicyTemplateAssignmentItemsPolicyAssignmentV1', 'PolicyTemplateAssignmentItemsPolicyAssignment']
+            )
+        )
+        raise Exception(msg)
+
+
+class PolicyTemplateCollection:
+    """
+    A collection of policy Templates.
+
+    :param int limit: (optional) The number of documents to include per each page of
+          the collection.
+    :param First first: (optional) Details with linking href to first page of
+          requested collection.
+    :param Next next: (optional) Details with href linking to the following page of
+          requested collection.
+    :param Previous previous: (optional) Details with linking href to previous page
+          of requested collection.
+    :param List[PolicyTemplate] policy_templates: List of policy templates.
+    """
+
+    def __init__(
+        self,
+        policy_templates: List['PolicyTemplate'],
+        *,
+        limit: Optional[int] = None,
+        first: Optional['First'] = None,
+        next: Optional['Next'] = None,
+        previous: Optional['Previous'] = None,
+    ) -> None:
+        """
+        Initialize a PolicyTemplateCollection object.
+
+        :param List[PolicyTemplate] policy_templates: List of policy templates.
+        :param int limit: (optional) The number of documents to include per each
+               page of the collection.
+        :param First first: (optional) Details with linking href to first page of
+               requested collection.
+        :param Next next: (optional) Details with href linking to the following
+               page of requested collection.
+        :param Previous previous: (optional) Details with linking href to previous
+               page of requested collection.
+        """
+        self.limit = limit
+        self.first = first
+        self.next = next
+        self.previous = previous
+        self.policy_templates = policy_templates
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'PolicyTemplateCollection':
+        """Initialize a PolicyTemplateCollection object from a json dictionary."""
+        args = {}
+        if (limit := _dict.get('limit')) is not None:
+            args['limit'] = limit
+        if (first := _dict.get('first')) is not None:
+            args['first'] = First.from_dict(first)
+        if (next := _dict.get('next')) is not None:
+            args['next'] = Next.from_dict(next)
+        if (previous := _dict.get('previous')) is not None:
+            args['previous'] = Previous.from_dict(previous)
+        if (policy_templates := _dict.get('policy_templates')) is not None:
+            args['policy_templates'] = [PolicyTemplate.from_dict(v) for v in policy_templates]
+        else:
+            raise ValueError('Required property \'policy_templates\' not present in PolicyTemplateCollection JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a PolicyTemplateCollection object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'limit') and self.limit is not None:
+            _dict['limit'] = self.limit
+        if hasattr(self, 'first') and self.first is not None:
+            if isinstance(self.first, dict):
+                _dict['first'] = self.first
+            else:
+                _dict['first'] = self.first.to_dict()
+        if hasattr(self, 'next') and self.next is not None:
+            if isinstance(self.next, dict):
+                _dict['next'] = self.next
+            else:
+                _dict['next'] = self.next.to_dict()
+        if hasattr(self, 'previous') and self.previous is not None:
+            if isinstance(self.previous, dict):
+                _dict['previous'] = self.previous
+            else:
+                _dict['previous'] = self.previous.to_dict()
+        if hasattr(self, 'policy_templates') and self.policy_templates is not None:
+            policy_templates_list = []
+            for v in self.policy_templates:
+                if isinstance(v, dict):
+                    policy_templates_list.append(v)
+                else:
+                    policy_templates_list.append(v.to_dict())
+            _dict['policy_templates'] = policy_templates_list
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this PolicyTemplateCollection object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'PolicyTemplateCollection') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'PolicyTemplateCollection') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class PolicyTemplateLimitData:
+    """
+    The core set of properties associated with the policy template.
+
+    :param str name: Required field when creating a new template. Otherwise, this
+          field is optional. If the field is included, it changes the name value for all
+          existing versions of the template.
+    :param str description: (optional) Description of the policy template. This is
+          shown to users in the enterprise account. Use this to describe the purpose or
+          context of the policy for enterprise users managing IAM templates.
+    :param str account_id: Enterprise account ID where this template is created.
+    :param str version: Template version.
+    :param bool committed: (optional) Committed status of the template version.
+    :param TemplatePolicy policy: The core set of properties associated with the
+          template's policy object.
+    :param str state: State of policy template.
+    :param str id: (optional) The policy template ID.
+    :param str href: (optional) The href URL that links to the policy templates API
+          by policy template ID.
+    :param datetime created_at: (optional) The UTC timestamp when the policy
+          template was created.
+    :param str created_by_id: (optional) The IAM ID of the entity that created the
+          policy template.
+    :param datetime last_modified_at: (optional) The UTC timestamp when the policy
+          template was last modified.
+    :param str last_modified_by_id: (optional) The IAM ID of the entity that last
+          modified the policy template.
+    :param TemplateCountData counts: (optional) policy template count details.
+    """
+
+    def __init__(
+        self,
+        name: str,
+        account_id: str,
+        version: str,
+        policy: 'TemplatePolicy',
+        state: str,
+        *,
+        description: Optional[str] = None,
+        committed: Optional[bool] = None,
+        id: Optional[str] = None,
+        href: Optional[str] = None,
+        created_at: Optional[datetime] = None,
+        created_by_id: Optional[str] = None,
+        last_modified_at: Optional[datetime] = None,
+        last_modified_by_id: Optional[str] = None,
+        counts: Optional['TemplateCountData'] = None,
+    ) -> None:
+        """
+        Initialize a PolicyTemplateLimitData object.
+
+        :param str name: Required field when creating a new template. Otherwise,
+               this field is optional. If the field is included, it changes the name value
+               for all existing versions of the template.
+        :param str account_id: Enterprise account ID where this template is
+               created.
+        :param str version: Template version.
+        :param TemplatePolicy policy: The core set of properties associated with
+               the template's policy object.
+        :param str state: State of policy template.
+        :param str description: (optional) Description of the policy template. This
+               is shown to users in the enterprise account. Use this to describe the
+               purpose or context of the policy for enterprise users managing IAM
+               templates.
+        :param bool committed: (optional) Committed status of the template version.
+        :param TemplateCountData counts: (optional) policy template count details.
+        """
+        self.name = name
+        self.description = description
+        self.account_id = account_id
+        self.version = version
+        self.committed = committed
+        self.policy = policy
+        self.state = state
+        self.id = id
+        self.href = href
+        self.created_at = created_at
+        self.created_by_id = created_by_id
+        self.last_modified_at = last_modified_at
+        self.last_modified_by_id = last_modified_by_id
+        self.counts = counts
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'PolicyTemplateLimitData':
+        """Initialize a PolicyTemplateLimitData object from a json dictionary."""
+        args = {}
+        if (name := _dict.get('name')) is not None:
+            args['name'] = name
+        else:
+            raise ValueError('Required property \'name\' not present in PolicyTemplateLimitData JSON')
+        if (description := _dict.get('description')) is not None:
+            args['description'] = description
+        if (account_id := _dict.get('account_id')) is not None:
+            args['account_id'] = account_id
+        else:
+            raise ValueError('Required property \'account_id\' not present in PolicyTemplateLimitData JSON')
+        if (version := _dict.get('version')) is not None:
+            args['version'] = version
+        else:
+            raise ValueError('Required property \'version\' not present in PolicyTemplateLimitData JSON')
+        if (committed := _dict.get('committed')) is not None:
+            args['committed'] = committed
+        if (policy := _dict.get('policy')) is not None:
+            args['policy'] = TemplatePolicy.from_dict(policy)
+        else:
+            raise ValueError('Required property \'policy\' not present in PolicyTemplateLimitData JSON')
+        if (state := _dict.get('state')) is not None:
+            args['state'] = state
+        else:
+            raise ValueError('Required property \'state\' not present in PolicyTemplateLimitData JSON')
+        if (id := _dict.get('id')) is not None:
+            args['id'] = id
+        if (href := _dict.get('href')) is not None:
+            args['href'] = href
+        if (created_at := _dict.get('created_at')) is not None:
+            args['created_at'] = string_to_datetime(created_at)
+        if (created_by_id := _dict.get('created_by_id')) is not None:
+            args['created_by_id'] = created_by_id
+        if (last_modified_at := _dict.get('last_modified_at')) is not None:
+            args['last_modified_at'] = string_to_datetime(last_modified_at)
+        if (last_modified_by_id := _dict.get('last_modified_by_id')) is not None:
+            args['last_modified_by_id'] = last_modified_by_id
+        if (counts := _dict.get('counts')) is not None:
+            args['counts'] = TemplateCountData.from_dict(counts)
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a PolicyTemplateLimitData object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'description') and self.description is not None:
+            _dict['description'] = self.description
+        if hasattr(self, 'account_id') and self.account_id is not None:
+            _dict['account_id'] = self.account_id
+        if hasattr(self, 'version') and self.version is not None:
+            _dict['version'] = self.version
+        if hasattr(self, 'committed') and self.committed is not None:
+            _dict['committed'] = self.committed
+        if hasattr(self, 'policy') and self.policy is not None:
+            if isinstance(self.policy, dict):
+                _dict['policy'] = self.policy
+            else:
+                _dict['policy'] = self.policy.to_dict()
+        if hasattr(self, 'state') and self.state is not None:
+            _dict['state'] = self.state
+        if hasattr(self, 'id') and getattr(self, 'id') is not None:
+            _dict['id'] = getattr(self, 'id')
+        if hasattr(self, 'href') and getattr(self, 'href') is not None:
+            _dict['href'] = getattr(self, 'href')
+        if hasattr(self, 'created_at') and getattr(self, 'created_at') is not None:
+            _dict['created_at'] = datetime_to_string(getattr(self, 'created_at'))
+        if hasattr(self, 'created_by_id') and getattr(self, 'created_by_id') is not None:
+            _dict['created_by_id'] = getattr(self, 'created_by_id')
+        if hasattr(self, 'last_modified_at') and getattr(self, 'last_modified_at') is not None:
+            _dict['last_modified_at'] = datetime_to_string(getattr(self, 'last_modified_at'))
+        if hasattr(self, 'last_modified_by_id') and getattr(self, 'last_modified_by_id') is not None:
+            _dict['last_modified_by_id'] = getattr(self, 'last_modified_by_id')
+        if hasattr(self, 'counts') and self.counts is not None:
+            if isinstance(self.counts, dict):
+                _dict['counts'] = self.counts
+            else:
+                _dict['counts'] = self.counts.to_dict()
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this PolicyTemplateLimitData object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'PolicyTemplateLimitData') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'PolicyTemplateLimitData') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class StateEnum(str, Enum):
+        """
+        State of policy template.
+        """
+
+        ACTIVE = 'active'
+        DELETED = 'deleted'
+
+
+class PolicyTemplateMetaData:
+    """
+    The core set of properties associated with a policy.
+
+    :param str id: (optional) The policy ID.
+    :param str type: The policy type; either 'access' or 'authorization'.
+    :param str description: (optional) Customer-defined description.
+    :param List[PolicySubject] subjects: The subjects associated with a policy.
+    :param List[PolicyRole] roles: A set of role Cloud Resource Names (CRNs) granted
+          by the policy.
+    :param List[PolicyResource] resources: The resources associated with a policy.
+    :param str href: (optional) The href links back to the policy.
+    :param datetime created_at: (optional) The UTC timestamp when the policy was
+          created.
+    :param str created_by_id: (optional) The IAM ID of the entity that created the
+          policy.
+    :param datetime last_modified_at: (optional) The UTC timestamp when the policy
+          was last modified.
+    :param str last_modified_by_id: (optional) The IAM ID of the entity that last
+          modified the policy.
+    :param str state: (optional) The policy state.
+    :param TemplateMetadata template: (optional) The details of the IAM template
+          that was used to create an enterprise-managed policy in your account. When
+          returned, this indicates that the policy is created from and managed by a
+          template in the root enterprise account.
+    """
+
+    def __init__(
+        self,
+        type: str,
+        subjects: List['PolicySubject'],
+        roles: List['PolicyRole'],
+        resources: List['PolicyResource'],
+        *,
+        id: Optional[str] = None,
+        description: Optional[str] = None,
+        href: Optional[str] = None,
+        created_at: Optional[datetime] = None,
+        created_by_id: Optional[str] = None,
+        last_modified_at: Optional[datetime] = None,
+        last_modified_by_id: Optional[str] = None,
+        state: Optional[str] = None,
+        template: Optional['TemplateMetadata'] = None,
+    ) -> None:
+        """
+        Initialize a PolicyTemplateMetaData object.
+
+        :param str type: The policy type; either 'access' or 'authorization'.
+        :param List[PolicySubject] subjects: The subjects associated with a policy.
+        :param List[PolicyRole] roles: A set of role Cloud Resource Names (CRNs)
+               granted by the policy.
+        :param List[PolicyResource] resources: The resources associated with a
+               policy.
+        :param str description: (optional) Customer-defined description.
+        :param str state: (optional) The policy state.
+        :param TemplateMetadata template: (optional) The details of the IAM
+               template that was used to create an enterprise-managed policy in your
+               account. When returned, this indicates that the policy is created from and
+               managed by a template in the root enterprise account.
+        """
+        self.id = id
+        self.type = type
+        self.description = description
+        self.subjects = subjects
+        self.roles = roles
+        self.resources = resources
+        self.href = href
+        self.created_at = created_at
+        self.created_by_id = created_by_id
+        self.last_modified_at = last_modified_at
+        self.last_modified_by_id = last_modified_by_id
+        self.state = state
+        self.template = template
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'PolicyTemplateMetaData':
+        """Initialize a PolicyTemplateMetaData object from a json dictionary."""
+        args = {}
+        if (id := _dict.get('id')) is not None:
+            args['id'] = id
+        if (type := _dict.get('type')) is not None:
+            args['type'] = type
+        else:
+            raise ValueError('Required property \'type\' not present in PolicyTemplateMetaData JSON')
+        if (description := _dict.get('description')) is not None:
+            args['description'] = description
+        if (subjects := _dict.get('subjects')) is not None:
+            args['subjects'] = [PolicySubject.from_dict(v) for v in subjects]
+        else:
+            raise ValueError('Required property \'subjects\' not present in PolicyTemplateMetaData JSON')
+        if (roles := _dict.get('roles')) is not None:
+            args['roles'] = [PolicyRole.from_dict(v) for v in roles]
+        else:
+            raise ValueError('Required property \'roles\' not present in PolicyTemplateMetaData JSON')
+        if (resources := _dict.get('resources')) is not None:
+            args['resources'] = [PolicyResource.from_dict(v) for v in resources]
+        else:
+            raise ValueError('Required property \'resources\' not present in PolicyTemplateMetaData JSON')
+        if (href := _dict.get('href')) is not None:
+            args['href'] = href
+        if (created_at := _dict.get('created_at')) is not None:
+            args['created_at'] = string_to_datetime(created_at)
+        if (created_by_id := _dict.get('created_by_id')) is not None:
+            args['created_by_id'] = created_by_id
+        if (last_modified_at := _dict.get('last_modified_at')) is not None:
+            args['last_modified_at'] = string_to_datetime(last_modified_at)
+        if (last_modified_by_id := _dict.get('last_modified_by_id')) is not None:
+            args['last_modified_by_id'] = last_modified_by_id
+        if (state := _dict.get('state')) is not None:
+            args['state'] = state
+        if (template := _dict.get('template')) is not None:
+            args['template'] = TemplateMetadata.from_dict(template)
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a PolicyTemplateMetaData object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'id') and getattr(self, 'id') is not None:
+            _dict['id'] = getattr(self, 'id')
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        if hasattr(self, 'description') and self.description is not None:
+            _dict['description'] = self.description
+        if hasattr(self, 'subjects') and self.subjects is not None:
+            subjects_list = []
+            for v in self.subjects:
+                if isinstance(v, dict):
+                    subjects_list.append(v)
+                else:
+                    subjects_list.append(v.to_dict())
+            _dict['subjects'] = subjects_list
+        if hasattr(self, 'roles') and self.roles is not None:
+            roles_list = []
+            for v in self.roles:
+                if isinstance(v, dict):
+                    roles_list.append(v)
+                else:
+                    roles_list.append(v.to_dict())
+            _dict['roles'] = roles_list
+        if hasattr(self, 'resources') and self.resources is not None:
+            resources_list = []
+            for v in self.resources:
+                if isinstance(v, dict):
+                    resources_list.append(v)
+                else:
+                    resources_list.append(v.to_dict())
+            _dict['resources'] = resources_list
+        if hasattr(self, 'href') and getattr(self, 'href') is not None:
+            _dict['href'] = getattr(self, 'href')
+        if hasattr(self, 'created_at') and getattr(self, 'created_at') is not None:
+            _dict['created_at'] = datetime_to_string(getattr(self, 'created_at'))
+        if hasattr(self, 'created_by_id') and getattr(self, 'created_by_id') is not None:
+            _dict['created_by_id'] = getattr(self, 'created_by_id')
+        if hasattr(self, 'last_modified_at') and getattr(self, 'last_modified_at') is not None:
+            _dict['last_modified_at'] = datetime_to_string(getattr(self, 'last_modified_at'))
+        if hasattr(self, 'last_modified_by_id') and getattr(self, 'last_modified_by_id') is not None:
+            _dict['last_modified_by_id'] = getattr(self, 'last_modified_by_id')
+        if hasattr(self, 'state') and self.state is not None:
+            _dict['state'] = self.state
+        if hasattr(self, 'template') and self.template is not None:
+            if isinstance(self.template, dict):
+                _dict['template'] = self.template
+            else:
+                _dict['template'] = self.template.to_dict()
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this PolicyTemplateMetaData object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'PolicyTemplateMetaData') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'PolicyTemplateMetaData') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class StateEnum(str, Enum):
+        """
+        The policy state.
+        """
+
+        ACTIVE = 'active'
+        DELETED = 'deleted'
+
+
+class PolicyTemplateVersionsCollection:
+    """
+    A collection of versions for a specific policy template.
+
+    :param int limit: (optional) The number of documents to include per each page of
+          the collection.
+    :param First first: (optional) Details with linking href to first page of
+          requested collection.
+    :param Next next: (optional) Details with href linking to the following page of
+          requested collection.
+    :param Previous previous: (optional) Details with linking href to previous page
+          of requested collection.
+    :param List[PolicyTemplate] versions: List of policy templates versions.
+    """
+
+    def __init__(
+        self,
+        versions: List['PolicyTemplate'],
+        *,
+        limit: Optional[int] = None,
+        first: Optional['First'] = None,
+        next: Optional['Next'] = None,
+        previous: Optional['Previous'] = None,
+    ) -> None:
+        """
+        Initialize a PolicyTemplateVersionsCollection object.
+
+        :param List[PolicyTemplate] versions: List of policy templates versions.
+        :param int limit: (optional) The number of documents to include per each
+               page of the collection.
+        :param First first: (optional) Details with linking href to first page of
+               requested collection.
+        :param Next next: (optional) Details with href linking to the following
+               page of requested collection.
+        :param Previous previous: (optional) Details with linking href to previous
+               page of requested collection.
+        """
+        self.limit = limit
+        self.first = first
+        self.next = next
+        self.previous = previous
+        self.versions = versions
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'PolicyTemplateVersionsCollection':
+        """Initialize a PolicyTemplateVersionsCollection object from a json dictionary."""
+        args = {}
+        if (limit := _dict.get('limit')) is not None:
+            args['limit'] = limit
+        if (first := _dict.get('first')) is not None:
+            args['first'] = First.from_dict(first)
+        if (next := _dict.get('next')) is not None:
+            args['next'] = Next.from_dict(next)
+        if (previous := _dict.get('previous')) is not None:
+            args['previous'] = Previous.from_dict(previous)
+        if (versions := _dict.get('versions')) is not None:
+            args['versions'] = [PolicyTemplate.from_dict(v) for v in versions]
+        else:
+            raise ValueError('Required property \'versions\' not present in PolicyTemplateVersionsCollection JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a PolicyTemplateVersionsCollection object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'limit') and self.limit is not None:
+            _dict['limit'] = self.limit
+        if hasattr(self, 'first') and self.first is not None:
+            if isinstance(self.first, dict):
+                _dict['first'] = self.first
+            else:
+                _dict['first'] = self.first.to_dict()
+        if hasattr(self, 'next') and self.next is not None:
+            if isinstance(self.next, dict):
+                _dict['next'] = self.next
+            else:
+                _dict['next'] = self.next.to_dict()
+        if hasattr(self, 'previous') and self.previous is not None:
+            if isinstance(self.previous, dict):
+                _dict['previous'] = self.previous
+            else:
+                _dict['previous'] = self.previous.to_dict()
+        if hasattr(self, 'versions') and self.versions is not None:
+            versions_list = []
+            for v in self.versions:
+                if isinstance(v, dict):
+                    versions_list.append(v)
+                else:
+                    versions_list.append(v.to_dict())
+            _dict['versions'] = versions_list
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this PolicyTemplateVersionsCollection object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'PolicyTemplateVersionsCollection') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'PolicyTemplateVersionsCollection') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class Previous:
+    """
+    Details with linking href to previous page of requested collection.
+
+    :param str href: (optional) The href linking to the page of requested
+          collection.
+    :param str start: (optional) Page token that refers to the page of the
+          collection.
+    """
+
+    def __init__(
+        self,
+        *,
+        href: Optional[str] = None,
+        start: Optional[str] = None,
+    ) -> None:
+        """
+        Initialize a Previous object.
+
+        :param str start: (optional) Page token that refers to the page of the
+               collection.
+        """
+        self.href = href
+        self.start = start
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'Previous':
+        """Initialize a Previous object from a json dictionary."""
+        args = {}
+        if (href := _dict.get('href')) is not None:
+            args['href'] = href
+        if (start := _dict.get('start')) is not None:
+            args['start'] = start
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a Previous object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'href') and getattr(self, 'href') is not None:
+            _dict['href'] = getattr(self, 'href')
+        if hasattr(self, 'start') and self.start is not None:
+            _dict['start'] = self.start
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this Previous object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'Previous') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'Previous') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class ResourceAttribute:
+    """
+    An attribute associated with a resource.
+
+    :param str name: The name of an attribute.
+    :param str value: The value of an attribute.
+    :param str operator: (optional) The operator of an attribute.
+    """
+
+    def __init__(
+        self,
+        name: str,
+        value: str,
+        *,
+        operator: Optional[str] = None,
+    ) -> None:
+        """
+        Initialize a ResourceAttribute object.
+
+        :param str name: The name of an attribute.
+        :param str value: The value of an attribute.
+        :param str operator: (optional) The operator of an attribute.
+        """
+        self.name = name
+        self.value = value
+        self.operator = operator
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'ResourceAttribute':
+        """Initialize a ResourceAttribute object from a json dictionary."""
+        args = {}
+        if (name := _dict.get('name')) is not None:
+            args['name'] = name
+        else:
+            raise ValueError('Required property \'name\' not present in ResourceAttribute JSON')
+        if (value := _dict.get('value')) is not None:
+            args['value'] = value
+        else:
+            raise ValueError('Required property \'value\' not present in ResourceAttribute JSON')
+        if (operator := _dict.get('operator')) is not None:
+            args['operator'] = operator
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a ResourceAttribute object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'value') and self.value is not None:
+            _dict['value'] = self.value
+        if hasattr(self, 'operator') and self.operator is not None:
+            _dict['operator'] = self.operator
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this ResourceAttribute object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'ResourceAttribute') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'ResourceAttribute') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class ResourceTag:
+    """
+    A tag associated with a resource.
+
+    :param str name: The name of an access management tag.
+    :param str value: The value of an access management tag.
+    :param str operator: (optional) The operator of an access management tag.
+    """
+
+    def __init__(
+        self,
+        name: str,
+        value: str,
+        *,
+        operator: Optional[str] = None,
+    ) -> None:
+        """
+        Initialize a ResourceTag object.
+
+        :param str name: The name of an access management tag.
+        :param str value: The value of an access management tag.
+        :param str operator: (optional) The operator of an access management tag.
+        """
+        self.name = name
+        self.value = value
+        self.operator = operator
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'ResourceTag':
+        """Initialize a ResourceTag object from a json dictionary."""
+        args = {}
+        if (name := _dict.get('name')) is not None:
+            args['name'] = name
+        else:
+            raise ValueError('Required property \'name\' not present in ResourceTag JSON')
+        if (value := _dict.get('value')) is not None:
+            args['value'] = value
+        else:
+            raise ValueError('Required property \'value\' not present in ResourceTag JSON')
+        if (operator := _dict.get('operator')) is not None:
+            args['operator'] = operator
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a ResourceTag object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'value') and self.value is not None:
+            _dict['value'] = self.value
+        if hasattr(self, 'operator') and self.operator is not None:
+            _dict['operator'] = self.operator
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this ResourceTag object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'ResourceTag') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'ResourceTag') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class Role:
+    """
+    A role resource.
+
+    :param str display_name: The display the name of the role that is shown in the
+          console.
+    :param str description: (optional) The description of the role.
+    :param List[str] actions: The actions of the role. For more information, see
+          [IAM roles and
+          actions](https://cloud.ibm.com/docs/account?topic=account-iam-service-roles-actions).
+    :param str crn: (optional) The role Cloud Resource Name (CRN). Example CRN:
+          'crn:v1:ibmcloud:public:iam-access-management::a/exampleAccountId::customRole:ExampleRoleName'.
+    """
+
+    def __init__(
+        self,
+        display_name: str,
+        actions: List[str],
+        *,
+        description: Optional[str] = None,
+        crn: Optional[str] = None,
+    ) -> None:
+        """
+        Initialize a Role object.
+
+        :param str display_name: The display the name of the role that is shown in
+               the console.
+        :param List[str] actions: The actions of the role. For more information,
+               see [IAM roles and
+               actions](https://cloud.ibm.com/docs/account?topic=account-iam-service-roles-actions).
+        :param str description: (optional) The description of the role.
+        """
+        self.display_name = display_name
+        self.description = description
+        self.actions = actions
+        self.crn = crn
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'Role':
+        """Initialize a Role object from a json dictionary."""
+        args = {}
+        if (display_name := _dict.get('display_name')) is not None:
+            args['display_name'] = display_name
+        else:
+            raise ValueError('Required property \'display_name\' not present in Role JSON')
+        if (description := _dict.get('description')) is not None:
+            args['description'] = description
+        if (actions := _dict.get('actions')) is not None:
+            args['actions'] = actions
+        else:
+            raise ValueError('Required property \'actions\' not present in Role JSON')
+        if (crn := _dict.get('crn')) is not None:
+            args['crn'] = crn
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a Role object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'display_name') and self.display_name is not None:
+            _dict['display_name'] = self.display_name
+        if hasattr(self, 'description') and self.description is not None:
+            _dict['description'] = self.description
+        if hasattr(self, 'actions') and self.actions is not None:
+            _dict['actions'] = self.actions
+        if hasattr(self, 'crn') and getattr(self, 'crn') is not None:
+            _dict['crn'] = getattr(self, 'crn')
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this Role object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'Role') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'Role') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class RoleAction:
+    """
+    An action that can be performed by the policy subject when assigned a role.
+
+    :param str id: Unique identifier for action with structure
+          service.resource.action. For example, cbr.rule.read.
+    :param str display_name: Services defined display name for action.
+    :param str description: Service defined description for action.
+    """
+
+    def __init__(
+        self,
+        id: str,
+        display_name: str,
+        description: str,
+    ) -> None:
+        """
+        Initialize a RoleAction object.
+
+        :param str id: Unique identifier for action with structure
+               service.resource.action. For example, cbr.rule.read.
+        :param str display_name: Services defined display name for action.
+        :param str description: Service defined description for action.
+        """
+        self.id = id
+        self.display_name = display_name
+        self.description = description
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'RoleAction':
+        """Initialize a RoleAction object from a json dictionary."""
+        args = {}
+        if (id := _dict.get('id')) is not None:
+            args['id'] = id
+        else:
+            raise ValueError('Required property \'id\' not present in RoleAction JSON')
+        if (display_name := _dict.get('display_name')) is not None:
+            args['display_name'] = display_name
+        else:
+            raise ValueError('Required property \'display_name\' not present in RoleAction JSON')
+        if (description := _dict.get('description')) is not None:
+            args['description'] = description
+        else:
+            raise ValueError('Required property \'description\' not present in RoleAction JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a RoleAction object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        if hasattr(self, 'display_name') and self.display_name is not None:
+            _dict['display_name'] = self.display_name
+        if hasattr(self, 'description') and self.description is not None:
+            _dict['description'] = self.description
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this RoleAction object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'RoleAction') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'RoleAction') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class RoleAssignment:
+    """
+    The set of properties associated with the assigned role template.
+
+    :param str id: (optional) Action control assignment ID.
+    :param str account_id: (optional) The account GUID that the role assignments
+          belong to.
+    :param str href: (optional) The href URL that links to the role assignments API
+          by role assignment ID.
+    :param datetime created_at: (optional) The UTC timestamp when the role
+          assignment was created.
+    :param str created_by_id: (optional) The IAM ID of the entity that created the
+          role assignment.
+    :param datetime last_modified_at: (optional) The UTC timestamp when the role
+          assignment was last modified.
+    :param str last_modified_by_id: (optional) The IAM ID of the entity that last
+          modified the role assignment.
+    :param str operation: (optional) The current operation of the role assignment.
+    :param List[RoleAssignmentResource] resources: (optional) Resources created when
+          role template is assigned.
+    :param RoleAssignmentTemplate template: The role template id and version that
+          will be assigned.
+    :param AssignmentTargetDetails target: assignment target account and type.
+    :param str status: (optional) The role assignment status.
+    """
+
+    def __init__(
+        self,
+        template: 'RoleAssignmentTemplate',
+        target: 'AssignmentTargetDetails',
+        *,
+        id: Optional[str] = None,
+        account_id: Optional[str] = None,
+        href: Optional[str] = None,
+        created_at: Optional[datetime] = None,
+        created_by_id: Optional[str] = None,
+        last_modified_at: Optional[datetime] = None,
+        last_modified_by_id: Optional[str] = None,
+        operation: Optional[str] = None,
+        resources: Optional[List['RoleAssignmentResource']] = None,
+        status: Optional[str] = None,
+    ) -> None:
+        """
+        Initialize a RoleAssignment object.
+
+        :param RoleAssignmentTemplate template: The role template id and version
+               that will be assigned.
+        :param AssignmentTargetDetails target: assignment target account and type.
+        """
+        self.id = id
+        self.account_id = account_id
+        self.href = href
+        self.created_at = created_at
+        self.created_by_id = created_by_id
+        self.last_modified_at = last_modified_at
+        self.last_modified_by_id = last_modified_by_id
+        self.operation = operation
+        self.resources = resources
+        self.template = template
+        self.target = target
+        self.status = status
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'RoleAssignment':
+        """Initialize a RoleAssignment object from a json dictionary."""
+        args = {}
+        if (id := _dict.get('id')) is not None:
+            args['id'] = id
+        if (account_id := _dict.get('account_id')) is not None:
+            args['account_id'] = account_id
+        if (href := _dict.get('href')) is not None:
+            args['href'] = href
+        if (created_at := _dict.get('created_at')) is not None:
+            args['created_at'] = string_to_datetime(created_at)
+        if (created_by_id := _dict.get('created_by_id')) is not None:
+            args['created_by_id'] = created_by_id
+        if (last_modified_at := _dict.get('last_modified_at')) is not None:
+            args['last_modified_at'] = string_to_datetime(last_modified_at)
+        if (last_modified_by_id := _dict.get('last_modified_by_id')) is not None:
+            args['last_modified_by_id'] = last_modified_by_id
+        if (operation := _dict.get('operation')) is not None:
+            args['operation'] = operation
+        if (resources := _dict.get('resources')) is not None:
+            args['resources'] = [RoleAssignmentResource.from_dict(v) for v in resources]
+        if (template := _dict.get('template')) is not None:
+            args['template'] = RoleAssignmentTemplate.from_dict(template)
+        else:
+            raise ValueError('Required property \'template\' not present in RoleAssignment JSON')
+        if (target := _dict.get('target')) is not None:
+            args['target'] = AssignmentTargetDetails.from_dict(target)
+        else:
+            raise ValueError('Required property \'target\' not present in RoleAssignment JSON')
+        if (status := _dict.get('status')) is not None:
+            args['status'] = status
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a RoleAssignment object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'id') and getattr(self, 'id') is not None:
+            _dict['id'] = getattr(self, 'id')
+        if hasattr(self, 'account_id') and getattr(self, 'account_id') is not None:
+            _dict['account_id'] = getattr(self, 'account_id')
+        if hasattr(self, 'href') and getattr(self, 'href') is not None:
+            _dict['href'] = getattr(self, 'href')
+        if hasattr(self, 'created_at') and getattr(self, 'created_at') is not None:
+            _dict['created_at'] = datetime_to_string(getattr(self, 'created_at'))
+        if hasattr(self, 'created_by_id') and getattr(self, 'created_by_id') is not None:
+            _dict['created_by_id'] = getattr(self, 'created_by_id')
+        if hasattr(self, 'last_modified_at') and getattr(self, 'last_modified_at') is not None:
+            _dict['last_modified_at'] = datetime_to_string(getattr(self, 'last_modified_at'))
+        if hasattr(self, 'last_modified_by_id') and getattr(self, 'last_modified_by_id') is not None:
+            _dict['last_modified_by_id'] = getattr(self, 'last_modified_by_id')
+        if hasattr(self, 'operation') and getattr(self, 'operation') is not None:
+            _dict['operation'] = getattr(self, 'operation')
+        if hasattr(self, 'resources') and getattr(self, 'resources') is not None:
+            resources_list = []
+            for v in getattr(self, 'resources'):
+                if isinstance(v, dict):
+                    resources_list.append(v)
+                else:
+                    resources_list.append(v.to_dict())
+            _dict['resources'] = resources_list
+        if hasattr(self, 'template') and self.template is not None:
+            if isinstance(self.template, dict):
+                _dict['template'] = self.template
+            else:
+                _dict['template'] = self.template.to_dict()
+        if hasattr(self, 'target') and self.target is not None:
+            if isinstance(self.target, dict):
+                _dict['target'] = self.target
+            else:
+                _dict['target'] = self.target.to_dict()
+        if hasattr(self, 'status') and getattr(self, 'status') is not None:
+            _dict['status'] = getattr(self, 'status')
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this RoleAssignment object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'RoleAssignment') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'RoleAssignment') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class OperationEnum(str, Enum):
+        """
+        The current operation of the role assignment.
+        """
+
+        CREATE = 'create'
+        APPLY = 'apply'
+        UPDATE = 'update'
+        REMOVE = 'remove'
+
+    class StatusEnum(str, Enum):
+        """
+        The role assignment status.
+        """
+
+        ACCEPTED = 'accepted'
+        FAILURE = 'failure'
+        IN_PROGRESS = 'in_progress'
+        SUPERSEDED = 'superseded'
+
+
+class RoleAssignmentCollection:
+    """
+    A collection of role assignments.
+
+    :param int limit: (optional) The number of documents to include per each page of
+          the collection.
+    :param First first: (optional) Details with linking href to first page of
+          requested collection.
+    :param Next next: (optional) Details with href linking to the following page of
+          requested collection.
+    :param Previous previous: (optional) Details with linking href to previous page
+          of requested collection.
+    :param List[RoleAssignment] assignments: List of role assignments.
+    """
+
+    def __init__(
+        self,
+        assignments: List['RoleAssignment'],
+        *,
+        limit: Optional[int] = None,
+        first: Optional['First'] = None,
+        next: Optional['Next'] = None,
+        previous: Optional['Previous'] = None,
+    ) -> None:
+        """
+        Initialize a RoleAssignmentCollection object.
+
+        :param List[RoleAssignment] assignments: List of role assignments.
+        :param int limit: (optional) The number of documents to include per each
+               page of the collection.
+        :param First first: (optional) Details with linking href to first page of
+               requested collection.
+        :param Next next: (optional) Details with href linking to the following
+               page of requested collection.
+        :param Previous previous: (optional) Details with linking href to previous
+               page of requested collection.
+        """
+        self.limit = limit
+        self.first = first
+        self.next = next
+        self.previous = previous
+        self.assignments = assignments
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'RoleAssignmentCollection':
+        """Initialize a RoleAssignmentCollection object from a json dictionary."""
+        args = {}
+        if (limit := _dict.get('limit')) is not None:
+            args['limit'] = limit
+        if (first := _dict.get('first')) is not None:
+            args['first'] = First.from_dict(first)
+        if (next := _dict.get('next')) is not None:
+            args['next'] = Next.from_dict(next)
+        if (previous := _dict.get('previous')) is not None:
+            args['previous'] = Previous.from_dict(previous)
+        if (assignments := _dict.get('assignments')) is not None:
+            args['assignments'] = [RoleAssignment.from_dict(v) for v in assignments]
+        else:
+            raise ValueError('Required property \'assignments\' not present in RoleAssignmentCollection JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a RoleAssignmentCollection object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'limit') and self.limit is not None:
+            _dict['limit'] = self.limit
+        if hasattr(self, 'first') and self.first is not None:
+            if isinstance(self.first, dict):
+                _dict['first'] = self.first
+            else:
+                _dict['first'] = self.first.to_dict()
+        if hasattr(self, 'next') and self.next is not None:
+            if isinstance(self.next, dict):
+                _dict['next'] = self.next
+            else:
+                _dict['next'] = self.next.to_dict()
+        if hasattr(self, 'previous') and self.previous is not None:
+            if isinstance(self.previous, dict):
+                _dict['previous'] = self.previous
+            else:
+                _dict['previous'] = self.previous.to_dict()
+        if hasattr(self, 'assignments') and self.assignments is not None:
+            assignments_list = []
+            for v in self.assignments:
+                if isinstance(v, dict):
+                    assignments_list.append(v)
+                else:
+                    assignments_list.append(v.to_dict())
+            _dict['assignments'] = assignments_list
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this RoleAssignmentCollection object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'RoleAssignmentCollection') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'RoleAssignmentCollection') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class RoleAssignmentResource:
+    """
+    The role assignment resources and target where the template is assigned.
+
+    :param AssignmentTargetDetails target: assignment target account and type.
+    :param RoleAssignmentResourceRole role: (optional) Set of properties of the
+          assigned resource or error message if assignment failed.
+    """
+
+    def __init__(
+        self,
+        target: 'AssignmentTargetDetails',
+        *,
+        role: Optional['RoleAssignmentResourceRole'] = None,
+    ) -> None:
+        """
+        Initialize a RoleAssignmentResource object.
+
+        :param AssignmentTargetDetails target: assignment target account and type.
+        :param RoleAssignmentResourceRole role: (optional) Set of properties of the
+               assigned resource or error message if assignment failed.
+        """
+        self.target = target
+        self.role = role
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'RoleAssignmentResource':
+        """Initialize a RoleAssignmentResource object from a json dictionary."""
+        args = {}
+        if (target := _dict.get('target')) is not None:
+            args['target'] = AssignmentTargetDetails.from_dict(target)
+        else:
+            raise ValueError('Required property \'target\' not present in RoleAssignmentResource JSON')
+        if (role := _dict.get('role')) is not None:
+            args['role'] = RoleAssignmentResourceRole.from_dict(role)
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a RoleAssignmentResource object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'target') and self.target is not None:
+            if isinstance(self.target, dict):
+                _dict['target'] = self.target
+            else:
+                _dict['target'] = self.target.to_dict()
+        if hasattr(self, 'role') and self.role is not None:
+            if isinstance(self.role, dict):
+                _dict['role'] = self.role
+            else:
+                _dict['role'] = self.role.to_dict()
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this RoleAssignmentResource object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'RoleAssignmentResource') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'RoleAssignmentResource') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class RoleAssignmentResourceCreated:
+    """
+    On success, it includes the role assigned.
+
+    :param str id: (optional) role id.
+    """
+
+    def __init__(
+        self,
+        *,
+        id: Optional[str] = None,
+    ) -> None:
+        """
+        Initialize a RoleAssignmentResourceCreated object.
+
+        :param str id: (optional) role id.
+        """
+        self.id = id
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'RoleAssignmentResourceCreated':
+        """Initialize a RoleAssignmentResourceCreated object from a json dictionary."""
+        args = {}
+        if (id := _dict.get('id')) is not None:
+            args['id'] = id
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a RoleAssignmentResourceCreated object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this RoleAssignmentResourceCreated object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'RoleAssignmentResourceCreated') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'RoleAssignmentResourceCreated') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class RoleAssignmentResourceRole:
+    """
+    Set of properties of the assigned resource or error message if assignment failed.
+
+    :param RoleAssignmentResourceCreated resource_created: (optional) On success, it
+          includes the role assigned.
+    :param AssignmentResourceError error_message: (optional) Body parameters for
+          assignment error.
+    """
+
+    def __init__(
+        self,
+        *,
+        resource_created: Optional['RoleAssignmentResourceCreated'] = None,
+        error_message: Optional['AssignmentResourceError'] = None,
+    ) -> None:
+        """
+        Initialize a RoleAssignmentResourceRole object.
+
+        :param RoleAssignmentResourceCreated resource_created: (optional) On
+               success, it includes the role assigned.
+        :param AssignmentResourceError error_message: (optional) Body parameters
+               for assignment error.
+        """
+        self.resource_created = resource_created
+        self.error_message = error_message
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'RoleAssignmentResourceRole':
+        """Initialize a RoleAssignmentResourceRole object from a json dictionary."""
+        args = {}
+        if (resource_created := _dict.get('resource_created')) is not None:
+            args['resource_created'] = RoleAssignmentResourceCreated.from_dict(resource_created)
+        if (error_message := _dict.get('error_message')) is not None:
+            args['error_message'] = AssignmentResourceError.from_dict(error_message)
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a RoleAssignmentResourceRole object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'resource_created') and self.resource_created is not None:
+            if isinstance(self.resource_created, dict):
+                _dict['resource_created'] = self.resource_created
+            else:
+                _dict['resource_created'] = self.resource_created.to_dict()
+        if hasattr(self, 'error_message') and self.error_message is not None:
+            if isinstance(self.error_message, dict):
+                _dict['error_message'] = self.error_message
+            else:
+                _dict['error_message'] = self.error_message.to_dict()
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this RoleAssignmentResourceRole object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'RoleAssignmentResourceRole') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'RoleAssignmentResourceRole') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class RoleAssignmentTemplate:
+    """
+    The role template id and version that will be assigned.
+
+    :param str id: Action control template ID.
+    :param str version: Action control template version.
+    """
+
+    def __init__(
+        self,
+        id: str,
+        version: str,
+    ) -> None:
+        """
+        Initialize a RoleAssignmentTemplate object.
+
+        :param str id: Action control template ID.
+        :param str version: Action control template version.
+        """
+        self.id = id
+        self.version = version
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'RoleAssignmentTemplate':
+        """Initialize a RoleAssignmentTemplate object from a json dictionary."""
+        args = {}
+        if (id := _dict.get('id')) is not None:
+            args['id'] = id
+        else:
+            raise ValueError('Required property \'id\' not present in RoleAssignmentTemplate JSON')
+        if (version := _dict.get('version')) is not None:
+            args['version'] = version
+        else:
+            raise ValueError('Required property \'version\' not present in RoleAssignmentTemplate JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a RoleAssignmentTemplate object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        if hasattr(self, 'version') and self.version is not None:
+            _dict['version'] = self.version
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this RoleAssignmentTemplate object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'RoleAssignmentTemplate') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'RoleAssignmentTemplate') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class RoleCollection:
+    """
+    A collection of roles returned by the 'list roles' operation.
+
+    :param List[CustomRole] custom_roles: List of custom roles.
+    :param List[Role] service_roles: List of service roles.
+    :param List[Role] system_roles: List of system roles.
+    """
+
+    def __init__(
+        self,
+        custom_roles: List['CustomRole'],
+        service_roles: List['Role'],
+        system_roles: List['Role'],
+    ) -> None:
+        """
+        Initialize a RoleCollection object.
+
+        :param List[CustomRole] custom_roles: List of custom roles.
+        :param List[Role] service_roles: List of service roles.
+        :param List[Role] system_roles: List of system roles.
+        """
+        self.custom_roles = custom_roles
+        self.service_roles = service_roles
+        self.system_roles = system_roles
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'RoleCollection':
+        """Initialize a RoleCollection object from a json dictionary."""
+        args = {}
+        if (custom_roles := _dict.get('custom_roles')) is not None:
+            args['custom_roles'] = [CustomRole.from_dict(v) for v in custom_roles]
+        else:
+            raise ValueError('Required property \'custom_roles\' not present in RoleCollection JSON')
+        if (service_roles := _dict.get('service_roles')) is not None:
+            args['service_roles'] = [Role.from_dict(v) for v in service_roles]
+        else:
+            raise ValueError('Required property \'service_roles\' not present in RoleCollection JSON')
+        if (system_roles := _dict.get('system_roles')) is not None:
+            args['system_roles'] = [Role.from_dict(v) for v in system_roles]
+        else:
+            raise ValueError('Required property \'system_roles\' not present in RoleCollection JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a RoleCollection object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'custom_roles') and self.custom_roles is not None:
+            custom_roles_list = []
+            for v in self.custom_roles:
+                if isinstance(v, dict):
+                    custom_roles_list.append(v)
+                else:
+                    custom_roles_list.append(v.to_dict())
+            _dict['custom_roles'] = custom_roles_list
+        if hasattr(self, 'service_roles') and self.service_roles is not None:
+            service_roles_list = []
+            for v in self.service_roles:
+                if isinstance(v, dict):
+                    service_roles_list.append(v)
+                else:
+                    service_roles_list.append(v.to_dict())
+            _dict['service_roles'] = service_roles_list
+        if hasattr(self, 'system_roles') and self.system_roles is not None:
+            system_roles_list = []
+            for v in self.system_roles:
+                if isinstance(v, dict):
+                    system_roles_list.append(v)
+                else:
+                    system_roles_list.append(v.to_dict())
+            _dict['system_roles'] = system_roles_list
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this RoleCollection object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'RoleCollection') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'RoleCollection') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class RoleTemplate:
+    """
+    The set of properties associated with the role template.
+
+    :param str name: Required field when creating a new template. Otherwise, this
+          field is optional. If the field is included, it changes the name value for all
+          existing versions of the template.
+    :param str description: Description of the role template. This is shown to users
+          in the enterprise account. Use this to describe the purpose or context of the
+          role for enterprise users managing IAM templates.
+    :param str account_id: Enterprise account ID where this template is created.
+    :param bool committed: (optional) Committed status of the template. If committed
+          is set to true, then the template version can no longer be updated.
+    :param RoleTemplatePrototypeRole role: (optional) The role properties that are
+          created in an action resource when the template is assigned.
+    :param str id: (optional) The role template ID.
+    :param str href: (optional) The href URL that links to the role templates API by
+          role template ID.
+    :param datetime created_at: (optional) The UTC timestamp when the role template
+          was created.
+    :param str created_by_id: (optional) The IAM ID of the entity that created the
+          role template.
+    :param datetime last_modified_at: (optional) The UTC timestamp when the role
+          template was last modified.
+    :param str last_modified_by_id: (optional) The IAM ID of the entity that last
+          modified the role template.
+    :param str version: The version number of the template used to identify
+          different versions of same template.
+    :param str state: State of role template.
+    """
+
+    def __init__(
+        self,
+        name: str,
+        account_id: str,
+        version: str,
+        state: str,
+        *,
+        description: Optional[str] = None,
+        committed: Optional[bool] = None,
+        role: Optional['RoleTemplatePrototypeRole'] = None,
+        id: Optional[str] = None,
+        href: Optional[str] = None,
+        created_at: Optional[datetime] = None,
+        created_by_id: Optional[str] = None,
+        last_modified_at: Optional[datetime] = None,
+        last_modified_by_id: Optional[str] = None,
+    ) -> None:
+        """
+        Initialize a RoleTemplate object.
+
+        :param str name: Required field when creating a new template. Otherwise,
+               this field is optional. If the field is included, it changes the name value
+               for all existing versions of the template.
+        :param str description: Description of the role template. This is shown to
+               users in the enterprise account. Use this to describe the purpose or
+               context of the role for enterprise users managing IAM templates.
+        :param str account_id: Enterprise account ID where this template is
+               created.
+        :param str version: The version number of the template used to identify
+               different versions of same template.
+        :param str state: State of role template.
+        :param bool committed: (optional) Committed status of the template. If
+               committed is set to true, then the template version can no longer be
+               updated.
+        :param RoleTemplatePrototypeRole role: (optional) The role properties that
+               are created in an action resource when the template is assigned.
+        """
+        self.name = name
+        self.description = description
+        self.account_id = account_id
+        self.committed = committed
+        self.role = role
+        self.id = id
+        self.href = href
+        self.created_at = created_at
+        self.created_by_id = created_by_id
+        self.last_modified_at = last_modified_at
+        self.last_modified_by_id = last_modified_by_id
+        self.version = version
+        self.state = state
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'RoleTemplate':
+        """Initialize a RoleTemplate object from a json dictionary."""
+        args = {}
+        if (name := _dict.get('name')) is not None:
+            args['name'] = name
+        else:
+            raise ValueError('Required property \'name\' not present in RoleTemplate JSON')
+        if (description := _dict.get('description')) is not None:
+            args['description'] = description
+        if (account_id := _dict.get('account_id')) is not None:
+            args['account_id'] = account_id
+        else:
+            raise ValueError('Required property \'account_id\' not present in RoleTemplate JSON')
+        if (committed := _dict.get('committed')) is not None:
+            args['committed'] = committed
+        if (role := _dict.get('role')) is not None:
+            args['role'] = RoleTemplatePrototypeRole.from_dict(role)
+        if (id := _dict.get('id')) is not None:
+            args['id'] = id
+        if (href := _dict.get('href')) is not None:
+            args['href'] = href
+        if (created_at := _dict.get('created_at')) is not None:
+            args['created_at'] = string_to_datetime(created_at)
+        if (created_by_id := _dict.get('created_by_id')) is not None:
+            args['created_by_id'] = created_by_id
+        if (last_modified_at := _dict.get('last_modified_at')) is not None:
+            args['last_modified_at'] = string_to_datetime(last_modified_at)
+        if (last_modified_by_id := _dict.get('last_modified_by_id')) is not None:
+            args['last_modified_by_id'] = last_modified_by_id
+        if (version := _dict.get('version')) is not None:
+            args['version'] = version
+        else:
+            raise ValueError('Required property \'version\' not present in RoleTemplate JSON')
+        if (state := _dict.get('state')) is not None:
+            args['state'] = state
+        else:
+            raise ValueError('Required property \'state\' not present in RoleTemplate JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a RoleTemplate object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'description') and self.description is not None:
+            _dict['description'] = self.description
+        if hasattr(self, 'account_id') and self.account_id is not None:
+            _dict['account_id'] = self.account_id
+        if hasattr(self, 'committed') and self.committed is not None:
+            _dict['committed'] = self.committed
+        if hasattr(self, 'role') and self.role is not None:
+            if isinstance(self.role, dict):
+                _dict['role'] = self.role
+            else:
+                _dict['role'] = self.role.to_dict()
+        if hasattr(self, 'id') and getattr(self, 'id') is not None:
+            _dict['id'] = getattr(self, 'id')
+        if hasattr(self, 'href') and getattr(self, 'href') is not None:
+            _dict['href'] = getattr(self, 'href')
+        if hasattr(self, 'created_at') and getattr(self, 'created_at') is not None:
+            _dict['created_at'] = datetime_to_string(getattr(self, 'created_at'))
+        if hasattr(self, 'created_by_id') and getattr(self, 'created_by_id') is not None:
+            _dict['created_by_id'] = getattr(self, 'created_by_id')
+        if hasattr(self, 'last_modified_at') and getattr(self, 'last_modified_at') is not None:
+            _dict['last_modified_at'] = datetime_to_string(getattr(self, 'last_modified_at'))
+        if hasattr(self, 'last_modified_by_id') and getattr(self, 'last_modified_by_id') is not None:
+            _dict['last_modified_by_id'] = getattr(self, 'last_modified_by_id')
+        if hasattr(self, 'version') and self.version is not None:
+            _dict['version'] = self.version
+        if hasattr(self, 'state') and self.state is not None:
+            _dict['state'] = self.state
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this RoleTemplate object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'RoleTemplate') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'RoleTemplate') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class StateEnum(str, Enum):
+        """
+        State of role template.
+        """
+
+        ACTIVE = 'active'
+        DELETED = 'deleted'
+
+
+class RoleTemplateCollection:
+    """
+    A collection of role templates.
+
+    :param int limit: (optional) The number of documents to include per each page of
+          the collection.
+    :param First first: (optional) Details with linking href to first page of
+          requested collection.
+    :param Next next: (optional) Details with href linking to the following page of
+          requested collection.
+    :param Previous previous: (optional) Details with linking href to previous page
+          of requested collection.
+    :param List[RoleTemplate] role_templates: List of role templates.
+    """
+
+    def __init__(
+        self,
+        role_templates: List['RoleTemplate'],
+        *,
+        limit: Optional[int] = None,
+        first: Optional['First'] = None,
+        next: Optional['Next'] = None,
+        previous: Optional['Previous'] = None,
+    ) -> None:
+        """
+        Initialize a RoleTemplateCollection object.
+
+        :param List[RoleTemplate] role_templates: List of role templates.
+        :param int limit: (optional) The number of documents to include per each
+               page of the collection.
+        :param First first: (optional) Details with linking href to first page of
+               requested collection.
+        :param Next next: (optional) Details with href linking to the following
+               page of requested collection.
+        :param Previous previous: (optional) Details with linking href to previous
+               page of requested collection.
+        """
+        self.limit = limit
+        self.first = first
+        self.next = next
+        self.previous = previous
+        self.role_templates = role_templates
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'RoleTemplateCollection':
+        """Initialize a RoleTemplateCollection object from a json dictionary."""
+        args = {}
+        if (limit := _dict.get('limit')) is not None:
+            args['limit'] = limit
+        if (first := _dict.get('first')) is not None:
+            args['first'] = First.from_dict(first)
+        if (next := _dict.get('next')) is not None:
+            args['next'] = Next.from_dict(next)
+        if (previous := _dict.get('previous')) is not None:
+            args['previous'] = Previous.from_dict(previous)
+        if (role_templates := _dict.get('role_templates')) is not None:
+            args['role_templates'] = [RoleTemplate.from_dict(v) for v in role_templates]
+        else:
+            raise ValueError('Required property \'role_templates\' not present in RoleTemplateCollection JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a RoleTemplateCollection object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'limit') and self.limit is not None:
+            _dict['limit'] = self.limit
+        if hasattr(self, 'first') and self.first is not None:
+            if isinstance(self.first, dict):
+                _dict['first'] = self.first
+            else:
+                _dict['first'] = self.first.to_dict()
+        if hasattr(self, 'next') and self.next is not None:
+            if isinstance(self.next, dict):
+                _dict['next'] = self.next
+            else:
+                _dict['next'] = self.next.to_dict()
+        if hasattr(self, 'previous') and self.previous is not None:
+            if isinstance(self.previous, dict):
+                _dict['previous'] = self.previous
+            else:
+                _dict['previous'] = self.previous.to_dict()
+        if hasattr(self, 'role_templates') and self.role_templates is not None:
+            role_templates_list = []
+            for v in self.role_templates:
+                if isinstance(v, dict):
+                    role_templates_list.append(v)
+                else:
+                    role_templates_list.append(v.to_dict())
+            _dict['role_templates'] = role_templates_list
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this RoleTemplateCollection object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'RoleTemplateCollection') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'RoleTemplateCollection') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class RoleTemplatePrototypeRole:
+    """
+    The role properties that are created in an action resource when the template is
+    assigned.
+
+    :param str name: The name of the role that is used in the CRN. This must be
+          alphanumeric and capitalized.
+    :param str display_name: The display the name of the role that is shown in the
+          console.
+    :param str service_name: (optional) The service name that the role refers.
+    :param str description: (optional) Description of the role.
+    :param List[str] actions: The actions of the role.
+    """
+
+    def __init__(
+        self,
+        name: str,
+        display_name: str,
+        actions: List[str],
+        *,
+        service_name: Optional[str] = None,
+        description: Optional[str] = None,
+    ) -> None:
+        """
+        Initialize a RoleTemplatePrototypeRole object.
+
+        :param str name: The name of the role that is used in the CRN. This must be
+               alphanumeric and capitalized.
+        :param str display_name: The display the name of the role that is shown in
+               the console.
+        :param List[str] actions: The actions of the role.
+        :param str service_name: (optional) The service name that the role refers.
+        :param str description: (optional) Description of the role.
+        """
+        self.name = name
+        self.display_name = display_name
+        self.service_name = service_name
+        self.description = description
+        self.actions = actions
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'RoleTemplatePrototypeRole':
+        """Initialize a RoleTemplatePrototypeRole object from a json dictionary."""
+        args = {}
+        if (name := _dict.get('name')) is not None:
+            args['name'] = name
+        else:
+            raise ValueError('Required property \'name\' not present in RoleTemplatePrototypeRole JSON')
+        if (display_name := _dict.get('display_name')) is not None:
+            args['display_name'] = display_name
+        else:
+            raise ValueError('Required property \'display_name\' not present in RoleTemplatePrototypeRole JSON')
+        if (service_name := _dict.get('service_name')) is not None:
+            args['service_name'] = service_name
+        if (description := _dict.get('description')) is not None:
+            args['description'] = description
+        if (actions := _dict.get('actions')) is not None:
+            args['actions'] = actions
+        else:
+            raise ValueError('Required property \'actions\' not present in RoleTemplatePrototypeRole JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a RoleTemplatePrototypeRole object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'display_name') and self.display_name is not None:
+            _dict['display_name'] = self.display_name
+        if hasattr(self, 'service_name') and self.service_name is not None:
+            _dict['service_name'] = self.service_name
+        if hasattr(self, 'description') and self.description is not None:
+            _dict['description'] = self.description
+        if hasattr(self, 'actions') and self.actions is not None:
+            _dict['actions'] = self.actions
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this RoleTemplatePrototypeRole object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'RoleTemplatePrototypeRole') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'RoleTemplatePrototypeRole') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class RoleTemplateReferencesItem:
+    """
+    A role template reference associated with a policy template.
+
+    :param str id: The role template ID.
+    :param str version: Role template version.
+    """
+
+    def __init__(
+        self,
+        id: str,
+        version: str,
+    ) -> None:
+        """
+        Initialize a RoleTemplateReferencesItem object.
+
+        :param str id: The role template ID.
+        :param str version: Role template version.
+        """
+        self.id = id
+        self.version = version
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'RoleTemplateReferencesItem':
+        """Initialize a RoleTemplateReferencesItem object from a json dictionary."""
+        args = {}
+        if (id := _dict.get('id')) is not None:
+            args['id'] = id
+        else:
+            raise ValueError('Required property \'id\' not present in RoleTemplateReferencesItem JSON')
+        if (version := _dict.get('version')) is not None:
+            args['version'] = version
+        else:
+            raise ValueError('Required property \'version\' not present in RoleTemplateReferencesItem JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a RoleTemplateReferencesItem object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        if hasattr(self, 'version') and self.version is not None:
+            _dict['version'] = self.version
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this RoleTemplateReferencesItem object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'RoleTemplateReferencesItem') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'RoleTemplateReferencesItem') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class RoleTemplateVersionsCollection:
+    """
+    A collection of versions for a specific role template.
+
+    :param int limit: (optional) The number of documents to include per each page of
+          the collection.
+    :param First first: (optional) Details with linking href to first page of
+          requested collection.
+    :param Next next: (optional) Details with href linking to the following page of
+          requested collection.
+    :param Previous previous: (optional) Details with linking href to previous page
+          of requested collection.
+    :param List[RoleTemplate] versions: List of role templates versions.
+    """
+
+    def __init__(
+        self,
+        versions: List['RoleTemplate'],
+        *,
+        limit: Optional[int] = None,
+        first: Optional['First'] = None,
+        next: Optional['Next'] = None,
+        previous: Optional['Previous'] = None,
+    ) -> None:
+        """
+        Initialize a RoleTemplateVersionsCollection object.
+
+        :param List[RoleTemplate] versions: List of role templates versions.
+        :param int limit: (optional) The number of documents to include per each
+               page of the collection.
+        :param First first: (optional) Details with linking href to first page of
+               requested collection.
+        :param Next next: (optional) Details with href linking to the following
+               page of requested collection.
+        :param Previous previous: (optional) Details with linking href to previous
+               page of requested collection.
+        """
+        self.limit = limit
+        self.first = first
+        self.next = next
+        self.previous = previous
+        self.versions = versions
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'RoleTemplateVersionsCollection':
+        """Initialize a RoleTemplateVersionsCollection object from a json dictionary."""
+        args = {}
+        if (limit := _dict.get('limit')) is not None:
+            args['limit'] = limit
+        if (first := _dict.get('first')) is not None:
+            args['first'] = First.from_dict(first)
+        if (next := _dict.get('next')) is not None:
+            args['next'] = Next.from_dict(next)
+        if (previous := _dict.get('previous')) is not None:
+            args['previous'] = Previous.from_dict(previous)
+        if (versions := _dict.get('versions')) is not None:
+            args['versions'] = [RoleTemplate.from_dict(v) for v in versions]
+        else:
+            raise ValueError('Required property \'versions\' not present in RoleTemplateVersionsCollection JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a RoleTemplateVersionsCollection object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'limit') and self.limit is not None:
+            _dict['limit'] = self.limit
+        if hasattr(self, 'first') and self.first is not None:
+            if isinstance(self.first, dict):
+                _dict['first'] = self.first
+            else:
+                _dict['first'] = self.first.to_dict()
+        if hasattr(self, 'next') and self.next is not None:
+            if isinstance(self.next, dict):
+                _dict['next'] = self.next
+            else:
+                _dict['next'] = self.next.to_dict()
+        if hasattr(self, 'previous') and self.previous is not None:
+            if isinstance(self.previous, dict):
+                _dict['previous'] = self.previous
+            else:
+                _dict['previous'] = self.previous.to_dict()
+        if hasattr(self, 'versions') and self.versions is not None:
+            versions_list = []
+            for v in self.versions:
+                if isinstance(v, dict):
+                    versions_list.append(v)
+                else:
+                    versions_list.append(v.to_dict())
+            _dict['versions'] = versions_list
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this RoleTemplateVersionsCollection object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'RoleTemplateVersionsCollection') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'RoleTemplateVersionsCollection') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class Roles:
+    """
+    A role associated with a policy.
+
+    :param str role_id: The role Cloud Resource Name (CRN) granted by the policy.
+          Example CRN: 'crn:v1:bluemix:public:iam::::role:Editor'.
+    """
+
+    def __init__(
+        self,
+        role_id: str,
+    ) -> None:
+        """
+        Initialize a Roles object.
+
+        :param str role_id: The role Cloud Resource Name (CRN) granted by the
+               policy. Example CRN: 'crn:v1:bluemix:public:iam::::role:Editor'.
+        """
+        self.role_id = role_id
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'Roles':
+        """Initialize a Roles object from a json dictionary."""
+        args = {}
+        if (role_id := _dict.get('role_id')) is not None:
+            args['role_id'] = role_id
+        else:
+            raise ValueError('Required property \'role_id\' not present in Roles JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a Roles object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'role_id') and self.role_id is not None:
+            _dict['role_id'] = self.role_id
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this Roles object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'Roles') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'Roles') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class RuleAttribute:
+    """
+    Rule that specifies additional access that is granted (For example, time-based
+    condition).
+
+    :param str key: The name of an attribute.
+    :param str operator: The operator of an attribute.
+    :param object value: The value of a rule, resource, or subject attribute; can be
+          boolean or string for resource and subject attribute. Can be a string or an
+          array of strings (for example, an array of days to permit access) for rule
+          attribute.
+    """
+
+    def __init__(
+        self,
+        key: str,
+        operator: str,
+        value: object,
+    ) -> None:
+        """
+        Initialize a RuleAttribute object.
+
+        :param str key: The name of an attribute.
+        :param str operator: The operator of an attribute.
+        :param object value: The value of a rule, resource, or subject attribute;
+               can be boolean or string for resource and subject attribute. Can be a
+               string or an array of strings (for example, an array of days to permit
+               access) for rule attribute.
+        """
+        self.key = key
+        self.operator = operator
+        self.value = value
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'RuleAttribute':
+        """Initialize a RuleAttribute object from a json dictionary."""
+        args = {}
+        if (key := _dict.get('key')) is not None:
+            args['key'] = key
+        else:
+            raise ValueError('Required property \'key\' not present in RuleAttribute JSON')
+        if (operator := _dict.get('operator')) is not None:
+            args['operator'] = operator
+        else:
+            raise ValueError('Required property \'operator\' not present in RuleAttribute JSON')
+        if (value := _dict.get('value')) is not None:
+            args['value'] = value
+        else:
+            raise ValueError('Required property \'value\' not present in RuleAttribute JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a RuleAttribute object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'key') and self.key is not None:
+            _dict['key'] = self.key
+        if hasattr(self, 'operator') and self.operator is not None:
+            _dict['operator'] = self.operator
+        if hasattr(self, 'value') and self.value is not None:
+            _dict['value'] = self.value
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this RuleAttribute object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'RuleAttribute') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'RuleAttribute') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class OperatorEnum(str, Enum):
+        """
+        The operator of an attribute.
+        """
+
+        STRINGEQUALS = 'stringEquals'
+        STRINGEXISTS = 'stringExists'
+        STRINGEQUALSANYOF = 'stringEqualsAnyOf'
+        STRINGMATCHANYOF = 'stringMatchAnyOf'
+        STRINGMATCH = 'stringMatch'
+        TIMELESSTHAN = 'timeLessThan'
+        TIMELESSTHANOREQUALS = 'timeLessThanOrEquals'
+        TIMEGREATERTHAN = 'timeGreaterThan'
+        TIMEGREATERTHANOREQUALS = 'timeGreaterThanOrEquals'
+        DATELESSTHAN = 'dateLessThan'
+        DATELESSTHANOREQUALS = 'dateLessThanOrEquals'
+        DATEGREATERTHAN = 'dateGreaterThan'
+        DATEGREATERTHANOREQUALS = 'dateGreaterThanOrEquals'
+        DATETIMELESSTHAN = 'dateTimeLessThan'
+        DATETIMELESSTHANOREQUALS = 'dateTimeLessThanOrEquals'
+        DATETIMEGREATERTHAN = 'dateTimeGreaterThan'
+        DATETIMEGREATERTHANOREQUALS = 'dateTimeGreaterThanOrEquals'
+        DAYOFWEEKEQUALS = 'dayOfWeekEquals'
+        DAYOFWEEKANYOF = 'dayOfWeekAnyOf'
+
+
+class SubjectAttribute:
+    """
+    An attribute associated with a subject.
+
+    :param str name: The name of an attribute.
+    :param str value: The value of an attribute.
+    """
+
+    def __init__(
+        self,
+        name: str,
+        value: str,
+    ) -> None:
+        """
+        Initialize a SubjectAttribute object.
+
+        :param str name: The name of an attribute.
+        :param str value: The value of an attribute.
+        """
+        self.name = name
+        self.value = value
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'SubjectAttribute':
+        """Initialize a SubjectAttribute object from a json dictionary."""
+        args = {}
+        if (name := _dict.get('name')) is not None:
+            args['name'] = name
+        else:
+            raise ValueError('Required property \'name\' not present in SubjectAttribute JSON')
+        if (value := _dict.get('value')) is not None:
+            args['value'] = value
+        else:
+            raise ValueError('Required property \'value\' not present in SubjectAttribute JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a SubjectAttribute object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'value') and self.value is not None:
+            _dict['value'] = self.value
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this SubjectAttribute object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'SubjectAttribute') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'SubjectAttribute') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class TemplateActionControl:
+    """
+    The action control properties that are created in an action resource when the template
+    is assigned.
+
+    :param str service_name: The service name that the action control refers.
+    :param str description: (optional) Description of the action control.
+    :param List[str] actions: List of actions to control access.
+    """
+
+    def __init__(
+        self,
+        service_name: str,
+        actions: List[str],
+        *,
+        description: Optional[str] = None,
+    ) -> None:
+        """
+        Initialize a TemplateActionControl object.
+
+        :param str service_name: The service name that the action control refers.
+        :param List[str] actions: List of actions to control access.
+        :param str description: (optional) Description of the action control.
+        """
+        self.service_name = service_name
+        self.description = description
+        self.actions = actions
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'TemplateActionControl':
+        """Initialize a TemplateActionControl object from a json dictionary."""
+        args = {}
+        if (service_name := _dict.get('service_name')) is not None:
+            args['service_name'] = service_name
+        else:
+            raise ValueError('Required property \'service_name\' not present in TemplateActionControl JSON')
+        if (description := _dict.get('description')) is not None:
+            args['description'] = description
+        if (actions := _dict.get('actions')) is not None:
+            args['actions'] = actions
+        else:
+            raise ValueError('Required property \'actions\' not present in TemplateActionControl JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a TemplateActionControl object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'service_name') and self.service_name is not None:
+            _dict['service_name'] = self.service_name
+        if hasattr(self, 'description') and self.description is not None:
+            _dict['description'] = self.description
+        if hasattr(self, 'actions') and self.actions is not None:
+            _dict['actions'] = self.actions
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this TemplateActionControl object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'TemplateActionControl') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'TemplateActionControl') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class TemplateControl:
+    """
+    Specifies the type of access that is granted by the policy.
+
+    :param TemplateGrant grant: Permission is granted by the policy.
+    """
+
+    def __init__(
+        self,
+        grant: 'TemplateGrant',
+    ) -> None:
+        """
+        Initialize a TemplateControl object.
+
+        :param TemplateGrant grant: Permission is granted by the policy.
+        """
+        self.grant = grant
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'TemplateControl':
+        """Initialize a TemplateControl object from a json dictionary."""
+        args = {}
+        if (grant := _dict.get('grant')) is not None:
+            args['grant'] = grant
+        else:
+            raise ValueError('Required property \'grant\' not present in TemplateControl JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a TemplateControl object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'grant') and self.grant is not None:
+            if isinstance(self.grant, dict):
+                _dict['grant'] = self.grant
+            else:
+                _dict['grant'] = self.grant.to_dict()
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this TemplateControl object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'TemplateControl') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'TemplateControl') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class TemplateCountData:
+    """
+    policy template count details.
+
+    :param LimitData template: (optional) policy template current and limit details
+          with in an account.
+    :param LimitData version: (optional) policy template current and limit details
+          with in an account.
+    """
+
+    def __init__(
+        self,
+        *,
+        template: Optional['LimitData'] = None,
+        version: Optional['LimitData'] = None,
+    ) -> None:
+        """
+        Initialize a TemplateCountData object.
+
+        :param LimitData template: (optional) policy template current and limit
+               details with in an account.
+        :param LimitData version: (optional) policy template current and limit
+               details with in an account.
+        """
+        self.template = template
+        self.version = version
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'TemplateCountData':
+        """Initialize a TemplateCountData object from a json dictionary."""
+        args = {}
+        if (template := _dict.get('template')) is not None:
+            args['template'] = LimitData.from_dict(template)
+        if (version := _dict.get('version')) is not None:
+            args['version'] = LimitData.from_dict(version)
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a TemplateCountData object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'template') and self.template is not None:
+            if isinstance(self.template, dict):
+                _dict['template'] = self.template
+            else:
+                _dict['template'] = self.template.to_dict()
+        if hasattr(self, 'version') and self.version is not None:
+            if isinstance(self.version, dict):
+                _dict['version'] = self.version
+            else:
+                _dict['version'] = self.version.to_dict()
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this TemplateCountData object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'TemplateCountData') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'TemplateCountData') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class TemplateGrant:
+    """
+    Permission is granted by the policy.
+
+    :param List[Roles] roles: (optional) A set of role Cloud Resource Names (CRNs)
+          granted by the policy.
+    :param List[RoleTemplateReferencesItem] role_template_references: (optional) A
+          set of role template reference IDs granted by the policy.
+    """
+
+    def __init__(
+        self,
+        *,
+        roles: Optional[List['Roles']] = None,
+        role_template_references: Optional[List['RoleTemplateReferencesItem']] = None,
+    ) -> None:
+        """
+        Initialize a TemplateGrant object.
+
+        :param List[Roles] roles: (optional) A set of role Cloud Resource Names
+               (CRNs) granted by the policy.
+        :param List[RoleTemplateReferencesItem] role_template_references:
+               (optional) A set of role template reference IDs granted by the policy.
+        """
+        self.roles = roles
+        self.role_template_references = role_template_references
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'TemplateGrant':
+        """Initialize a TemplateGrant object from a json dictionary."""
+        args = {}
+        if (roles := _dict.get('roles')) is not None:
+            args['roles'] = [Roles.from_dict(v) for v in roles]
+        if (role_template_references := _dict.get('role_template_references')) is not None:
+            args['role_template_references'] = [
+                RoleTemplateReferencesItem.from_dict(v) for v in role_template_references
+            ]
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a TemplateGrant object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'roles') and self.roles is not None:
+            roles_list = []
+            for v in self.roles:
+                if isinstance(v, dict):
+                    roles_list.append(v)
+                else:
+                    roles_list.append(v.to_dict())
+            _dict['roles'] = roles_list
+        if hasattr(self, 'role_template_references') and self.role_template_references is not None:
+            role_template_references_list = []
+            for v in self.role_template_references:
+                if isinstance(v, dict):
+                    role_template_references_list.append(v)
+                else:
+                    role_template_references_list.append(v.to_dict())
+            _dict['role_template_references'] = role_template_references_list
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this TemplateGrant object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'TemplateGrant') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'TemplateGrant') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class TemplateMetadata:
+    """
+    The details of the IAM template that was used to create an enterprise-managed policy
+    in your account. When returned, this indicates that the policy is created from and
+    managed by a template in the root enterprise account.
+
+    :param str id: (optional) The policy template ID.
+    :param str version: (optional) Template version.
+    :param str assignment_id: (optional) Policy assignment ID.
+    :param str root_id: (optional) Orchestrator template ID.
+    :param str root_version: (optional) Orchestrator template version.
+    """
+
+    def __init__(
+        self,
+        *,
+        id: Optional[str] = None,
+        version: Optional[str] = None,
+        assignment_id: Optional[str] = None,
+        root_id: Optional[str] = None,
+        root_version: Optional[str] = None,
+    ) -> None:
+        """
+        Initialize a TemplateMetadata object.
+
+        :param str id: (optional) The policy template ID.
+        :param str version: (optional) Template version.
+        :param str assignment_id: (optional) Policy assignment ID.
+        :param str root_id: (optional) Orchestrator template ID.
+        :param str root_version: (optional) Orchestrator template version.
+        """
+        self.id = id
+        self.version = version
+        self.assignment_id = assignment_id
+        self.root_id = root_id
+        self.root_version = root_version
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'TemplateMetadata':
+        """Initialize a TemplateMetadata object from a json dictionary."""
+        args = {}
+        if (id := _dict.get('id')) is not None:
+            args['id'] = id
+        if (version := _dict.get('version')) is not None:
+            args['version'] = version
+        if (assignment_id := _dict.get('assignment_id')) is not None:
+            args['assignment_id'] = assignment_id
+        if (root_id := _dict.get('root_id')) is not None:
+            args['root_id'] = root_id
+        if (root_version := _dict.get('root_version')) is not None:
+            args['root_version'] = root_version
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a TemplateMetadata object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'id') and self.id is not None:
+            _dict['id'] = self.id
+        if hasattr(self, 'version') and self.version is not None:
+            _dict['version'] = self.version
+        if hasattr(self, 'assignment_id') and self.assignment_id is not None:
+            _dict['assignment_id'] = self.assignment_id
+        if hasattr(self, 'root_id') and self.root_id is not None:
+            _dict['root_id'] = self.root_id
+        if hasattr(self, 'root_version') and self.root_version is not None:
+            _dict['root_version'] = self.root_version
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this TemplateMetadata object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'TemplateMetadata') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'TemplateMetadata') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class TemplatePolicy:
+    """
+    The core set of properties associated with the template's policy object.
+
+    :param str type: The policy type; either 'access' or 'authorization'.
+    :param str description: (optional) Description of the policy. This is shown in
+          child accounts when an access group or trusted profile template uses the policy
+          template to assign access.
+    :param V2PolicyResource resource: (optional) The resource attributes to which
+          the policy grants access.
+    :param V2PolicySubject subject: (optional) The subject attributes for whom the
+          policy grants access.
+    :param str pattern: (optional) Indicates pattern of rule, either
+          'time-based-conditions:once', 'time-based-conditions:weekly:all-day', or
+          'time-based-conditions:weekly:custom-hours'.
+    :param V2PolicyRule rule: (optional) Additional access conditions associated
+          with the policy.
+    :param TemplateControl control: (optional) Specifies the type of access that is
+          granted by the policy.
+    """
+
+    def __init__(
+        self,
+        type: str,
+        *,
+        description: Optional[str] = None,
+        resource: Optional['V2PolicyResource'] = None,
+        subject: Optional['V2PolicySubject'] = None,
+        pattern: Optional[str] = None,
+        rule: Optional['V2PolicyRule'] = None,
+        control: Optional['TemplateControl'] = None,
+    ) -> None:
+        """
+        Initialize a TemplatePolicy object.
+
+        :param str type: The policy type; either 'access' or 'authorization'.
+        :param str description: (optional) Description of the policy. This is shown
+               in child accounts when an access group or trusted profile template uses the
+               policy template to assign access.
+        :param V2PolicyResource resource: (optional) The resource attributes to
+               which the policy grants access.
+        :param V2PolicySubject subject: (optional) The subject attributes for whom
+               the policy grants access.
+        :param str pattern: (optional) Indicates pattern of rule, either
+               'time-based-conditions:once', 'time-based-conditions:weekly:all-day', or
+               'time-based-conditions:weekly:custom-hours'.
+        :param V2PolicyRule rule: (optional) Additional access conditions
+               associated with the policy.
+        :param TemplateControl control: (optional) Specifies the type of access
+               that is granted by the policy.
+        """
+        self.type = type
+        self.description = description
+        self.resource = resource
+        self.subject = subject
+        self.pattern = pattern
+        self.rule = rule
+        self.control = control
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'TemplatePolicy':
+        """Initialize a TemplatePolicy object from a json dictionary."""
+        args = {}
+        if (type := _dict.get('type')) is not None:
+            args['type'] = type
+        else:
+            raise ValueError('Required property \'type\' not present in TemplatePolicy JSON')
+        if (description := _dict.get('description')) is not None:
+            args['description'] = description
+        if (resource := _dict.get('resource')) is not None:
+            args['resource'] = V2PolicyResource.from_dict(resource)
+        if (subject := _dict.get('subject')) is not None:
+            args['subject'] = V2PolicySubject.from_dict(subject)
+        if (pattern := _dict.get('pattern')) is not None:
+            args['pattern'] = pattern
+        if (rule := _dict.get('rule')) is not None:
+            args['rule'] = rule
+        if (control := _dict.get('control')) is not None:
+            args['control'] = TemplateControl.from_dict(control)
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a TemplatePolicy object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        if hasattr(self, 'description') and self.description is not None:
+            _dict['description'] = self.description
+        if hasattr(self, 'resource') and self.resource is not None:
+            if isinstance(self.resource, dict):
+                _dict['resource'] = self.resource
+            else:
+                _dict['resource'] = self.resource.to_dict()
+        if hasattr(self, 'subject') and self.subject is not None:
+            if isinstance(self.subject, dict):
+                _dict['subject'] = self.subject
+            else:
+                _dict['subject'] = self.subject.to_dict()
+        if hasattr(self, 'pattern') and self.pattern is not None:
+            _dict['pattern'] = self.pattern
+        if hasattr(self, 'rule') and self.rule is not None:
+            if isinstance(self.rule, dict):
+                _dict['rule'] = self.rule
+            else:
+                _dict['rule'] = self.rule.to_dict()
+        if hasattr(self, 'control') and self.control is not None:
+            if isinstance(self.control, dict):
+                _dict['control'] = self.control
+            else:
+                _dict['control'] = self.control.to_dict()
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this TemplatePolicy object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'TemplatePolicy') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'TemplatePolicy') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The policy type; either 'access' or 'authorization'.
+        """
+
+        ACCESS = 'access'
+        AUTHORIZATION = 'authorization'
+
+
+class TemplateRole:
+    """
+    The role properties that are created in an action resource when the template is
+    assigned.
+
+    :param str display_name: The display the name of the role that is shown in the
+          console.
+    :param str service_name: (optional) The service name that the role refers.
+    :param str description: (optional) Description of the role.
+    :param List[str] actions: The actions of the role.
+    """
+
+    def __init__(
+        self,
+        display_name: str,
+        actions: List[str],
+        *,
+        service_name: Optional[str] = None,
+        description: Optional[str] = None,
+    ) -> None:
+        """
+        Initialize a TemplateRole object.
+
+        :param str display_name: The display the name of the role that is shown in
+               the console.
+        :param List[str] actions: The actions of the role.
+        :param str service_name: (optional) The service name that the role refers.
+        :param str description: (optional) Description of the role.
+        """
+        self.display_name = display_name
+        self.service_name = service_name
+        self.description = description
+        self.actions = actions
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'TemplateRole':
+        """Initialize a TemplateRole object from a json dictionary."""
+        args = {}
+        if (display_name := _dict.get('display_name')) is not None:
+            args['display_name'] = display_name
+        else:
+            raise ValueError('Required property \'display_name\' not present in TemplateRole JSON')
+        if (service_name := _dict.get('service_name')) is not None:
+            args['service_name'] = service_name
+        if (description := _dict.get('description')) is not None:
+            args['description'] = description
+        if (actions := _dict.get('actions')) is not None:
+            args['actions'] = actions
+        else:
+            raise ValueError('Required property \'actions\' not present in TemplateRole JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a TemplateRole object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'display_name') and self.display_name is not None:
+            _dict['display_name'] = self.display_name
+        if hasattr(self, 'service_name') and self.service_name is not None:
+            _dict['service_name'] = self.service_name
+        if hasattr(self, 'description') and self.description is not None:
+            _dict['description'] = self.description
+        if hasattr(self, 'actions') and self.actions is not None:
+            _dict['actions'] = self.actions
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this TemplateRole object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'TemplateRole') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'TemplateRole') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class V2Policy:
+    """
+    The core set of properties associated with the policy.
+
+    :param str type: The policy type; either 'access' or 'authorization'.
+    :param str description: (optional) Description of the policy.
+    :param V2PolicySubject subject: (optional) The subject attributes for whom the
+          policy grants access.
+    :param V2PolicyResource resource: (optional) The resource attributes to which
+          the policy grants access.
+    :param str pattern: (optional) Indicates pattern of rule, either
+          'time-based-conditions:once', 'time-based-conditions:weekly:all-day', or
+          'time-based-conditions:weekly:custom-hours'.
+    :param V2PolicyRule rule: (optional) Additional access conditions associated
+          with the policy.
+    :param str id: (optional) The policy ID.
+    :param str href: (optional) The href URL that links to the policies API by
+          policy ID.
+    :param ControlResponse control:
+    :param datetime created_at: (optional) The UTC timestamp when the policy was
+          created.
+    :param str created_by_id: (optional) The IAM ID of the entity that created the
+          policy.
+    :param datetime last_modified_at: (optional) The UTC timestamp when the policy
+          was last modified.
+    :param str last_modified_by_id: (optional) The IAM ID of the entity that last
+          modified the policy.
+    :param str state: The policy state, either 'deleted' or 'active'.
+    :param str last_permit_at: (optional) The optional last permit time of policy,
+          when passing query parameter format=include_last_permit.
+    :param int last_permit_frequency: (optional) The optional count of times that
+          policy has provided a permit, when passing query parameter
+          format=include_last_permit.
+    """
+
+    def __init__(
+        self,
+        type: str,
+        control: 'ControlResponse',
+        state: str,
+        *,
+        description: Optional[str] = None,
+        subject: Optional['V2PolicySubject'] = None,
+        resource: Optional['V2PolicyResource'] = None,
+        pattern: Optional[str] = None,
+        rule: Optional['V2PolicyRule'] = None,
+        id: Optional[str] = None,
+        href: Optional[str] = None,
+        created_at: Optional[datetime] = None,
+        created_by_id: Optional[str] = None,
+        last_modified_at: Optional[datetime] = None,
+        last_modified_by_id: Optional[str] = None,
+        last_permit_at: Optional[str] = None,
+        last_permit_frequency: Optional[int] = None,
+    ) -> None:
+        """
+        Initialize a V2Policy object.
+
+        :param str type: The policy type; either 'access' or 'authorization'.
+        :param ControlResponse control:
+        :param str state: The policy state, either 'deleted' or 'active'.
+        :param str description: (optional) Description of the policy.
+        :param V2PolicySubject subject: (optional) The subject attributes for whom
+               the policy grants access.
+        :param V2PolicyResource resource: (optional) The resource attributes to
+               which the policy grants access.
+        :param str pattern: (optional) Indicates pattern of rule, either
+               'time-based-conditions:once', 'time-based-conditions:weekly:all-day', or
+               'time-based-conditions:weekly:custom-hours'.
+        :param V2PolicyRule rule: (optional) Additional access conditions
+               associated with the policy.
+        :param str last_permit_at: (optional) The optional last permit time of
+               policy, when passing query parameter format=include_last_permit.
+        :param int last_permit_frequency: (optional) The optional count of times
+               that policy has provided a permit, when passing query parameter
+               format=include_last_permit.
+        """
+        self.type = type
+        self.description = description
+        self.subject = subject
+        self.resource = resource
+        self.pattern = pattern
+        self.rule = rule
+        self.id = id
+        self.href = href
+        self.control = control
+        self.created_at = created_at
+        self.created_by_id = created_by_id
+        self.last_modified_at = last_modified_at
+        self.last_modified_by_id = last_modified_by_id
+        self.state = state
+        self.last_permit_at = last_permit_at
+        self.last_permit_frequency = last_permit_frequency
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'V2Policy':
+        """Initialize a V2Policy object from a json dictionary."""
+        args = {}
+        if (type := _dict.get('type')) is not None:
+            args['type'] = type
+        else:
+            raise ValueError('Required property \'type\' not present in V2Policy JSON')
+        if (description := _dict.get('description')) is not None:
+            args['description'] = description
+        if (subject := _dict.get('subject')) is not None:
+            args['subject'] = V2PolicySubject.from_dict(subject)
+        if (resource := _dict.get('resource')) is not None:
+            args['resource'] = V2PolicyResource.from_dict(resource)
+        if (pattern := _dict.get('pattern')) is not None:
+            args['pattern'] = pattern
+        if (rule := _dict.get('rule')) is not None:
+            args['rule'] = rule
+        if (id := _dict.get('id')) is not None:
+            args['id'] = id
+        if (href := _dict.get('href')) is not None:
+            args['href'] = href
+        if (control := _dict.get('control')) is not None:
+            args['control'] = control
+        else:
+            raise ValueError('Required property \'control\' not present in V2Policy JSON')
+        if (created_at := _dict.get('created_at')) is not None:
+            args['created_at'] = string_to_datetime(created_at)
+        if (created_by_id := _dict.get('created_by_id')) is not None:
+            args['created_by_id'] = created_by_id
+        if (last_modified_at := _dict.get('last_modified_at')) is not None:
+            args['last_modified_at'] = string_to_datetime(last_modified_at)
+        if (last_modified_by_id := _dict.get('last_modified_by_id')) is not None:
+            args['last_modified_by_id'] = last_modified_by_id
+        if (state := _dict.get('state')) is not None:
+            args['state'] = state
+        else:
+            raise ValueError('Required property \'state\' not present in V2Policy JSON')
+        if (last_permit_at := _dict.get('last_permit_at')) is not None:
+            args['last_permit_at'] = last_permit_at
+        if (last_permit_frequency := _dict.get('last_permit_frequency')) is not None:
+            args['last_permit_frequency'] = last_permit_frequency
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a V2Policy object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        if hasattr(self, 'description') and self.description is not None:
+            _dict['description'] = self.description
+        if hasattr(self, 'subject') and self.subject is not None:
+            if isinstance(self.subject, dict):
+                _dict['subject'] = self.subject
+            else:
+                _dict['subject'] = self.subject.to_dict()
+        if hasattr(self, 'resource') and self.resource is not None:
+            if isinstance(self.resource, dict):
+                _dict['resource'] = self.resource
+            else:
+                _dict['resource'] = self.resource.to_dict()
+        if hasattr(self, 'pattern') and self.pattern is not None:
+            _dict['pattern'] = self.pattern
+        if hasattr(self, 'rule') and self.rule is not None:
+            if isinstance(self.rule, dict):
+                _dict['rule'] = self.rule
+            else:
+                _dict['rule'] = self.rule.to_dict()
+        if hasattr(self, 'id') and getattr(self, 'id') is not None:
+            _dict['id'] = getattr(self, 'id')
+        if hasattr(self, 'href') and getattr(self, 'href') is not None:
+            _dict['href'] = getattr(self, 'href')
+        if hasattr(self, 'control') and self.control is not None:
+            if isinstance(self.control, dict):
+                _dict['control'] = self.control
+            else:
+                _dict['control'] = self.control.to_dict()
+        if hasattr(self, 'created_at') and getattr(self, 'created_at') is not None:
+            _dict['created_at'] = datetime_to_string(getattr(self, 'created_at'))
+        if hasattr(self, 'created_by_id') and getattr(self, 'created_by_id') is not None:
+            _dict['created_by_id'] = getattr(self, 'created_by_id')
+        if hasattr(self, 'last_modified_at') and getattr(self, 'last_modified_at') is not None:
+            _dict['last_modified_at'] = datetime_to_string(getattr(self, 'last_modified_at'))
+        if hasattr(self, 'last_modified_by_id') and getattr(self, 'last_modified_by_id') is not None:
+            _dict['last_modified_by_id'] = getattr(self, 'last_modified_by_id')
+        if hasattr(self, 'state') and self.state is not None:
+            _dict['state'] = self.state
+        if hasattr(self, 'last_permit_at') and self.last_permit_at is not None:
+            _dict['last_permit_at'] = self.last_permit_at
+        if hasattr(self, 'last_permit_frequency') and self.last_permit_frequency is not None:
+            _dict['last_permit_frequency'] = self.last_permit_frequency
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this V2Policy object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'V2Policy') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'V2Policy') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The policy type; either 'access' or 'authorization'.
+        """
+
+        ACCESS = 'access'
+        AUTHORIZATION = 'authorization'
+
+    class StateEnum(str, Enum):
+        """
+        The policy state, either 'deleted' or 'active'.
+        """
+
+        ACTIVE = 'active'
+        DELETED = 'deleted'
+
+
+class V2PolicyCollection:
+    """
+    A collection of policies.
+
+    :param int limit: (optional) The number of documents to include per each page of
+          the collection.
+    :param First first: (optional) Details with linking href to first page of
+          requested collection.
+    :param Next next: (optional) Details with href linking to the following page of
+          requested collection.
+    :param Previous previous: (optional) Details with linking href to previous page
+          of requested collection.
+    :param List[V2PolicyTemplateMetaData] policies: List of policies.
+    """
+
+    def __init__(
+        self,
+        policies: List['V2PolicyTemplateMetaData'],
+        *,
+        limit: Optional[int] = None,
+        first: Optional['First'] = None,
+        next: Optional['Next'] = None,
+        previous: Optional['Previous'] = None,
+    ) -> None:
+        """
+        Initialize a V2PolicyCollection object.
+
+        :param List[V2PolicyTemplateMetaData] policies: List of policies.
+        :param int limit: (optional) The number of documents to include per each
+               page of the collection.
+        :param First first: (optional) Details with linking href to first page of
+               requested collection.
+        :param Next next: (optional) Details with href linking to the following
+               page of requested collection.
+        :param Previous previous: (optional) Details with linking href to previous
+               page of requested collection.
+        """
+        self.limit = limit
+        self.first = first
+        self.next = next
+        self.previous = previous
+        self.policies = policies
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'V2PolicyCollection':
+        """Initialize a V2PolicyCollection object from a json dictionary."""
+        args = {}
+        if (limit := _dict.get('limit')) is not None:
+            args['limit'] = limit
+        if (first := _dict.get('first')) is not None:
+            args['first'] = First.from_dict(first)
+        if (next := _dict.get('next')) is not None:
+            args['next'] = Next.from_dict(next)
+        if (previous := _dict.get('previous')) is not None:
+            args['previous'] = Previous.from_dict(previous)
+        if (policies := _dict.get('policies')) is not None:
+            args['policies'] = [V2PolicyTemplateMetaData.from_dict(v) for v in policies]
+        else:
+            raise ValueError('Required property \'policies\' not present in V2PolicyCollection JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a V2PolicyCollection object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'limit') and self.limit is not None:
+            _dict['limit'] = self.limit
+        if hasattr(self, 'first') and self.first is not None:
+            if isinstance(self.first, dict):
+                _dict['first'] = self.first
+            else:
+                _dict['first'] = self.first.to_dict()
+        if hasattr(self, 'next') and self.next is not None:
+            if isinstance(self.next, dict):
+                _dict['next'] = self.next
+            else:
+                _dict['next'] = self.next.to_dict()
+        if hasattr(self, 'previous') and self.previous is not None:
+            if isinstance(self.previous, dict):
+                _dict['previous'] = self.previous
+            else:
+                _dict['previous'] = self.previous.to_dict()
+        if hasattr(self, 'policies') and self.policies is not None:
+            policies_list = []
+            for v in self.policies:
+                if isinstance(v, dict):
+                    policies_list.append(v)
+                else:
+                    policies_list.append(v.to_dict())
+            _dict['policies'] = policies_list
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this V2PolicyCollection object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'V2PolicyCollection') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'V2PolicyCollection') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class V2PolicyResource:
+    """
+    The resource attributes to which the policy grants access.
+
+    :param List[V2PolicyResourceAttribute] attributes: List of resource attributes
+          to which the policy grants access.
+    :param List[V2PolicyResourceTag] tags: (optional) Optional list of resource tags
+          to which the policy grants access.
+    """
+
+    def __init__(
+        self,
+        attributes: List['V2PolicyResourceAttribute'],
+        *,
+        tags: Optional[List['V2PolicyResourceTag']] = None,
+    ) -> None:
+        """
+        Initialize a V2PolicyResource object.
+
+        :param List[V2PolicyResourceAttribute] attributes: List of resource
+               attributes to which the policy grants access.
+        :param List[V2PolicyResourceTag] tags: (optional) Optional list of resource
+               tags to which the policy grants access.
+        """
+        self.attributes = attributes
+        self.tags = tags
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'V2PolicyResource':
+        """Initialize a V2PolicyResource object from a json dictionary."""
+        args = {}
+        if (attributes := _dict.get('attributes')) is not None:
+            args['attributes'] = [V2PolicyResourceAttribute.from_dict(v) for v in attributes]
+        else:
+            raise ValueError('Required property \'attributes\' not present in V2PolicyResource JSON')
+        if (tags := _dict.get('tags')) is not None:
+            args['tags'] = [V2PolicyResourceTag.from_dict(v) for v in tags]
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a V2PolicyResource object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'attributes') and self.attributes is not None:
+            attributes_list = []
+            for v in self.attributes:
+                if isinstance(v, dict):
+                    attributes_list.append(v)
+                else:
+                    attributes_list.append(v.to_dict())
+            _dict['attributes'] = attributes_list
+        if hasattr(self, 'tags') and self.tags is not None:
+            tags_list = []
+            for v in self.tags:
+                if isinstance(v, dict):
+                    tags_list.append(v)
+                else:
+                    tags_list.append(v.to_dict())
+            _dict['tags'] = tags_list
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this V2PolicyResource object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'V2PolicyResource') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'V2PolicyResource') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class V2PolicyResourceAttribute:
+    """
+    Resource attribute to which the policy grants access.
+
+    :param str key: The name of a resource attribute.
+    :param str operator: The operator of an attribute.
+    :param object value: The value of a rule, resource, or subject attribute; can be
+          boolean or string for resource and subject attribute. Can be a string or an
+          array of strings (for example, an array of days to permit access) for rule
+          attribute.
+    """
+
+    def __init__(
+        self,
+        key: str,
+        operator: str,
+        value: object,
+    ) -> None:
+        """
+        Initialize a V2PolicyResourceAttribute object.
+
+        :param str key: The name of a resource attribute.
+        :param str operator: The operator of an attribute.
+        :param object value: The value of a rule, resource, or subject attribute;
+               can be boolean or string for resource and subject attribute. Can be a
+               string or an array of strings (for example, an array of days to permit
+               access) for rule attribute.
+        """
+        self.key = key
+        self.operator = operator
+        self.value = value
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'V2PolicyResourceAttribute':
+        """Initialize a V2PolicyResourceAttribute object from a json dictionary."""
+        args = {}
+        if (key := _dict.get('key')) is not None:
+            args['key'] = key
+        else:
+            raise ValueError('Required property \'key\' not present in V2PolicyResourceAttribute JSON')
+        if (operator := _dict.get('operator')) is not None:
+            args['operator'] = operator
+        else:
+            raise ValueError('Required property \'operator\' not present in V2PolicyResourceAttribute JSON')
+        if (value := _dict.get('value')) is not None:
+            args['value'] = value
+        else:
+            raise ValueError('Required property \'value\' not present in V2PolicyResourceAttribute JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a V2PolicyResourceAttribute object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'key') and self.key is not None:
+            _dict['key'] = self.key
+        if hasattr(self, 'operator') and self.operator is not None:
+            _dict['operator'] = self.operator
+        if hasattr(self, 'value') and self.value is not None:
+            _dict['value'] = self.value
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this V2PolicyResourceAttribute object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'V2PolicyResourceAttribute') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'V2PolicyResourceAttribute') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class OperatorEnum(str, Enum):
+        """
+        The operator of an attribute.
+        """
+
+        STRINGEQUALS = 'stringEquals'
+        STRINGEXISTS = 'stringExists'
+        STRINGMATCH = 'stringMatch'
+        STRINGEQUALSANYOF = 'stringEqualsAnyOf'
+        STRINGMATCHANYOF = 'stringMatchAnyOf'
+
+
+class V2PolicyResourceTag:
+    """
+    A tag associated with a resource.
+
+    :param str key: The name of an access management tag.
+    :param str value: The value of an access management tag.
+    :param str operator: The operator of an access management tag.
+    """
+
+    def __init__(
+        self,
+        key: str,
+        value: str,
+        operator: str,
+    ) -> None:
+        """
+        Initialize a V2PolicyResourceTag object.
+
+        :param str key: The name of an access management tag.
+        :param str value: The value of an access management tag.
+        :param str operator: The operator of an access management tag.
+        """
+        self.key = key
+        self.value = value
+        self.operator = operator
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'V2PolicyResourceTag':
+        """Initialize a V2PolicyResourceTag object from a json dictionary."""
+        args = {}
+        if (key := _dict.get('key')) is not None:
+            args['key'] = key
+        else:
+            raise ValueError('Required property \'key\' not present in V2PolicyResourceTag JSON')
+        if (value := _dict.get('value')) is not None:
+            args['value'] = value
+        else:
+            raise ValueError('Required property \'value\' not present in V2PolicyResourceTag JSON')
+        if (operator := _dict.get('operator')) is not None:
+            args['operator'] = operator
+        else:
+            raise ValueError('Required property \'operator\' not present in V2PolicyResourceTag JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a V2PolicyResourceTag object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'key') and self.key is not None:
+            _dict['key'] = self.key
+        if hasattr(self, 'value') and self.value is not None:
+            _dict['value'] = self.value
+        if hasattr(self, 'operator') and self.operator is not None:
+            _dict['operator'] = self.operator
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this V2PolicyResourceTag object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'V2PolicyResourceTag') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'V2PolicyResourceTag') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class OperatorEnum(str, Enum):
+        """
+        The operator of an access management tag.
+        """
+
+        STRINGEQUALS = 'stringEquals'
+        STRINGMATCH = 'stringMatch'
+
+
+class V2PolicyRule:
+    """
+    Additional access conditions associated with the policy.
+
+    """
+
+    def __init__(
+        self,
+    ) -> None:
+        """
+        Initialize a V2PolicyRule object.
+
+        """
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+            ", ".join(['V2PolicyRuleRuleAttribute', 'V2PolicyRuleRuleWithNestedConditions'])
+        )
+        raise Exception(msg)
+
+
+class V2PolicySubject:
+    """
+    The subject attributes for whom the policy grants access.
+
+    :param List[V2PolicySubjectAttribute] attributes: List of subject attributes
+          associated with policy.
+    """
+
+    def __init__(
+        self,
+        attributes: List['V2PolicySubjectAttribute'],
+    ) -> None:
+        """
+        Initialize a V2PolicySubject object.
+
+        :param List[V2PolicySubjectAttribute] attributes: List of subject
+               attributes associated with policy.
+        """
+        self.attributes = attributes
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'V2PolicySubject':
+        """Initialize a V2PolicySubject object from a json dictionary."""
+        args = {}
+        if (attributes := _dict.get('attributes')) is not None:
+            args['attributes'] = [V2PolicySubjectAttribute.from_dict(v) for v in attributes]
+        else:
+            raise ValueError('Required property \'attributes\' not present in V2PolicySubject JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a V2PolicySubject object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'attributes') and self.attributes is not None:
+            attributes_list = []
+            for v in self.attributes:
+                if isinstance(v, dict):
+                    attributes_list.append(v)
+                else:
+                    attributes_list.append(v.to_dict())
+            _dict['attributes'] = attributes_list
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this V2PolicySubject object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'V2PolicySubject') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'V2PolicySubject') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class V2PolicySubjectAttribute:
+    """
+    Subject attribute for whom the policy grants access.
+
+    :param str key: The name of a subject attribute. For example, iam_id,
+          access_group_id.
+    :param str operator: The operator of an attribute.
+    :param object value: The value of a rule, resource, or subject attribute; can be
+          boolean or string for resource and subject attribute. Can be a string or an
+          array of strings (for example, an array of days to permit access) for rule
+          attribute.
+    """
+
+    def __init__(
+        self,
+        key: str,
+        operator: str,
+        value: object,
+    ) -> None:
+        """
+        Initialize a V2PolicySubjectAttribute object.
+
+        :param str key: The name of a subject attribute. For example, iam_id,
+               access_group_id.
+        :param str operator: The operator of an attribute.
+        :param object value: The value of a rule, resource, or subject attribute;
+               can be boolean or string for resource and subject attribute. Can be a
+               string or an array of strings (for example, an array of days to permit
+               access) for rule attribute.
+        """
+        self.key = key
+        self.operator = operator
+        self.value = value
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'V2PolicySubjectAttribute':
+        """Initialize a V2PolicySubjectAttribute object from a json dictionary."""
+        args = {}
+        if (key := _dict.get('key')) is not None:
+            args['key'] = key
+        else:
+            raise ValueError('Required property \'key\' not present in V2PolicySubjectAttribute JSON')
+        if (operator := _dict.get('operator')) is not None:
+            args['operator'] = operator
+        else:
+            raise ValueError('Required property \'operator\' not present in V2PolicySubjectAttribute JSON')
+        if (value := _dict.get('value')) is not None:
+            args['value'] = value
+        else:
+            raise ValueError('Required property \'value\' not present in V2PolicySubjectAttribute JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a V2PolicySubjectAttribute object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'key') and self.key is not None:
+            _dict['key'] = self.key
+        if hasattr(self, 'operator') and self.operator is not None:
+            _dict['operator'] = self.operator
+        if hasattr(self, 'value') and self.value is not None:
+            _dict['value'] = self.value
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this V2PolicySubjectAttribute object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'V2PolicySubjectAttribute') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'V2PolicySubjectAttribute') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class OperatorEnum(str, Enum):
+        """
+        The operator of an attribute.
+        """
+
+        STRINGEQUALS = 'stringEquals'
+        STRINGEXISTS = 'stringExists'
+
+
+class V2PolicyTemplateMetaData:
+    """
+    The core set of properties associated with the policy.
+
+    :param str type: The policy type; either 'access' or 'authorization'.
+    :param str description: (optional) Description of the policy.
+    :param V2PolicySubject subject: (optional) The subject attributes for whom the
+          policy grants access.
+    :param V2PolicyResource resource: (optional) The resource attributes to which
+          the policy grants access.
+    :param str pattern: (optional) Indicates pattern of rule, either
+          'time-based-conditions:once', 'time-based-conditions:weekly:all-day', or
+          'time-based-conditions:weekly:custom-hours'.
+    :param V2PolicyRule rule: (optional) Additional access conditions associated
+          with the policy.
+    :param str id: (optional) The policy ID.
+    :param str href: (optional) The href URL that links to the policies API by
+          policy ID.
+    :param ControlResponse control:
+    :param datetime created_at: (optional) The UTC timestamp when the policy was
+          created.
+    :param str created_by_id: (optional) The IAM ID of the entity that created the
+          policy.
+    :param datetime last_modified_at: (optional) The UTC timestamp when the policy
+          was last modified.
+    :param str last_modified_by_id: (optional) The IAM ID of the entity that last
+          modified the policy.
+    :param str state: The policy state, either 'deleted' or 'active'.
+    :param str last_permit_at: (optional) The optional last permit time of policy,
+          when passing query parameter format=include_last_permit.
+    :param int last_permit_frequency: (optional) The optional count of times that
+          policy has provided a permit, when passing query parameter
+          format=include_last_permit.
+    :param TemplateMetadata template: (optional) The details of the IAM template
+          that was used to create an enterprise-managed policy in your account. When
+          returned, this indicates that the policy is created from and managed by a
+          template in the root enterprise account.
+    """
+
+    def __init__(
+        self,
+        type: str,
+        control: 'ControlResponse',
+        state: str,
+        *,
+        description: Optional[str] = None,
+        subject: Optional['V2PolicySubject'] = None,
+        resource: Optional['V2PolicyResource'] = None,
+        pattern: Optional[str] = None,
+        rule: Optional['V2PolicyRule'] = None,
+        id: Optional[str] = None,
+        href: Optional[str] = None,
+        created_at: Optional[datetime] = None,
+        created_by_id: Optional[str] = None,
+        last_modified_at: Optional[datetime] = None,
+        last_modified_by_id: Optional[str] = None,
+        last_permit_at: Optional[str] = None,
+        last_permit_frequency: Optional[int] = None,
+        template: Optional['TemplateMetadata'] = None,
+    ) -> None:
+        """
+        Initialize a V2PolicyTemplateMetaData object.
+
+        :param str type: The policy type; either 'access' or 'authorization'.
+        :param ControlResponse control:
+        :param str state: The policy state, either 'deleted' or 'active'.
+        :param str description: (optional) Description of the policy.
+        :param V2PolicySubject subject: (optional) The subject attributes for whom
+               the policy grants access.
+        :param V2PolicyResource resource: (optional) The resource attributes to
+               which the policy grants access.
+        :param str pattern: (optional) Indicates pattern of rule, either
+               'time-based-conditions:once', 'time-based-conditions:weekly:all-day', or
+               'time-based-conditions:weekly:custom-hours'.
+        :param V2PolicyRule rule: (optional) Additional access conditions
+               associated with the policy.
+        :param str last_permit_at: (optional) The optional last permit time of
+               policy, when passing query parameter format=include_last_permit.
+        :param int last_permit_frequency: (optional) The optional count of times
+               that policy has provided a permit, when passing query parameter
+               format=include_last_permit.
+        :param TemplateMetadata template: (optional) The details of the IAM
+               template that was used to create an enterprise-managed policy in your
+               account. When returned, this indicates that the policy is created from and
+               managed by a template in the root enterprise account.
+        """
+        self.type = type
+        self.description = description
+        self.subject = subject
+        self.resource = resource
+        self.pattern = pattern
+        self.rule = rule
+        self.id = id
+        self.href = href
+        self.control = control
+        self.created_at = created_at
+        self.created_by_id = created_by_id
+        self.last_modified_at = last_modified_at
+        self.last_modified_by_id = last_modified_by_id
+        self.state = state
+        self.last_permit_at = last_permit_at
+        self.last_permit_frequency = last_permit_frequency
+        self.template = template
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'V2PolicyTemplateMetaData':
+        """Initialize a V2PolicyTemplateMetaData object from a json dictionary."""
+        args = {}
+        if (type := _dict.get('type')) is not None:
+            args['type'] = type
+        else:
+            raise ValueError('Required property \'type\' not present in V2PolicyTemplateMetaData JSON')
+        if (description := _dict.get('description')) is not None:
+            args['description'] = description
+        if (subject := _dict.get('subject')) is not None:
+            args['subject'] = V2PolicySubject.from_dict(subject)
+        if (resource := _dict.get('resource')) is not None:
+            args['resource'] = V2PolicyResource.from_dict(resource)
+        if (pattern := _dict.get('pattern')) is not None:
+            args['pattern'] = pattern
+        if (rule := _dict.get('rule')) is not None:
+            args['rule'] = rule
+        if (id := _dict.get('id')) is not None:
+            args['id'] = id
+        if (href := _dict.get('href')) is not None:
+            args['href'] = href
+        if (control := _dict.get('control')) is not None:
+            args['control'] = control
+        else:
+            raise ValueError('Required property \'control\' not present in V2PolicyTemplateMetaData JSON')
+        if (created_at := _dict.get('created_at')) is not None:
+            args['created_at'] = string_to_datetime(created_at)
+        if (created_by_id := _dict.get('created_by_id')) is not None:
+            args['created_by_id'] = created_by_id
+        if (last_modified_at := _dict.get('last_modified_at')) is not None:
+            args['last_modified_at'] = string_to_datetime(last_modified_at)
+        if (last_modified_by_id := _dict.get('last_modified_by_id')) is not None:
+            args['last_modified_by_id'] = last_modified_by_id
+        if (state := _dict.get('state')) is not None:
+            args['state'] = state
+        else:
+            raise ValueError('Required property \'state\' not present in V2PolicyTemplateMetaData JSON')
+        if (last_permit_at := _dict.get('last_permit_at')) is not None:
+            args['last_permit_at'] = last_permit_at
+        if (last_permit_frequency := _dict.get('last_permit_frequency')) is not None:
+            args['last_permit_frequency'] = last_permit_frequency
+        if (template := _dict.get('template')) is not None:
+            args['template'] = TemplateMetadata.from_dict(template)
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a V2PolicyTemplateMetaData object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        if hasattr(self, 'description') and self.description is not None:
+            _dict['description'] = self.description
+        if hasattr(self, 'subject') and self.subject is not None:
+            if isinstance(self.subject, dict):
+                _dict['subject'] = self.subject
+            else:
+                _dict['subject'] = self.subject.to_dict()
+        if hasattr(self, 'resource') and self.resource is not None:
+            if isinstance(self.resource, dict):
+                _dict['resource'] = self.resource
+            else:
+                _dict['resource'] = self.resource.to_dict()
+        if hasattr(self, 'pattern') and self.pattern is not None:
+            _dict['pattern'] = self.pattern
+        if hasattr(self, 'rule') and self.rule is not None:
+            if isinstance(self.rule, dict):
+                _dict['rule'] = self.rule
+            else:
+                _dict['rule'] = self.rule.to_dict()
+        if hasattr(self, 'id') and getattr(self, 'id') is not None:
+            _dict['id'] = getattr(self, 'id')
+        if hasattr(self, 'href') and getattr(self, 'href') is not None:
+            _dict['href'] = getattr(self, 'href')
+        if hasattr(self, 'control') and self.control is not None:
+            if isinstance(self.control, dict):
+                _dict['control'] = self.control
+            else:
+                _dict['control'] = self.control.to_dict()
+        if hasattr(self, 'created_at') and getattr(self, 'created_at') is not None:
+            _dict['created_at'] = datetime_to_string(getattr(self, 'created_at'))
+        if hasattr(self, 'created_by_id') and getattr(self, 'created_by_id') is not None:
+            _dict['created_by_id'] = getattr(self, 'created_by_id')
+        if hasattr(self, 'last_modified_at') and getattr(self, 'last_modified_at') is not None:
+            _dict['last_modified_at'] = datetime_to_string(getattr(self, 'last_modified_at'))
+        if hasattr(self, 'last_modified_by_id') and getattr(self, 'last_modified_by_id') is not None:
+            _dict['last_modified_by_id'] = getattr(self, 'last_modified_by_id')
+        if hasattr(self, 'state') and self.state is not None:
+            _dict['state'] = self.state
+        if hasattr(self, 'last_permit_at') and self.last_permit_at is not None:
+            _dict['last_permit_at'] = self.last_permit_at
+        if hasattr(self, 'last_permit_frequency') and self.last_permit_frequency is not None:
+            _dict['last_permit_frequency'] = self.last_permit_frequency
+        if hasattr(self, 'template') and self.template is not None:
+            if isinstance(self.template, dict):
+                _dict['template'] = self.template
+            else:
+                _dict['template'] = self.template.to_dict()
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this V2PolicyTemplateMetaData object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'V2PolicyTemplateMetaData') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'V2PolicyTemplateMetaData') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        The policy type; either 'access' or 'authorization'.
+        """
+
+        ACCESS = 'access'
+        AUTHORIZATION = 'authorization'
+
+    class StateEnum(str, Enum):
+        """
+        The policy state, either 'deleted' or 'active'.
+        """
+
+        ACTIVE = 'active'
+        DELETED = 'deleted'
+
+
+class ControlResponseControl(ControlResponse):
+    """
+    Specifies the type of access that is granted by the policy.
+
+    :param Grant grant: Permission is granted by the policy.
+    """
+
+    def __init__(
+        self,
+        grant: 'Grant',
+    ) -> None:
+        """
+        Initialize a ControlResponseControl object.
+
+        :param Grant grant: Permission is granted by the policy.
+        """
+        # pylint: disable=super-init-not-called
+        self.grant = grant
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'ControlResponseControl':
+        """Initialize a ControlResponseControl object from a json dictionary."""
+        args = {}
+        if (grant := _dict.get('grant')) is not None:
+            args['grant'] = Grant.from_dict(grant)
+        else:
+            raise ValueError('Required property \'grant\' not present in ControlResponseControl JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a ControlResponseControl object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'grant') and self.grant is not None:
+            if isinstance(self.grant, dict):
+                _dict['grant'] = self.grant
+            else:
+                _dict['grant'] = self.grant.to_dict()
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this ControlResponseControl object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'ControlResponseControl') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'ControlResponseControl') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class ControlResponseControlWithEnrichedRoles(ControlResponse):
+    """
+    Specifies the type of access that is granted by the policy with additional role
+    information.
+
+    :param GrantWithEnrichedRoles grant: Permission granted by the policy with
+          translated roles and additional role information.
+    """
+
+    def __init__(
+        self,
+        grant: 'GrantWithEnrichedRoles',
+    ) -> None:
+        """
+        Initialize a ControlResponseControlWithEnrichedRoles object.
+
+        :param GrantWithEnrichedRoles grant: Permission granted by the policy with
+               translated roles and additional role information.
+        """
+        # pylint: disable=super-init-not-called
+        self.grant = grant
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'ControlResponseControlWithEnrichedRoles':
+        """Initialize a ControlResponseControlWithEnrichedRoles object from a json dictionary."""
+        args = {}
+        if (grant := _dict.get('grant')) is not None:
+            args['grant'] = GrantWithEnrichedRoles.from_dict(grant)
+        else:
+            raise ValueError('Required property \'grant\' not present in ControlResponseControlWithEnrichedRoles JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a ControlResponseControlWithEnrichedRoles object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'grant') and self.grant is not None:
+            if isinstance(self.grant, dict):
+                _dict['grant'] = self.grant
+            else:
+                _dict['grant'] = self.grant.to_dict()
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this ControlResponseControlWithEnrichedRoles object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'ControlResponseControlWithEnrichedRoles') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'ControlResponseControlWithEnrichedRoles') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class NestedConditionRuleAttribute(NestedCondition):
+    """
+    Rule that specifies additional access that is granted (For example, time-based
+    condition).
+
+    :param str key: The name of an attribute.
+    :param str operator: The operator of an attribute.
+    :param object value: The value of a rule, resource, or subject attribute; can be
+          boolean or string for resource and subject attribute. Can be a string or an
+          array of strings (for example, an array of days to permit access) for rule
+          attribute.
+    """
+
+    def __init__(
+        self,
+        key: str,
+        operator: str,
+        value: object,
+    ) -> None:
+        """
+        Initialize a NestedConditionRuleAttribute object.
+
+        :param str key: The name of an attribute.
+        :param str operator: The operator of an attribute.
+        :param object value: The value of a rule, resource, or subject attribute;
+               can be boolean or string for resource and subject attribute. Can be a
+               string or an array of strings (for example, an array of days to permit
+               access) for rule attribute.
+        """
+        # pylint: disable=super-init-not-called
+        self.key = key
+        self.operator = operator
+        self.value = value
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'NestedConditionRuleAttribute':
+        """Initialize a NestedConditionRuleAttribute object from a json dictionary."""
+        args = {}
+        if (key := _dict.get('key')) is not None:
+            args['key'] = key
+        else:
+            raise ValueError('Required property \'key\' not present in NestedConditionRuleAttribute JSON')
+        if (operator := _dict.get('operator')) is not None:
+            args['operator'] = operator
+        else:
+            raise ValueError('Required property \'operator\' not present in NestedConditionRuleAttribute JSON')
+        if (value := _dict.get('value')) is not None:
+            args['value'] = value
+        else:
+            raise ValueError('Required property \'value\' not present in NestedConditionRuleAttribute JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a NestedConditionRuleAttribute object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'key') and self.key is not None:
+            _dict['key'] = self.key
+        if hasattr(self, 'operator') and self.operator is not None:
+            _dict['operator'] = self.operator
+        if hasattr(self, 'value') and self.value is not None:
+            _dict['value'] = self.value
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this NestedConditionRuleAttribute object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'NestedConditionRuleAttribute') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'NestedConditionRuleAttribute') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class OperatorEnum(str, Enum):
+        """
+        The operator of an attribute.
+        """
+
+        STRINGEQUALS = 'stringEquals'
+        STRINGEXISTS = 'stringExists'
+        STRINGEQUALSANYOF = 'stringEqualsAnyOf'
+        STRINGMATCHANYOF = 'stringMatchAnyOf'
+        STRINGMATCH = 'stringMatch'
+        TIMELESSTHAN = 'timeLessThan'
+        TIMELESSTHANOREQUALS = 'timeLessThanOrEquals'
+        TIMEGREATERTHAN = 'timeGreaterThan'
+        TIMEGREATERTHANOREQUALS = 'timeGreaterThanOrEquals'
+        DATELESSTHAN = 'dateLessThan'
+        DATELESSTHANOREQUALS = 'dateLessThanOrEquals'
+        DATEGREATERTHAN = 'dateGreaterThan'
+        DATEGREATERTHANOREQUALS = 'dateGreaterThanOrEquals'
+        DATETIMELESSTHAN = 'dateTimeLessThan'
+        DATETIMELESSTHANOREQUALS = 'dateTimeLessThanOrEquals'
+        DATETIMEGREATERTHAN = 'dateTimeGreaterThan'
+        DATETIMEGREATERTHANOREQUALS = 'dateTimeGreaterThanOrEquals'
+        DAYOFWEEKEQUALS = 'dayOfWeekEquals'
+        DAYOFWEEKANYOF = 'dayOfWeekAnyOf'
+
+
+class NestedConditionRuleWithConditions(NestedCondition):
+    """
+    Rule that specifies additional access that is granted (for example, time-based
+    condition) accross multiple conditions.
+
+    :param str operator: Operator to evaluate conditions.
+    :param List[RuleAttribute] conditions: List of conditions associated with a
+          policy. For example, time-based conditions that grant access over a certain time
+          period.
+    """
+
+    def __init__(
+        self,
+        operator: str,
+        conditions: List['RuleAttribute'],
+    ) -> None:
+        """
+        Initialize a NestedConditionRuleWithConditions object.
+
+        :param str operator: Operator to evaluate conditions.
+        :param List[RuleAttribute] conditions: List of conditions associated with a
+               policy. For example, time-based conditions that grant access over a certain
+               time period.
+        """
+        # pylint: disable=super-init-not-called
+        self.operator = operator
+        self.conditions = conditions
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'NestedConditionRuleWithConditions':
+        """Initialize a NestedConditionRuleWithConditions object from a json dictionary."""
+        args = {}
+        if (operator := _dict.get('operator')) is not None:
+            args['operator'] = operator
+        else:
+            raise ValueError('Required property \'operator\' not present in NestedConditionRuleWithConditions JSON')
+        if (conditions := _dict.get('conditions')) is not None:
+            args['conditions'] = [RuleAttribute.from_dict(v) for v in conditions]
+        else:
+            raise ValueError('Required property \'conditions\' not present in NestedConditionRuleWithConditions JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a NestedConditionRuleWithConditions object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'operator') and self.operator is not None:
+            _dict['operator'] = self.operator
+        if hasattr(self, 'conditions') and self.conditions is not None:
+            conditions_list = []
+            for v in self.conditions:
+                if isinstance(v, dict):
+                    conditions_list.append(v)
+                else:
+                    conditions_list.append(v.to_dict())
+            _dict['conditions'] = conditions_list
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this NestedConditionRuleWithConditions object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'NestedConditionRuleWithConditions') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'NestedConditionRuleWithConditions') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class OperatorEnum(str, Enum):
+        """
+        Operator to evaluate conditions.
+        """
+
+        AND = 'and'
+        OR = 'or'
+
+
+class PolicyTemplateAssignmentItemsPolicyAssignment(PolicyTemplateAssignmentItems):
+    """
+    The set of properties associated with the policy template assignment.
+
+    :param str template_id: policy template ID.
+    :param str template_version: policy template version.
+    :param str assignment_id: (optional) Passed in value to correlate with other
+          assignments.
+    :param str target_type: Assignment target type.
+    :param str target: ID of the target account.
+    :param str id: (optional) Policy assignment ID.
+    :param str account_id: (optional) The account GUID that the policies assignments
+          belong to.
+    :param str href: (optional) The href URL that links to the policies assignments
+          API by policy assignment ID.
+    :param datetime created_at: (optional) The UTC timestamp when the policy
+          assignment was created.
+    :param str created_by_id: (optional) The IAM ID of the entity that created the
+          policy assignment.
+    :param datetime last_modified_at: (optional) The UTC timestamp when the policy
+          assignment was last modified.
+    :param str last_modified_by_id: (optional) The IAM ID of the entity that last
+          modified the policy assignment.
+    :param List[PolicyAssignmentResources] resources: Object for each account
+          assigned.
+    :param str status: The policy assignment status.
+    """
+
+    def __init__(
+        self,
+        template_id: str,
+        template_version: str,
+        target_type: str,
+        target: str,
+        resources: List['PolicyAssignmentResources'],
+        status: str,
+        *,
+        assignment_id: Optional[str] = None,
+        id: Optional[str] = None,
+        account_id: Optional[str] = None,
+        href: Optional[str] = None,
+        created_at: Optional[datetime] = None,
+        created_by_id: Optional[str] = None,
+        last_modified_at: Optional[datetime] = None,
+        last_modified_by_id: Optional[str] = None,
+    ) -> None:
+        """
+        Initialize a PolicyTemplateAssignmentItemsPolicyAssignment object.
+
+        :param str template_id: policy template ID.
+        :param str template_version: policy template version.
+        :param str target_type: Assignment target type.
+        :param str target: ID of the target account.
+        :param List[PolicyAssignmentResources] resources: Object for each account
+               assigned.
+        :param str status: The policy assignment status.
+        :param str assignment_id: (optional) Passed in value to correlate with
+               other assignments.
+        """
+        # pylint: disable=super-init-not-called
+        self.template_id = template_id
+        self.template_version = template_version
+        self.assignment_id = assignment_id
+        self.target_type = target_type
+        self.target = target
+        self.id = id
+        self.account_id = account_id
+        self.href = href
+        self.created_at = created_at
+        self.created_by_id = created_by_id
+        self.last_modified_at = last_modified_at
+        self.last_modified_by_id = last_modified_by_id
+        self.resources = resources
+        self.status = status
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'PolicyTemplateAssignmentItemsPolicyAssignment':
+        """Initialize a PolicyTemplateAssignmentItemsPolicyAssignment object from a json dictionary."""
+        args = {}
+        if (template_id := _dict.get('template_id')) is not None:
+            args['template_id'] = template_id
+        else:
+            raise ValueError(
+                'Required property \'template_id\' not present in PolicyTemplateAssignmentItemsPolicyAssignment JSON'
+            )
+        if (template_version := _dict.get('template_version')) is not None:
+            args['template_version'] = template_version
+        else:
+            raise ValueError(
+                'Required property \'template_version\' not present in PolicyTemplateAssignmentItemsPolicyAssignment JSON'
+            )
+        if (assignment_id := _dict.get('assignment_id')) is not None:
+            args['assignment_id'] = assignment_id
+        if (target_type := _dict.get('target_type')) is not None:
+            args['target_type'] = target_type
+        else:
+            raise ValueError(
+                'Required property \'target_type\' not present in PolicyTemplateAssignmentItemsPolicyAssignment JSON'
+            )
+        if (target := _dict.get('target')) is not None:
+            args['target'] = target
+        else:
+            raise ValueError(
+                'Required property \'target\' not present in PolicyTemplateAssignmentItemsPolicyAssignment JSON'
+            )
+        if (id := _dict.get('id')) is not None:
+            args['id'] = id
+        if (account_id := _dict.get('account_id')) is not None:
+            args['account_id'] = account_id
+        if (href := _dict.get('href')) is not None:
+            args['href'] = href
+        if (created_at := _dict.get('created_at')) is not None:
+            args['created_at'] = string_to_datetime(created_at)
+        if (created_by_id := _dict.get('created_by_id')) is not None:
+            args['created_by_id'] = created_by_id
+        if (last_modified_at := _dict.get('last_modified_at')) is not None:
+            args['last_modified_at'] = string_to_datetime(last_modified_at)
+        if (last_modified_by_id := _dict.get('last_modified_by_id')) is not None:
+            args['last_modified_by_id'] = last_modified_by_id
+        if (resources := _dict.get('resources')) is not None:
+            args['resources'] = [PolicyAssignmentResources.from_dict(v) for v in resources]
+        else:
+            raise ValueError(
+                'Required property \'resources\' not present in PolicyTemplateAssignmentItemsPolicyAssignment JSON'
+            )
+        if (status := _dict.get('status')) is not None:
+            args['status'] = status
+        else:
+            raise ValueError(
+                'Required property \'status\' not present in PolicyTemplateAssignmentItemsPolicyAssignment JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a PolicyTemplateAssignmentItemsPolicyAssignment object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'template_id') and self.template_id is not None:
+            _dict['template_id'] = self.template_id
+        if hasattr(self, 'template_version') and self.template_version is not None:
+            _dict['template_version'] = self.template_version
+        if hasattr(self, 'assignment_id') and self.assignment_id is not None:
+            _dict['assignment_id'] = self.assignment_id
+        if hasattr(self, 'target_type') and self.target_type is not None:
+            _dict['target_type'] = self.target_type
+        if hasattr(self, 'target') and self.target is not None:
+            _dict['target'] = self.target
+        if hasattr(self, 'id') and getattr(self, 'id') is not None:
+            _dict['id'] = getattr(self, 'id')
+        if hasattr(self, 'account_id') and getattr(self, 'account_id') is not None:
+            _dict['account_id'] = getattr(self, 'account_id')
+        if hasattr(self, 'href') and getattr(self, 'href') is not None:
+            _dict['href'] = getattr(self, 'href')
+        if hasattr(self, 'created_at') and getattr(self, 'created_at') is not None:
+            _dict['created_at'] = datetime_to_string(getattr(self, 'created_at'))
+        if hasattr(self, 'created_by_id') and getattr(self, 'created_by_id') is not None:
+            _dict['created_by_id'] = getattr(self, 'created_by_id')
+        if hasattr(self, 'last_modified_at') and getattr(self, 'last_modified_at') is not None:
+            _dict['last_modified_at'] = datetime_to_string(getattr(self, 'last_modified_at'))
+        if hasattr(self, 'last_modified_by_id') and getattr(self, 'last_modified_by_id') is not None:
+            _dict['last_modified_by_id'] = getattr(self, 'last_modified_by_id')
+        if hasattr(self, 'resources') and self.resources is not None:
+            resources_list = []
+            for v in self.resources:
+                if isinstance(v, dict):
+                    resources_list.append(v)
+                else:
+                    resources_list.append(v.to_dict())
+            _dict['resources'] = resources_list
+        if hasattr(self, 'status') and self.status is not None:
+            _dict['status'] = self.status
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this PolicyTemplateAssignmentItemsPolicyAssignment object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'PolicyTemplateAssignmentItemsPolicyAssignment') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'PolicyTemplateAssignmentItemsPolicyAssignment') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TargetTypeEnum(str, Enum):
+        """
+        Assignment target type.
+        """
+
+        ACCOUNT = 'Account'
+        ACCOUNTGROUP = 'AccountGroup'
+        ENTERPRISE = 'Enterprise'
+
+    class StatusEnum(str, Enum):
+        """
+        The policy assignment status.
+        """
+
+        IN_PROGRESS = 'in_progress'
+        SUCCEEDED = 'succeeded'
+        SUCCEED_WITH_ERRORS = 'succeed_with_errors'
+        FAILED = 'failed'
+
+
+class PolicyTemplateAssignmentItemsPolicyAssignmentV1(PolicyTemplateAssignmentItems):
+    """
+    The set of properties associated with the policy template assignment.
+
+    :param AssignmentTargetDetails target: assignment target account and type.
+    :param str id: (optional) Policy assignment ID.
+    :param str account_id: (optional) The account GUID that the policies assignments
+          belong to.
+    :param str href: (optional) The href URL that links to the policies assignments
+          API by policy assignment ID.
+    :param datetime created_at: (optional) The UTC timestamp when the policy
+          assignment was created.
+    :param str created_by_id: (optional) The IAM ID of the entity that created the
+          policy assignment.
+    :param datetime last_modified_at: (optional) The UTC timestamp when the policy
+          assignment was last modified.
+    :param str last_modified_by_id: (optional) The IAM ID of the entity that last
+          modified the policy assignment.
+    :param List[PolicyAssignmentV1Resources] resources: Object for each account
+          assigned.
+    :param PolicyAssignmentV1Subject subject: (optional) Subject details of access
+          type assignment.
+    :param AssignmentTemplateDetails template: policy template details.
+    :param str status: The policy assignment status.
+    """
+
+    def __init__(
+        self,
+        target: 'AssignmentTargetDetails',
+        resources: List['PolicyAssignmentV1Resources'],
+        template: 'AssignmentTemplateDetails',
+        status: str,
+        *,
+        id: Optional[str] = None,
+        account_id: Optional[str] = None,
+        href: Optional[str] = None,
+        created_at: Optional[datetime] = None,
+        created_by_id: Optional[str] = None,
+        last_modified_at: Optional[datetime] = None,
+        last_modified_by_id: Optional[str] = None,
+        subject: Optional['PolicyAssignmentV1Subject'] = None,
+    ) -> None:
+        """
+        Initialize a PolicyTemplateAssignmentItemsPolicyAssignmentV1 object.
+
+        :param AssignmentTargetDetails target: assignment target account and type.
+        :param List[PolicyAssignmentV1Resources] resources: Object for each account
+               assigned.
+        :param AssignmentTemplateDetails template: policy template details.
+        :param str status: The policy assignment status.
+        :param PolicyAssignmentV1Subject subject: (optional) Subject details of
+               access type assignment.
+        """
+        # pylint: disable=super-init-not-called
+        self.target = target
+        self.id = id
+        self.account_id = account_id
+        self.href = href
+        self.created_at = created_at
+        self.created_by_id = created_by_id
+        self.last_modified_at = last_modified_at
+        self.last_modified_by_id = last_modified_by_id
+        self.resources = resources
+        self.subject = subject
+        self.template = template
+        self.status = status
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'PolicyTemplateAssignmentItemsPolicyAssignmentV1':
+        """Initialize a PolicyTemplateAssignmentItemsPolicyAssignmentV1 object from a json dictionary."""
+        args = {}
+        if (target := _dict.get('target')) is not None:
+            args['target'] = AssignmentTargetDetails.from_dict(target)
+        else:
+            raise ValueError(
+                'Required property \'target\' not present in PolicyTemplateAssignmentItemsPolicyAssignmentV1 JSON'
+            )
+        if (id := _dict.get('id')) is not None:
+            args['id'] = id
+        if (account_id := _dict.get('account_id')) is not None:
+            args['account_id'] = account_id
+        if (href := _dict.get('href')) is not None:
+            args['href'] = href
+        if (created_at := _dict.get('created_at')) is not None:
+            args['created_at'] = string_to_datetime(created_at)
+        if (created_by_id := _dict.get('created_by_id')) is not None:
+            args['created_by_id'] = created_by_id
+        if (last_modified_at := _dict.get('last_modified_at')) is not None:
+            args['last_modified_at'] = string_to_datetime(last_modified_at)
+        if (last_modified_by_id := _dict.get('last_modified_by_id')) is not None:
+            args['last_modified_by_id'] = last_modified_by_id
+        if (resources := _dict.get('resources')) is not None:
+            args['resources'] = [PolicyAssignmentV1Resources.from_dict(v) for v in resources]
+        else:
+            raise ValueError(
+                'Required property \'resources\' not present in PolicyTemplateAssignmentItemsPolicyAssignmentV1 JSON'
+            )
+        if (subject := _dict.get('subject')) is not None:
+            args['subject'] = PolicyAssignmentV1Subject.from_dict(subject)
+        if (template := _dict.get('template')) is not None:
+            args['template'] = AssignmentTemplateDetails.from_dict(template)
+        else:
+            raise ValueError(
+                'Required property \'template\' not present in PolicyTemplateAssignmentItemsPolicyAssignmentV1 JSON'
+            )
+        if (status := _dict.get('status')) is not None:
+            args['status'] = status
+        else:
+            raise ValueError(
+                'Required property \'status\' not present in PolicyTemplateAssignmentItemsPolicyAssignmentV1 JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a PolicyTemplateAssignmentItemsPolicyAssignmentV1 object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'target') and self.target is not None:
+            if isinstance(self.target, dict):
+                _dict['target'] = self.target
+            else:
+                _dict['target'] = self.target.to_dict()
+        if hasattr(self, 'id') and getattr(self, 'id') is not None:
+            _dict['id'] = getattr(self, 'id')
+        if hasattr(self, 'account_id') and getattr(self, 'account_id') is not None:
+            _dict['account_id'] = getattr(self, 'account_id')
+        if hasattr(self, 'href') and getattr(self, 'href') is not None:
+            _dict['href'] = getattr(self, 'href')
+        if hasattr(self, 'created_at') and getattr(self, 'created_at') is not None:
+            _dict['created_at'] = datetime_to_string(getattr(self, 'created_at'))
+        if hasattr(self, 'created_by_id') and getattr(self, 'created_by_id') is not None:
+            _dict['created_by_id'] = getattr(self, 'created_by_id')
+        if hasattr(self, 'last_modified_at') and getattr(self, 'last_modified_at') is not None:
+            _dict['last_modified_at'] = datetime_to_string(getattr(self, 'last_modified_at'))
+        if hasattr(self, 'last_modified_by_id') and getattr(self, 'last_modified_by_id') is not None:
+            _dict['last_modified_by_id'] = getattr(self, 'last_modified_by_id')
+        if hasattr(self, 'resources') and self.resources is not None:
+            resources_list = []
+            for v in self.resources:
+                if isinstance(v, dict):
+                    resources_list.append(v)
+                else:
+                    resources_list.append(v.to_dict())
+            _dict['resources'] = resources_list
+        if hasattr(self, 'subject') and self.subject is not None:
+            if isinstance(self.subject, dict):
+                _dict['subject'] = self.subject
+            else:
+                _dict['subject'] = self.subject.to_dict()
+        if hasattr(self, 'template') and self.template is not None:
+            if isinstance(self.template, dict):
+                _dict['template'] = self.template
+            else:
+                _dict['template'] = self.template.to_dict()
+        if hasattr(self, 'status') and self.status is not None:
+            _dict['status'] = self.status
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this PolicyTemplateAssignmentItemsPolicyAssignmentV1 object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'PolicyTemplateAssignmentItemsPolicyAssignmentV1') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'PolicyTemplateAssignmentItemsPolicyAssignmentV1') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class StatusEnum(str, Enum):
+        """
+        The policy assignment status.
+        """
+
+        IN_PROGRESS = 'in_progress'
+        SUCCEEDED = 'succeeded'
+        SUCCEED_WITH_ERRORS = 'succeed_with_errors'
+        FAILED = 'failed'
+
+
+class TemplateGrantRoleReferences(TemplateGrant):
+    """
+    TemplateGrantRoleReferences.
+
+    :param List[RoleTemplateReferencesItem] role_template_references: A set of role
+          template reference IDs granted by the policy.
+    """
+
+    def __init__(
+        self,
+        role_template_references: List['RoleTemplateReferencesItem'],
+    ) -> None:
+        """
+        Initialize a TemplateGrantRoleReferences object.
+
+        :param List[RoleTemplateReferencesItem] role_template_references: A set of
+               role template reference IDs granted by the policy.
+        """
+        # pylint: disable=super-init-not-called
+        self.role_template_references = role_template_references
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'TemplateGrantRoleReferences':
+        """Initialize a TemplateGrantRoleReferences object from a json dictionary."""
+        args = {}
+        if (role_template_references := _dict.get('role_template_references')) is not None:
+            args['role_template_references'] = [
+                RoleTemplateReferencesItem.from_dict(v) for v in role_template_references
+            ]
+        else:
+            raise ValueError(
+                'Required property \'role_template_references\' not present in TemplateGrantRoleReferences JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a TemplateGrantRoleReferences object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'role_template_references') and self.role_template_references is not None:
+            role_template_references_list = []
+            for v in self.role_template_references:
+                if isinstance(v, dict):
+                    role_template_references_list.append(v)
+                else:
+                    role_template_references_list.append(v.to_dict())
+            _dict['role_template_references'] = role_template_references_list
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this TemplateGrantRoleReferences object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'TemplateGrantRoleReferences') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'TemplateGrantRoleReferences') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class TemplateGrantRoles(TemplateGrant):
+    """
+    TemplateGrantRoles.
+
+    :param List[Roles] roles: A set of role Cloud Resource Names (CRNs) granted by
+          the policy.
+    """
+
+    def __init__(
+        self,
+        roles: List['Roles'],
+    ) -> None:
+        """
+        Initialize a TemplateGrantRoles object.
+
+        :param List[Roles] roles: A set of role Cloud Resource Names (CRNs) granted
+               by the policy.
+        """
+        # pylint: disable=super-init-not-called
+        self.roles = roles
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'TemplateGrantRoles':
+        """Initialize a TemplateGrantRoles object from a json dictionary."""
+        args = {}
+        if (roles := _dict.get('roles')) is not None:
+            args['roles'] = [Roles.from_dict(v) for v in roles]
+        else:
+            raise ValueError('Required property \'roles\' not present in TemplateGrantRoles JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a TemplateGrantRoles object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'roles') and self.roles is not None:
+            roles_list = []
+            for v in self.roles:
+                if isinstance(v, dict):
+                    roles_list.append(v)
+                else:
+                    roles_list.append(v.to_dict())
+            _dict['roles'] = roles_list
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this TemplateGrantRoles object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'TemplateGrantRoles') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'TemplateGrantRoles') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class V2PolicyRuleRuleAttribute(V2PolicyRule):
+    """
+    Rule that specifies additional access that is granted (For example, time-based
+    condition).
+
+    :param str key: The name of an attribute.
+    :param str operator: The operator of an attribute.
+    :param object value: The value of a rule, resource, or subject attribute; can be
+          boolean or string for resource and subject attribute. Can be a string or an
+          array of strings (for example, an array of days to permit access) for rule
+          attribute.
+    """
+
+    def __init__(
+        self,
+        key: str,
+        operator: str,
+        value: object,
+    ) -> None:
+        """
+        Initialize a V2PolicyRuleRuleAttribute object.
+
+        :param str key: The name of an attribute.
+        :param str operator: The operator of an attribute.
+        :param object value: The value of a rule, resource, or subject attribute;
+               can be boolean or string for resource and subject attribute. Can be a
+               string or an array of strings (for example, an array of days to permit
+               access) for rule attribute.
+        """
+        # pylint: disable=super-init-not-called
+        self.key = key
+        self.operator = operator
+        self.value = value
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'V2PolicyRuleRuleAttribute':
+        """Initialize a V2PolicyRuleRuleAttribute object from a json dictionary."""
+        args = {}
+        if (key := _dict.get('key')) is not None:
+            args['key'] = key
+        else:
+            raise ValueError('Required property \'key\' not present in V2PolicyRuleRuleAttribute JSON')
+        if (operator := _dict.get('operator')) is not None:
+            args['operator'] = operator
+        else:
+            raise ValueError('Required property \'operator\' not present in V2PolicyRuleRuleAttribute JSON')
+        if (value := _dict.get('value')) is not None:
+            args['value'] = value
+        else:
+            raise ValueError('Required property \'value\' not present in V2PolicyRuleRuleAttribute JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a V2PolicyRuleRuleAttribute object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'key') and self.key is not None:
+            _dict['key'] = self.key
+        if hasattr(self, 'operator') and self.operator is not None:
+            _dict['operator'] = self.operator
+        if hasattr(self, 'value') and self.value is not None:
+            _dict['value'] = self.value
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this V2PolicyRuleRuleAttribute object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'V2PolicyRuleRuleAttribute') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'V2PolicyRuleRuleAttribute') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class OperatorEnum(str, Enum):
+        """
+        The operator of an attribute.
+        """
+
+        STRINGEQUALS = 'stringEquals'
+        STRINGEXISTS = 'stringExists'
+        STRINGEQUALSANYOF = 'stringEqualsAnyOf'
+        STRINGMATCHANYOF = 'stringMatchAnyOf'
+        STRINGMATCH = 'stringMatch'
+        TIMELESSTHAN = 'timeLessThan'
+        TIMELESSTHANOREQUALS = 'timeLessThanOrEquals'
+        TIMEGREATERTHAN = 'timeGreaterThan'
+        TIMEGREATERTHANOREQUALS = 'timeGreaterThanOrEquals'
+        DATELESSTHAN = 'dateLessThan'
+        DATELESSTHANOREQUALS = 'dateLessThanOrEquals'
+        DATEGREATERTHAN = 'dateGreaterThan'
+        DATEGREATERTHANOREQUALS = 'dateGreaterThanOrEquals'
+        DATETIMELESSTHAN = 'dateTimeLessThan'
+        DATETIMELESSTHANOREQUALS = 'dateTimeLessThanOrEquals'
+        DATETIMEGREATERTHAN = 'dateTimeGreaterThan'
+        DATETIMEGREATERTHANOREQUALS = 'dateTimeGreaterThanOrEquals'
+        DAYOFWEEKEQUALS = 'dayOfWeekEquals'
+        DAYOFWEEKANYOF = 'dayOfWeekAnyOf'
+
+
+class V2PolicyRuleRuleWithNestedConditions(V2PolicyRule):
+    """
+    Rule that specifies additional access that is granted (for example, time-based
+    condition) accross multiple conditions.
+
+    :param str operator: Operator to evaluate conditions.
+    :param List[NestedCondition] conditions: List of conditions associated with a
+          policy. For example, time-based conditions that grant access over a certain time
+          period.
+    """
+
+    def __init__(
+        self,
+        operator: str,
+        conditions: List['NestedCondition'],
+    ) -> None:
+        """
+        Initialize a V2PolicyRuleRuleWithNestedConditions object.
+
+        :param str operator: Operator to evaluate conditions.
+        :param List[NestedCondition] conditions: List of conditions associated with
+               a policy. For example, time-based conditions that grant access over a
+               certain time period.
+        """
+        # pylint: disable=super-init-not-called
+        self.operator = operator
+        self.conditions = conditions
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'V2PolicyRuleRuleWithNestedConditions':
+        """Initialize a V2PolicyRuleRuleWithNestedConditions object from a json dictionary."""
+        args = {}
+        if (operator := _dict.get('operator')) is not None:
+            args['operator'] = operator
+        else:
+            raise ValueError('Required property \'operator\' not present in V2PolicyRuleRuleWithNestedConditions JSON')
+        if (conditions := _dict.get('conditions')) is not None:
+            args['conditions'] = conditions
+        else:
+            raise ValueError(
+                'Required property \'conditions\' not present in V2PolicyRuleRuleWithNestedConditions JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a V2PolicyRuleRuleWithNestedConditions object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'operator') and self.operator is not None:
+            _dict['operator'] = self.operator
+        if hasattr(self, 'conditions') and self.conditions is not None:
+            conditions_list = []
+            for v in self.conditions:
+                if isinstance(v, dict):
+                    conditions_list.append(v)
+                else:
+                    conditions_list.append(v.to_dict())
+            _dict['conditions'] = conditions_list
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this V2PolicyRuleRuleWithNestedConditions object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'V2PolicyRuleRuleWithNestedConditions') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'V2PolicyRuleRuleWithNestedConditions') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class OperatorEnum(str, Enum):
+        """
+        Operator to evaluate conditions.
+        """
+
+        AND = 'and'
+        OR = 'or'
+
+
+##############################################################################
+# Pagers
+##############################################################################
+
+
+class PoliciesPager:
+    """
+    PoliciesPager can be used to simplify the use of the "list_policies" method.
+    """
+
+    def __init__(
+        self,
+        *,
+        client: IamPolicyManagementV1,
+        account_id: str,
+        accept_language: str = None,
+        iam_id: str = None,
+        access_group_id: str = None,
+        type: str = None,
+        service_type: str = None,
+        tag_name: str = None,
+        tag_value: str = None,
+        sort: str = None,
+        format: str = None,
+        state: str = None,
+        limit: int = None,
+    ) -> None:
+        """
+        Initialize a PoliciesPager object.
+        :param str account_id: The account GUID that the policies belong to.
+        :param str accept_language: (optional) Language code for translations
+               * `default` - English
+               * `de` -  German (Standard)
+               * `en` - English
+               * `es` - Spanish (Spain)
+               * `fr` - French (Standard)
+               * `it` - Italian (Standard)
+               * `ja` - Japanese
+               * `ko` - Korean
+               * `pt-br` - Portuguese (Brazil)
+               * `zh-cn` - Chinese (Simplified, PRC)
+               * `zh-tw` - (Chinese, Taiwan).
+        :param str iam_id: (optional) Optional IAM ID used to identify the subject.
+        :param str access_group_id: (optional) Optional access group id.
+        :param str type: (optional) Optional type of policy.
+        :param str service_type: (optional) Optional type of service.
+        :param str tag_name: (optional) Optional name of the access tag in the
+               policy.
+        :param str tag_value: (optional) Optional value of the access tag in the
+               policy.
+        :param str sort: (optional) Optional top level policy field to sort
+               results. Ascending sort is default. Descending sort available by prepending
+               '-' to field. Example '-last_modified_at'.
+        :param str format: (optional) Include additional data per policy returned
+               * `include_last_permit` - returns details of when the policy last granted a
+               permit decision and the number of times it has done so
+               * `display` - returns the list of all actions included in each of the
+               policy roles.
+        :param str state: (optional) The state of the policy.
+               * `active` - returns active policies
+               * `deleted` - returns non-active policies.
+        :param int limit: (optional) The number of documents to include in the
+               collection.
+        """
+        self._has_next = True
+        self._client = client
+        self._page_context = {'next': None}
+        self._account_id = account_id
+        self._accept_language = accept_language
+        self._iam_id = iam_id
+        self._access_group_id = access_group_id
+        self._type = type
+        self._service_type = service_type
+        self._tag_name = tag_name
+        self._tag_value = tag_value
+        self._sort = sort
+        self._format = format
+        self._state = state
+        self._limit = limit
+
+    def has_next(self) -> bool:
+        """
+        Returns true if there are potentially more results to be retrieved.
+        """
+        return self._has_next
+
+    def get_next(self) -> List[dict]:
+        """
+        Returns the next page of results.
+        :return: A List[dict], where each element is a dict that represents an instance of PolicyTemplateMetaData.
+        :rtype: List[dict]
+        """
+        if not self.has_next():
+            raise StopIteration(message='No more results available')
+
+        result = self._client.list_policies(
+            account_id=self._account_id,
+            accept_language=self._accept_language,
+            iam_id=self._iam_id,
+            access_group_id=self._access_group_id,
+            type=self._type,
+            service_type=self._service_type,
+            tag_name=self._tag_name,
+            tag_value=self._tag_value,
+            sort=self._sort,
+            format=self._format,
+            state=self._state,
+            limit=self._limit,
+            start=self._page_context.get('next'),
+        ).get_result()
+
+        next = None
+        next_page_link = result.get('next')
+        if next_page_link is not None:
+            next = next_page_link.get('start')
+        self._page_context['next'] = next
+        if next is None:
+            self._has_next = False
+
+        return result.get('policies')
+
+    def get_all(self) -> List[dict]:
+        """
+        Returns all results by invoking get_next() repeatedly
+        until all pages of results have been retrieved.
+        :return: A List[dict], where each element is a dict that represents an instance of PolicyTemplateMetaData.
+        :rtype: List[dict]
+        """
+        results = []
+        while self.has_next():
+            next_page = self.get_next()
+            results.extend(next_page)
+        return results
+
+
+class V2PoliciesPager:
+    """
+    V2PoliciesPager can be used to simplify the use of the "list_v2_policies" method.
+    """
+
+    def __init__(
+        self,
+        *,
+        client: IamPolicyManagementV1,
+        account_id: str,
+        accept_language: str = None,
+        iam_id: str = None,
+        access_group_id: str = None,
+        type: str = None,
+        service_type: str = None,
+        service_name: str = None,
+        service_group_id: str = None,
+        sort: str = None,
+        format: str = None,
+        state: str = None,
+        limit: int = None,
+    ) -> None:
+        """
+        Initialize a V2PoliciesPager object.
+        :param str account_id: The account GUID in which the policies belong to.
+        :param str accept_language: (optional) Language code for translations
+               * `default` - English
+               * `de` -  German (Standard)
+               * `en` - English
+               * `es` - Spanish (Spain)
+               * `fr` - French (Standard)
+               * `it` - Italian (Standard)
+               * `ja` - Japanese
+               * `ko` - Korean
+               * `pt-br` - Portuguese (Brazil)
+               * `zh-cn` - Chinese (Simplified, PRC)
+               * `zh-tw` - (Chinese, Taiwan).
+        :param str iam_id: (optional) Optional IAM ID used to identify the subject.
+        :param str access_group_id: (optional) Optional access group id.
+        :param str type: (optional) Optional type of policy.
+        :param str service_type: (optional) Optional type of service.
+        :param str service_name: (optional) Optional name of service.
+        :param str service_group_id: (optional) Optional ID of service group.
+        :param str sort: (optional) Optional top level policy field to sort
+               results. Ascending sort is default. Descending sort available by prepending
+               '-' to field, for example, '-last_modified_at'. Note that last permit
+               information is only included when 'format=include_last_permit', for
+               example, "format=include_last_permit&sort=last_permit_at" Example fields
+               that can be sorted on:
+                 - 'id'
+                 - 'type'
+                 - 'href'
+                 - 'created_at'
+                 - 'created_by_id'
+                 - 'last_modified_at'
+                 - 'last_modified_by_id'
+                 - 'state'
+                 - 'last_permit_at'
+                 - 'last_permit_frequency'.
+        :param str format: (optional) Include additional data per policy returned
+               * `include_last_permit` - returns details of when the policy last granted a
+               permit decision and the number of times it has done so
+               * `display` - returns the list of all actions included in each of the
+               policy roles and translations for all relevant fields.
+        :param str state: (optional) The state of the policy.
+               * `active` - returns active policies
+               * `deleted` - returns non-active policies.
+        :param int limit: (optional) The number of documents to include in the
+               collection.
+        """
+        self._has_next = True
+        self._client = client
+        self._page_context = {'next': None}
+        self._account_id = account_id
+        self._accept_language = accept_language
+        self._iam_id = iam_id
+        self._access_group_id = access_group_id
+        self._type = type
+        self._service_type = service_type
+        self._service_name = service_name
+        self._service_group_id = service_group_id
+        self._sort = sort
+        self._format = format
+        self._state = state
+        self._limit = limit
+
+    def has_next(self) -> bool:
+        """
+        Returns true if there are potentially more results to be retrieved.
+        """
+        return self._has_next
+
+    def get_next(self) -> List[dict]:
+        """
+        Returns the next page of results.
+        :return: A List[dict], where each element is a dict that represents an instance of V2PolicyTemplateMetaData.
+        :rtype: List[dict]
+        """
+        if not self.has_next():
+            raise StopIteration(message='No more results available')
+
+        result = self._client.list_v2_policies(
+            account_id=self._account_id,
+            accept_language=self._accept_language,
+            iam_id=self._iam_id,
+            access_group_id=self._access_group_id,
+            type=self._type,
+            service_type=self._service_type,
+            service_name=self._service_name,
+            service_group_id=self._service_group_id,
+            sort=self._sort,
+            format=self._format,
+            state=self._state,
+            limit=self._limit,
+            start=self._page_context.get('next'),
+        ).get_result()
+
+        next = None
+        next_page_link = result.get('next')
+        if next_page_link is not None:
+            next = next_page_link.get('start')
+        self._page_context['next'] = next
+        if next is None:
+            self._has_next = False
+
+        return result.get('policies')
+
+    def get_all(self) -> List[dict]:
+        """
+        Returns all results by invoking get_next() repeatedly
+        until all pages of results have been retrieved.
+        :return: A List[dict], where each element is a dict that represents an instance of V2PolicyTemplateMetaData.
+        :rtype: List[dict]
+        """
+        results = []
+        while self.has_next():
+            next_page = self.get_next()
+            results.extend(next_page)
+        return results
+
+
+class PolicyTemplatesPager:
+    """
+    PolicyTemplatesPager can be used to simplify the use of the "list_policy_templates" method.
+    """
+
+    def __init__(
+        self,
+        *,
+        client: IamPolicyManagementV1,
+        account_id: str,
+        accept_language: str = None,
+        state: str = None,
+        name: str = None,
+        policy_service_type: str = None,
+        policy_service_name: str = None,
+        policy_service_group_id: str = None,
+        policy_type: str = None,
+        limit: int = None,
+    ) -> None:
+        """
+        Initialize a PolicyTemplatesPager object.
+        :param str account_id: The account GUID that the policy templates belong
+               to.
+        :param str accept_language: (optional) Language code for translations
+               * `default` - English
+               * `de` -  German (Standard)
+               * `en` - English
+               * `es` - Spanish (Spain)
+               * `fr` - French (Standard)
+               * `it` - Italian (Standard)
+               * `ja` - Japanese
+               * `ko` - Korean
+               * `pt-br` - Portuguese (Brazil)
+               * `zh-cn` - Chinese (Simplified, PRC)
+               * `zh-tw` - (Chinese, Taiwan).
+        :param str state: (optional) The policy template state.
+        :param str name: (optional) The policy template name.
+        :param str policy_service_type: (optional) Service type, Optional.
+        :param str policy_service_name: (optional) Service name, Optional.
+        :param str policy_service_group_id: (optional) Service group id, Optional.
+        :param str policy_type: (optional) Policy type, Optional.
+        :param int limit: (optional) The number of documents to include in the
+               collection.
+        """
+        self._has_next = True
+        self._client = client
+        self._page_context = {'next': None}
+        self._account_id = account_id
+        self._accept_language = accept_language
+        self._state = state
+        self._name = name
+        self._policy_service_type = policy_service_type
+        self._policy_service_name = policy_service_name
+        self._policy_service_group_id = policy_service_group_id
+        self._policy_type = policy_type
+        self._limit = limit
+
+    def has_next(self) -> bool:
+        """
+        Returns true if there are potentially more results to be retrieved.
+        """
+        return self._has_next
+
+    def get_next(self) -> List[dict]:
+        """
+        Returns the next page of results.
+        :return: A List[dict], where each element is a dict that represents an instance of PolicyTemplate.
+        :rtype: List[dict]
+        """
+        if not self.has_next():
+            raise StopIteration(message='No more results available')
+
+        result = self._client.list_policy_templates(
+            account_id=self._account_id,
+            accept_language=self._accept_language,
+            state=self._state,
+            name=self._name,
+            policy_service_type=self._policy_service_type,
+            policy_service_name=self._policy_service_name,
+            policy_service_group_id=self._policy_service_group_id,
+            policy_type=self._policy_type,
+            limit=self._limit,
+            start=self._page_context.get('next'),
+        ).get_result()
+
+        next = None
+        next_page_link = result.get('next')
+        if next_page_link is not None:
+            next = next_page_link.get('start')
+        self._page_context['next'] = next
+        if next is None:
+            self._has_next = False
+
+        return result.get('policy_templates')
+
+    def get_all(self) -> List[dict]:
+        """
+        Returns all results by invoking get_next() repeatedly
+        until all pages of results have been retrieved.
+        :return: A List[dict], where each element is a dict that represents an instance of PolicyTemplate.
+        :rtype: List[dict]
+        """
+        results = []
+        while self.has_next():
+            next_page = self.get_next()
+            results.extend(next_page)
+        return results
+
+
+class PolicyTemplateVersionsPager:
+    """
+    PolicyTemplateVersionsPager can be used to simplify the use of the "list_policy_template_versions" method.
+    """
+
+    def __init__(
+        self,
+        *,
+        client: IamPolicyManagementV1,
+        policy_template_id: str,
+        state: str = None,
+        limit: int = None,
+    ) -> None:
+        """
+        Initialize a PolicyTemplateVersionsPager object.
+        :param str policy_template_id: The policy template ID.
+        :param str state: (optional) The policy template state.
+        :param int limit: (optional) The number of documents to include in the
+               collection.
+        """
+        self._has_next = True
+        self._client = client
+        self._page_context = {'next': None}
+        self._policy_template_id = policy_template_id
+        self._state = state
+        self._limit = limit
+
+    def has_next(self) -> bool:
+        """
+        Returns true if there are potentially more results to be retrieved.
+        """
+        return self._has_next
+
+    def get_next(self) -> List[dict]:
+        """
+        Returns the next page of results.
+        :return: A List[dict], where each element is a dict that represents an instance of PolicyTemplate.
+        :rtype: List[dict]
+        """
+        if not self.has_next():
+            raise StopIteration(message='No more results available')
+
+        result = self._client.list_policy_template_versions(
+            policy_template_id=self._policy_template_id,
+            state=self._state,
+            limit=self._limit,
+            start=self._page_context.get('next'),
+        ).get_result()
+
+        next = None
+        next_page_link = result.get('next')
+        if next_page_link is not None:
+            next = next_page_link.get('start')
+        self._page_context['next'] = next
+        if next is None:
+            self._has_next = False
+
+        return result.get('versions')
+
+    def get_all(self) -> List[dict]:
+        """
+        Returns all results by invoking get_next() repeatedly
+        until all pages of results have been retrieved.
+        :return: A List[dict], where each element is a dict that represents an instance of PolicyTemplate.
+        :rtype: List[dict]
+        """
+        results = []
+        while self.has_next():
+            next_page = self.get_next()
+            results.extend(next_page)
+        return results
+
+
+class PolicyAssignmentsPager:
+    """
+    PolicyAssignmentsPager can be used to simplify the use of the "list_policy_assignments" method.
+    """
+
+    def __init__(
+        self,
+        *,
+        client: IamPolicyManagementV1,
+        version: str,
+        account_id: str,
+        accept_language: str = None,
+        template_id: str = None,
+        template_version: str = None,
+        limit: int = None,
+    ) -> None:
+        """
+        Initialize a PolicyAssignmentsPager object.
+        :param str version: specify version of response body format.
+        :param str account_id: The account GUID in which the policies belong to.
+        :param str accept_language: (optional) Language code for translations
+               * `default` - English
+               * `de` -  German (Standard)
+               * `en` - English
+               * `es` - Spanish (Spain)
+               * `fr` - French (Standard)
+               * `it` - Italian (Standard)
+               * `ja` - Japanese
+               * `ko` - Korean
+               * `pt-br` - Portuguese (Brazil)
+               * `zh-cn` - Chinese (Simplified, PRC)
+               * `zh-tw` - (Chinese, Taiwan).
+        :param str template_id: (optional) Optional template id.
+        :param str template_version: (optional) Optional policy template version.
+        :param int limit: (optional) The number of documents to include in the
+               collection.
+        """
+        self._has_next = True
+        self._client = client
+        self._page_context = {'next': None}
+        self._version = version
+        self._account_id = account_id
+        self._accept_language = accept_language
+        self._template_id = template_id
+        self._template_version = template_version
+        self._limit = limit
+
+    def has_next(self) -> bool:
+        """
+        Returns true if there are potentially more results to be retrieved.
+        """
+        return self._has_next
+
+    def get_next(self) -> List[dict]:
+        """
+        Returns the next page of results.
+        :return: A List[dict], where each element is a dict that represents an instance of PolicyTemplateAssignmentItems.
+        :rtype: List[dict]
+        """
+        if not self.has_next():
+            raise StopIteration(message='No more results available')
+
+        result = self._client.list_policy_assignments(
+            version=self._version,
+            account_id=self._account_id,
+            accept_language=self._accept_language,
+            template_id=self._template_id,
+            template_version=self._template_version,
+            limit=self._limit,
+            start=self._page_context.get('next'),
+        ).get_result()
+
+        next = None
+        next_page_link = result.get('next')
+        if next_page_link is not None:
+            next = next_page_link.get('start')
+        self._page_context['next'] = next
+        if next is None:
+            self._has_next = False
+
+        return result.get('assignments')
+
+    def get_all(self) -> List[dict]:
+        """
+        Returns all results by invoking get_next() repeatedly
+        until all pages of results have been retrieved.
+        :return: A List[dict], where each element is a dict that represents an instance of PolicyTemplateAssignmentItems.
+        :rtype: List[dict]
+        """
+        results = []
+        while self.has_next():
+            next_page = self.get_next()
+            results.extend(next_page)
+        return results
+
+
+class ActionControlTemplatesPager:
+    """
+    ActionControlTemplatesPager can be used to simplify the use of the "list_action_control_templates" method.
+    """
+
+    def __init__(
+        self,
+        *,
+        client: IamPolicyManagementV1,
+        account_id: str,
+        accept_language: str = None,
+        limit: int = None,
+    ) -> None:
+        """
+        Initialize a ActionControlTemplatesPager object.
+        :param str account_id: The account GUID that the action control templates
+               belong to.
+        :param str accept_language: (optional) Language code for translations
+               * `default` - English
+               * `de` -  German (Standard)
+               * `en` - English
+               * `es` - Spanish (Spain)
+               * `fr` - French (Standard)
+               * `it` - Italian (Standard)
+               * `ja` - Japanese
+               * `ko` - Korean
+               * `pt-br` - Portuguese (Brazil)
+               * `zh-cn` - Chinese (Simplified, PRC)
+               * `zh-tw` - (Chinese, Taiwan).
+        :param int limit: (optional) The number of documents to include in the
+               collection.
+        """
+        self._has_next = True
+        self._client = client
+        self._page_context = {'next': None}
+        self._account_id = account_id
+        self._accept_language = accept_language
+        self._limit = limit
+
+    def has_next(self) -> bool:
+        """
+        Returns true if there are potentially more results to be retrieved.
+        """
+        return self._has_next
+
+    def get_next(self) -> List[dict]:
+        """
+        Returns the next page of results.
+        :return: A List[dict], where each element is a dict that represents an instance of ActionControlTemplate.
+        :rtype: List[dict]
+        """
+        if not self.has_next():
+            raise StopIteration(message='No more results available')
+
+        result = self._client.list_action_control_templates(
+            account_id=self._account_id,
+            accept_language=self._accept_language,
+            limit=self._limit,
+            start=self._page_context.get('next'),
+        ).get_result()
+
+        next = None
+        next_page_link = result.get('next')
+        if next_page_link is not None:
+            next = next_page_link.get('start')
+        self._page_context['next'] = next
+        if next is None:
+            self._has_next = False
+
+        return result.get('action_control_templates')
+
+    def get_all(self) -> List[dict]:
+        """
+        Returns all results by invoking get_next() repeatedly
+        until all pages of results have been retrieved.
+        :return: A List[dict], where each element is a dict that represents an instance of ActionControlTemplate.
+        :rtype: List[dict]
+        """
+        results = []
+        while self.has_next():
+            next_page = self.get_next()
+            results.extend(next_page)
+        return results
+
+
+class ActionControlTemplateVersionsPager:
+    """
+    ActionControlTemplateVersionsPager can be used to simplify the use of the "list_action_control_template_versions" method.
+    """
+
+    def __init__(
+        self,
+        *,
+        client: IamPolicyManagementV1,
+        action_control_template_id: str,
+        state: str = None,
+        limit: int = None,
+    ) -> None:
+        """
+        Initialize a ActionControlTemplateVersionsPager object.
+        :param str action_control_template_id: The action control template ID.
+        :param str state: (optional) Action control template state.
+        :param int limit: (optional) The number of documents to include in the
+               collection.
+        """
+        self._has_next = True
+        self._client = client
+        self._page_context = {'next': None}
+        self._action_control_template_id = action_control_template_id
+        self._state = state
+        self._limit = limit
+
+    def has_next(self) -> bool:
+        """
+        Returns true if there are potentially more results to be retrieved.
+        """
+        return self._has_next
+
+    def get_next(self) -> List[dict]:
+        """
+        Returns the next page of results.
+        :return: A List[dict], where each element is a dict that represents an instance of ActionControlTemplate.
+        :rtype: List[dict]
+        """
+        if not self.has_next():
+            raise StopIteration(message='No more results available')
+
+        result = self._client.list_action_control_template_versions(
+            action_control_template_id=self._action_control_template_id,
+            state=self._state,
+            limit=self._limit,
+            start=self._page_context.get('next'),
+        ).get_result()
+
+        next = None
+        next_page_link = result.get('next')
+        if next_page_link is not None:
+            next = next_page_link.get('start')
+        self._page_context['next'] = next
+        if next is None:
+            self._has_next = False
+
+        return result.get('versions')
+
+    def get_all(self) -> List[dict]:
+        """
+        Returns all results by invoking get_next() repeatedly
+        until all pages of results have been retrieved.
+        :return: A List[dict], where each element is a dict that represents an instance of ActionControlTemplate.
+        :rtype: List[dict]
+        """
+        results = []
+        while self.has_next():
+            next_page = self.get_next()
+            results.extend(next_page)
+        return results
+
+
+class ActionControlAssignmentsPager:
+    """
+    ActionControlAssignmentsPager can be used to simplify the use of the "list_action_control_assignments" method.
+    """
+
+    def __init__(
+        self,
+        *,
+        client: IamPolicyManagementV1,
+        account_id: str,
+        accept_language: str = None,
+        template_id: str = None,
+        template_version: str = None,
+        limit: int = None,
+    ) -> None:
+        """
+        Initialize a ActionControlAssignmentsPager object.
+        :param str account_id: The account GUID in which the action control
+               assignment belongs to.
+        :param str accept_language: (optional) Language code for translations
+               * `default` - English
+               * `de` -  German (Standard)
+               * `en` - English
+               * `es` - Spanish (Spain)
+               * `fr` - French (Standard)
+               * `it` - Italian (Standard)
+               * `ja` - Japanese
+               * `ko` - Korean
+               * `pt-br` - Portuguese (Brazil)
+               * `zh-cn` - Chinese (Simplified, PRC)
+               * `zh-tw` - (Chinese, Taiwan).
+        :param str template_id: (optional) Optional template ID.
+        :param str template_version: (optional) Optional action control template
+               version.
+        :param int limit: (optional) The number of documents to include in the
+               collection.
+        """
+        self._has_next = True
+        self._client = client
+        self._page_context = {'next': None}
+        self._account_id = account_id
+        self._accept_language = accept_language
+        self._template_id = template_id
+        self._template_version = template_version
+        self._limit = limit
+
+    def has_next(self) -> bool:
+        """
+        Returns true if there are potentially more results to be retrieved.
+        """
+        return self._has_next
+
+    def get_next(self) -> List[dict]:
+        """
+        Returns the next page of results.
+        :return: A List[dict], where each element is a dict that represents an instance of ActionControlAssignment.
+        :rtype: List[dict]
+        """
+        if not self.has_next():
+            raise StopIteration(message='No more results available')
+
+        result = self._client.list_action_control_assignments(
+            account_id=self._account_id,
+            accept_language=self._accept_language,
+            template_id=self._template_id,
+            template_version=self._template_version,
+            limit=self._limit,
+            start=self._page_context.get('next'),
+        ).get_result()
+
+        next = None
+        next_page_link = result.get('next')
+        if next_page_link is not None:
+            next = next_page_link.get('start')
+        self._page_context['next'] = next
+        if next is None:
+            self._has_next = False
+
+        return result.get('assignments')
+
+    def get_all(self) -> List[dict]:
+        """
+        Returns all results by invoking get_next() repeatedly
+        until all pages of results have been retrieved.
+        :return: A List[dict], where each element is a dict that represents an instance of ActionControlAssignment.
+        :rtype: List[dict]
+        """
+        results = []
+        while self.has_next():
+            next_page = self.get_next()
+            results.extend(next_page)
+        return results
+
+
+class RoleTemplatesPager:
+    """
+    RoleTemplatesPager can be used to simplify the use of the "list_role_templates" method.
+    """
+
+    def __init__(
+        self,
+        *,
+        client: IamPolicyManagementV1,
+        account_id: str,
+        accept_language: str = None,
+        name: str = None,
+        role_name: str = None,
+        role_service_name: str = None,
+        state: str = None,
+        limit: int = None,
+    ) -> None:
+        """
+        Initialize a RoleTemplatesPager object.
+        :param str account_id: The account GUID that the role templates belong to.
+        :param str accept_language: (optional) Language code for translations
+               * `default` - English
+               * `de` -  German (Standard)
+               * `en` - English
+               * `es` - Spanish (Spain)
+               * `fr` - French (Standard)
+               * `it` - Italian (Standard)
+               * `ja` - Japanese
+               * `ko` - Korean
+               * `pt-br` - Portuguese (Brazil)
+               * `zh-cn` - Chinese (Simplified, PRC)
+               * `zh-tw` - (Chinese, Taiwan).
+        :param str name: (optional) The role template name.
+        :param str role_name: (optional) The template role name.
+        :param str role_service_name: (optional) The template role service name.
+        :param str state: (optional) The role template state.
+        :param int limit: (optional) The number of documents to include in the
+               collection.
+        """
+        self._has_next = True
+        self._client = client
+        self._page_context = {'next': None}
+        self._account_id = account_id
+        self._accept_language = accept_language
+        self._name = name
+        self._role_name = role_name
+        self._role_service_name = role_service_name
+        self._state = state
+        self._limit = limit
+
+    def has_next(self) -> bool:
+        """
+        Returns true if there are potentially more results to be retrieved.
+        """
+        return self._has_next
+
+    def get_next(self) -> List[dict]:
+        """
+        Returns the next page of results.
+        :return: A List[dict], where each element is a dict that represents an instance of RoleTemplate.
+        :rtype: List[dict]
+        """
+        if not self.has_next():
+            raise StopIteration(message='No more results available')
+
+        result = self._client.list_role_templates(
+            account_id=self._account_id,
+            accept_language=self._accept_language,
+            name=self._name,
+            role_name=self._role_name,
+            role_service_name=self._role_service_name,
+            state=self._state,
+            limit=self._limit,
+            start=self._page_context.get('next'),
+        ).get_result()
+
+        next = None
+        next_page_link = result.get('next')
+        if next_page_link is not None:
+            next = next_page_link.get('start')
+        self._page_context['next'] = next
+        if next is None:
+            self._has_next = False
+
+        return result.get('role_templates')
+
+    def get_all(self) -> List[dict]:
+        """
+        Returns all results by invoking get_next() repeatedly
+        until all pages of results have been retrieved.
+        :return: A List[dict], where each element is a dict that represents an instance of RoleTemplate.
+        :rtype: List[dict]
+        """
+        results = []
+        while self.has_next():
+            next_page = self.get_next()
+            results.extend(next_page)
+        return results
+
+
+class RoleTemplateVersionsPager:
+    """
+    RoleTemplateVersionsPager can be used to simplify the use of the "list_role_template_versions" method.
+    """
+
+    def __init__(
+        self,
+        *,
+        client: IamPolicyManagementV1,
+        role_template_id: str,
+        state: str = None,
+        limit: int = None,
+    ) -> None:
+        """
+        Initialize a RoleTemplateVersionsPager object.
+        :param str role_template_id: The role template ID.
+        :param str state: (optional) Role template state.
+        :param int limit: (optional) The number of documents to include in the
+               collection.
+        """
+        self._has_next = True
+        self._client = client
+        self._page_context = {'next': None}
+        self._role_template_id = role_template_id
+        self._state = state
+        self._limit = limit
+
+    def has_next(self) -> bool:
+        """
+        Returns true if there are potentially more results to be retrieved.
+        """
+        return self._has_next
+
+    def get_next(self) -> List[dict]:
+        """
+        Returns the next page of results.
+        :return: A List[dict], where each element is a dict that represents an instance of RoleTemplate.
+        :rtype: List[dict]
+        """
+        if not self.has_next():
+            raise StopIteration(message='No more results available')
+
+        result = self._client.list_role_template_versions(
+            role_template_id=self._role_template_id,
+            state=self._state,
+            limit=self._limit,
+            start=self._page_context.get('next'),
+        ).get_result()
+
+        next = None
+        next_page_link = result.get('next')
+        if next_page_link is not None:
+            next = next_page_link.get('start')
+        self._page_context['next'] = next
+        if next is None:
+            self._has_next = False
+
+        return result.get('versions')
+
+    def get_all(self) -> List[dict]:
+        """
+        Returns all results by invoking get_next() repeatedly
+        until all pages of results have been retrieved.
+        :return: A List[dict], where each element is a dict that represents an instance of RoleTemplate.
+        :rtype: List[dict]
+        """
+        results = []
+        while self.has_next():
+            next_page = self.get_next()
+            results.extend(next_page)
+        return results
+
+
+class RoleAssignmentsPager:
+    """
+    RoleAssignmentsPager can be used to simplify the use of the "list_role_assignments" method.
+    """
+
+    def __init__(
+        self,
+        *,
+        client: IamPolicyManagementV1,
+        account_id: str,
+        accept_language: str = None,
+        template_id: str = None,
+        template_version: str = None,
+        limit: int = None,
+    ) -> None:
+        """
+        Initialize a RoleAssignmentsPager object.
+        :param str account_id: The account GUID in which the role assignment
+               belongs to.
+        :param str accept_language: (optional) Language code for translations
+               * `default` - English
+               * `de` -  German (Standard)
+               * `en` - English
+               * `es` - Spanish (Spain)
+               * `fr` - French (Standard)
+               * `it` - Italian (Standard)
+               * `ja` - Japanese
+               * `ko` - Korean
+               * `pt-br` - Portuguese (Brazil)
+               * `zh-cn` - Chinese (Simplified, PRC)
+               * `zh-tw` - (Chinese, Taiwan).
+        :param str template_id: (optional) Optional template ID.
+        :param str template_version: (optional) Optional role template version.
+        :param int limit: (optional) The number of documents to include in the
+               collection.
+        """
+        self._has_next = True
+        self._client = client
+        self._page_context = {'next': None}
+        self._account_id = account_id
+        self._accept_language = accept_language
+        self._template_id = template_id
+        self._template_version = template_version
+        self._limit = limit
+
+    def has_next(self) -> bool:
+        """
+        Returns true if there are potentially more results to be retrieved.
+        """
+        return self._has_next
+
+    def get_next(self) -> List[dict]:
+        """
+        Returns the next page of results.
+        :return: A List[dict], where each element is a dict that represents an instance of RoleAssignment.
+        :rtype: List[dict]
+        """
+        if not self.has_next():
+            raise StopIteration(message='No more results available')
+
+        result = self._client.list_role_assignments(
+            account_id=self._account_id,
+            accept_language=self._accept_language,
+            template_id=self._template_id,
+            template_version=self._template_version,
+            limit=self._limit,
+            start=self._page_context.get('next'),
+        ).get_result()
+
+        next = None
+        next_page_link = result.get('next')
+        if next_page_link is not None:
+            next = next_page_link.get('start')
+        self._page_context['next'] = next
+        if next is None:
+            self._has_next = False
+
+        return result.get('assignments')
+
+    def get_all(self) -> List[dict]:
+        """
+        Returns all results by invoking get_next() repeatedly
+        until all pages of results have been retrieved.
+        :return: A List[dict], where each element is a dict that represents an instance of RoleAssignment.
+        :rtype: List[dict]
+        """
+        results = []
+        while self.has_next():
+            next_page = self.get_next()
+            results.extend(next_page)
+        return results

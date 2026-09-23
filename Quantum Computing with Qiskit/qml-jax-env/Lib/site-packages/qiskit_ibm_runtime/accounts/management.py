@@ -1,0 +1,282 @@
+# This code is part of Qiskit.
+#
+# (C) Copyright IBM 2021.
+#
+# This code is licensed under the Apache License, Version 2.0. You may
+# obtain a copy of this license in the LICENSE.txt file in the root directory
+# of this source tree or at http://www.apache.org/licenses/LICENSE-2.0.
+#
+# Any modifications or derivative works of this code must retain this
+# copyright notice, and modified files need to carry a notice indicating
+# that they have been altered from the originals.
+
+"""Account management related classes and functions."""
+
+import os
+import logging
+
+from ..proxies import ProxyConfiguration
+from .exceptions import AccountNotFoundError
+from .account import Account, ChannelType
+from .storage import save_config, read_config, delete_config
+
+_DEFAULT_ACCOUNT_CONFIG_JSON_FILE = os.path.join(
+    os.path.expanduser("~"), ".qiskit", "qiskit-ibm.json"
+)
+
+_DEFAULT_ACCOUNT_NAME = "default"
+_DEFAULT_ACCOUNT_NAME_IBM_CLOUD = "default-ibm-cloud"
+_DEFAULT_ACCOUNT_NAME_IBM_QUANTUM_PLATFORM = "default-ibm-quantum-platform"
+_DEFAULT_CHANNEL_TYPE: ChannelType = "ibm_quantum_platform"
+_CHANNEL_TYPES = [_DEFAULT_CHANNEL_TYPE, "ibm_cloud"]
+
+logger = logging.getLogger(__name__)
+
+
+class AccountManager:
+    """Class that bundles account management related functionality."""
+
+    @classmethod
+    def save(
+        cls,
+        token: str | None = None,
+        url: str | None = None,
+        instance: str | None = None,
+        channel: ChannelType | None = None,
+        filename: str | None = None,
+        name: str | None = _DEFAULT_ACCOUNT_NAME,
+        proxies: ProxyConfiguration | None = None,
+        verify: bool | None = None,
+        overwrite: bool | None = False,
+        set_as_default: bool | None = None,
+        private_endpoint: bool | None = False,
+        region: str | None = None,
+        plans_preference: list[str] | None = None,
+        tags: str | None = None,
+    ) -> None:
+        """Save account on disk."""
+        channel = (
+            channel
+            or os.getenv("QISKIT_IBM_CHANNEL")
+            or _DEFAULT_CHANNEL_TYPE  # type: ignore[assignment]
+        )
+        name = name or cls._get_default_account_name(channel)
+        filename = filename if filename else _DEFAULT_ACCOUNT_CONFIG_JSON_FILE
+        filename = os.path.expanduser(filename)
+
+        config = Account.create_account(
+            channel=channel,  # type: ignore[arg-type]
+            token=token,  # type: ignore[arg-type]
+            url=url,
+            instance=instance,
+            proxies=proxies,
+            verify=verify,
+            private_endpoint=private_endpoint,
+            region=region,
+            plans_preference=plans_preference,
+            tags=tags,  # type: ignore[arg-type]
+        )
+        return save_config(
+            filename=filename,
+            name=name,
+            overwrite=overwrite,
+            config=config
+            # avoid storing invalid accounts
+            .validate().to_saved_format(),
+            set_as_default=set_as_default,
+        )
+
+    @staticmethod
+    def list(
+        default: bool | None = None,
+        channel: ChannelType | None = None,
+        filename: str | None = None,
+        name: str | None = None,
+    ) -> dict[str, Account]:
+        """List all accounts in a given filename, or in the default account file."""
+        filename = filename if filename else _DEFAULT_ACCOUNT_CONFIG_JSON_FILE
+        filename = os.path.expanduser(filename)
+
+        def _matching_name(account_name: str) -> bool:
+            return name is None or name == account_name
+
+        def _matching_channel(account: Account) -> bool:
+            return channel is None or account.channel == channel
+
+        def _matching_default(account_name: str) -> bool:
+            default_accounts = [
+                _DEFAULT_ACCOUNT_NAME,
+                _DEFAULT_ACCOUNT_NAME_IBM_QUANTUM_PLATFORM,
+                _DEFAULT_ACCOUNT_NAME_IBM_CLOUD,
+            ]
+            if default is None:
+                return True
+            elif default is False:
+                return account_name not in default_accounts
+            else:
+                return account_name in default_accounts
+
+        # don't load legacy accounts with "ibm_quantum" as the channel name
+        filter_legacy_accounts_dict = {
+            k: v for k, v in read_config(filename=filename).items() if v["channel"] != "ibm_quantum"
+        }
+
+        # load all account objects
+        all_account_objects = map(
+            lambda kv: (
+                kv[0],
+                Account.from_saved_format(kv[1]),
+            ),
+            filter_legacy_accounts_dict.items(),
+        )
+        # filter based on input parameters
+        filtered_account_objects = dict(
+            list(
+                filter(
+                    lambda kv: _matching_channel(kv[1])
+                    and _matching_default(kv[0])
+                    and _matching_name(kv[0]),
+                    all_account_objects,
+                )
+            )
+        )
+        return filtered_account_objects
+
+    @classmethod
+    def get(
+        cls,
+        filename: str | None = None,
+        name: str | None = None,
+        channel: ChannelType | None = None,
+    ) -> Account | None:
+        """Read account from disk.
+
+        Args:
+            filename: Full path of the file from which to get the account.
+            name: Account name.
+            channel: Channel type.
+            Order of precedence for selecting the account:
+            1. If name is specified, get account with that name
+            2. If the environment variables define an account, get that one
+            3. If the channel parameter is defined,
+               a. get the account of this channel type defined as "is_default_account"
+               b. get the account of this channel type with default name
+               c. get any account of this channel type
+            4. If the channel is defined in "QISKIT_IBM_CHANNEL"
+               a. get the account of this channel type defined as "is_default_account"
+               b. get the account of this channel type with default name
+               c. get any account of this channel type
+            5. If a default account is defined in the json file, get that account
+            6. Get any account that is defined in the json file with
+               preference for _DEFAULT_CHANNEL_TYPE.
+
+
+        Returns:
+            Account information.
+
+        Raises:
+            AccountNotFoundError: If the input value cannot be found on disk.
+        """
+        filename = filename if filename else _DEFAULT_ACCOUNT_CONFIG_JSON_FILE
+        filename = os.path.expanduser(filename)
+        if name:
+            saved_account = read_config(filename=filename, name=name)
+            if not saved_account:
+                raise AccountNotFoundError(f"Account with the name {name} does not exist on disk.")
+            logger.info("Loading saved account: %s", name)
+            return Account.from_saved_format(saved_account)
+        logger.info("Loading default saved account")
+        channel_ = channel or os.getenv("QISKIT_IBM_CHANNEL") or _DEFAULT_CHANNEL_TYPE
+        env_account = cls._from_env_variables(channel_)  # type: ignore[arg-type]
+        if env_account is not None:
+            return env_account
+
+        all_config = read_config(filename=filename)
+        # Get the default account for the given channel.
+        # If channel == None, get the default account, for any channel, if it exists
+        saved_account = cls._get_default_account(all_config, channel)
+
+        if saved_account is not None:
+            return Account.from_saved_format(saved_account)
+
+        # Get the default account from the channel defined in the environment variable
+        account = cls._get_default_account(all_config, channel=channel_)
+        if account is not None:
+            return Account.from_saved_format(account)
+
+        # check for any account
+        for channel_type in _CHANNEL_TYPES:
+            account_name = cls._get_default_account_name(channel=channel_type)
+            if account_name in all_config:
+                return Account.from_saved_format(all_config[account_name])
+
+        raise AccountNotFoundError(
+            "Unable to find account. Please make sure an account with the channel name "
+            f"'{channel_}' is saved."
+        )
+
+    @classmethod
+    def delete(
+        cls,
+        filename: str | None = None,
+        name: str | None = None,
+        channel: ChannelType | None = None,
+    ) -> bool:
+        """Delete account from disk."""
+        filename = filename if filename else _DEFAULT_ACCOUNT_CONFIG_JSON_FILE
+        filename = os.path.expanduser(filename)
+        name = name or cls._get_default_account_name(channel)
+        return delete_config(
+            filename=filename,
+            name=name,
+        )
+
+    @classmethod
+    def _from_env_variables(cls, channel: ChannelType | None) -> Account | None:
+        """Read account from environment variable."""
+        token = os.getenv("QISKIT_IBM_TOKEN")
+        url = os.getenv("QISKIT_IBM_URL")
+        if not token:
+            return None
+        return Account.create_account(
+            token=token,
+            url=url,
+            instance=os.getenv("QISKIT_IBM_INSTANCE"),
+            channel=channel,
+        )
+
+    @classmethod
+    def _get_default_account(cls, all_config: dict, channel: str | None = None) -> dict | None:
+        default_channel_account = None
+        any_channel_account = None
+
+        for account_name in all_config:
+            account = all_config[account_name]
+            if channel:
+                if account.get("channel") == channel and account.get("is_default_account"):
+                    return account
+                if account.get(
+                    "channel"
+                ) == channel and account_name == cls._get_default_account_name(
+                    channel  # type: ignore[arg-type]
+                ):
+                    default_channel_account = account
+                if account.get("channel") == channel:
+                    any_channel_account = account
+            else:
+                if account.get("is_default_account"):
+                    return account
+
+        if default_channel_account:
+            return default_channel_account
+        elif any_channel_account:
+            return any_channel_account
+        return None
+
+    @classmethod
+    def _get_default_account_name(cls, channel: ChannelType) -> str:
+        return (
+            _DEFAULT_ACCOUNT_NAME_IBM_CLOUD
+            if channel == "ibm_cloud"
+            else _DEFAULT_ACCOUNT_NAME_IBM_QUANTUM_PLATFORM
+        )

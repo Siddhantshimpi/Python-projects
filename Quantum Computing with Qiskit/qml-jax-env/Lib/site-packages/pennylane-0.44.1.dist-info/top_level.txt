@@ -1,0 +1,5 @@
+dist
+doc
+docker
+pennylane
+tests
